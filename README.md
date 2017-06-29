@@ -1,8 +1,12 @@
 # Drug Interactions ANAlyzer (DIANA)
 
-2017 Joaquim Aguirre-Plans 
+2017 Joaquim Aguirre-Plans
+
 Structural Bioinformatics Laboratory
+
 Universitat Pompeu Fabra
+
+
 
 Drug Interactions ANAlyzer (DIANA) is a Python software which permits the prediction of drug combination using drug target and protein-protein interaction information
 
