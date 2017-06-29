@@ -42,7 +42,6 @@ python diana_v3.5.local.py
   -ex <thresholds list> # Cut-offs that will define the profiles 
   -db <database>
   -prof # If introduced, it generates the profiles
-  -comp # If introduced, it performs the comparison between profiles of the two drugs
 ```
 python diana_v3.5.local.py -d1 oltipraz -s1 seeds/oltipraz.seeds -sif sif/human_eAFF_geneid_2017.sif -tis geneid -ex small_analysis_thresholds.list -db BIANA_JAN_2017 -prof
 
@@ -56,7 +55,7 @@ python diana_v3.5.local.py
   -tis geneid
   -ex top_thresholds.list
   -db BIANA_JAN_2017
-  -prof # If introduced, it creates the profiles of the drug
+  -prof
 ```
 
 #### Compare the profiles of a pair of drugs:
