@@ -1,4 +1,3 @@
-from funcassociate import client
 
 def main():
     file_name = "gene_list.txt"
@@ -21,6 +20,8 @@ def check_functional_enrichment(subset_gene_ids, gene_ids, id_type, output_metho
 	gene_ids is a list of gene symbols (without whitespace) or gene ids
 	id_type
     """
+    from funcassociate import client
+    
     if id_type == "geneid":
         id_type = "entrezgene"
     elif id_type == "genesymbol":

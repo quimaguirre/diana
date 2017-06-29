@@ -326,7 +326,7 @@ def run_generate_netscore_files(drug, seeds_file, radius, taxid, restriction, se
     else:
         addgeneid = ""
 
-    command = "/soft/devel/python-2.7/bin/python2.7 toolbox/generate_netscore_files%s%s.py -iseed %s -radius %d -stype %s -ttype %s -score 0.0 -taxid %d -node %s -loc %s -edge %s -trans %s -format guild %s " % (addgeneid, db, seeds_file, radius, seeds_type, translation_type, taxid, nodes, loc, edges, trans, restriction)
+    command = "python toolbox/generate_netscore_files%s%s.py -iseed %s -radius %d -stype %s -ttype %s -score 0.0 -taxid %d -node %s -loc %s -edge %s -trans %s -format guild %s " % (addgeneid, db, seeds_file, radius, seeds_type, translation_type, taxid, nodes, loc, edges, trans, restriction)
     os.system(command)
 
     return
@@ -340,7 +340,7 @@ def run_score_network(network_file, pvalue_file, seed_file, top_threshold, pval_
     top_threshold = float(top_threshold)
     pval_threshold = float(pval_threshold)
 
-    command = "/soft/devel/python-2.7/bin/python toolbox/score_network.py {} {} {} {:f} {:f} {}".format( network_file, pvalue_file, seed_file, top_threshold, pval_threshold, data_dir )
+    command = "python toolbox/score_network.py {} {} {} {:f} {:f} {}".format( network_file, pvalue_file, seed_file, top_threshold, pval_threshold, data_dir )
     os.system(command)
 
     return
@@ -357,7 +357,7 @@ def run_top_scoring(data_dir, pvalue_file, top_threshold, pval_threshold, analys
     top_threshold = float(top_threshold)
     pval_threshold = float(pval_threshold)
 
-    command = "/soft/devel/python-2.7/bin/python  toolbox/top_scoring_combination.py %s %s %s %f %f %s " % (data_dir, pvalue_file, data_dir, top_threshold, pval_threshold, analysis_type)
+    command = "python  toolbox/top_scoring_combination.py %s %s %s %f %f %s " % (data_dir, pvalue_file, data_dir, top_threshold, pval_threshold, analysis_type)
     os.system(command)
 
     return
@@ -368,7 +368,7 @@ def run_transform_network(network_input_file, nodes_input_file, translation_file
     output_edges_file = output_file + ".edges"
     output_nodes_file = output_file + ".nodes"
 
-    command = "/soft/devel/python-2.7/bin/python toolbox/TransformNetwork.py -i %s -n %s -trans %s -oe %s -on %s" % (network_input_file, nodes_input_file, translation_file, output_edges_file, output_nodes_file)
+    command = "python toolbox/TransformNetwork.py -i %s -n %s -trans %s -oe %s -on %s" % (network_input_file, nodes_input_file, translation_file, output_edges_file, output_nodes_file)
     os.system(command)
 
     return
@@ -385,7 +385,7 @@ def run_translate_network(network_input_file, nodes_input_file, taxid, translati
     elif database == "BIANA_JAN_2017":
         db = "_v2017"
 
-    command = "/soft/devel/python-2.7/bin/python toolbox/TranslateNetwork%s.py -i %s -n %s -x -taxid %d -ttype %s -o %s" % (db, network_input_file, nodes_input_file, taxid, translation_type, output_file)
+    command = "python toolbox/TranslateNetwork%s.py -i %s -n %s -x -taxid %d -ttype %s -o %s" % (db, network_input_file, nodes_input_file, taxid, translation_type, output_file)
     os.system(command)
 
     return
@@ -421,9 +421,9 @@ def translate_seeds(seeds_list, input_type, translation_type, taxid, drug, datab
         db = "_v2017"
 
     if input_type == "uniprotentry":
-        command = "/soft/devel/python-2.7/bin/python toolbox/TranslateNetwork%s.py -i %s -n %s -iformat %s -x -taxid %d -ttype %s -o %s" % (db, seeds_file, seeds_file, input_type, taxid, translation_type, output_file)
+        command = "python toolbox/TranslateNetwork%s.py -i %s -n %s -iformat %s -x -taxid %d -ttype %s -o %s" % (db, seeds_file, seeds_file, input_type, taxid, translation_type, output_file)
     elif input_type == "geneid":
-        command = "/soft/devel/python-2.7/bin/python toolbox/TranslateNetwork%s.py -i %s -n %s -iformat %s -xf -taxid %d -ttype %s -o %s" % (db, seeds_file, seeds_file, input_type, taxid, translation_type, output_file)
+        command = "python toolbox/TranslateNetwork%s.py -i %s -n %s -iformat %s -xf -taxid %d -ttype %s -o %s" % (db, seeds_file, seeds_file, input_type, taxid, translation_type, output_file)
     os.system(command)
     # Remove the edge file created, which is not useful
     command = "rm %s.edges" %(output_file)
@@ -780,7 +780,7 @@ def run_diana(options):
                 results_dir = "data/"+drug+'/guild_results'
                 random_networks_dir = 'data/random_networks'
 
-                guild_command = "/soft/devel/python-2.7/bin/python toolbox/run_guild.py %s %s %s %s %s" % (data_dir, new_seeds_file, sif_file, results_dir, random_networks_dir)
+                guild_command = "python toolbox/run_guild.py %s %s %s %s %s" % (data_dir, new_seeds_file, sif_file, results_dir, random_networks_dir)
                 os.system(guild_command)
                 print("\n  DIANA INFO:\tGUILD has finished.\n")
 
@@ -856,7 +856,7 @@ def run_diana(options):
                 data_dir = "data/"+drug
                 random_networks_dir = 'data/random_networks'
 
-                guild_command = "/soft/devel/python-2.7/bin/python toolbox/run_guild.py %s %s %s %s %s" % (data_dir, new_seeds_file, options.sif, results_dir, random_networks_dir)
+                guild_command = "python toolbox/run_guild.py %s %s %s %s %s" % (data_dir, new_seeds_file, options.sif, results_dir, random_networks_dir)
                 os.system(guild_command)
                 print("  DIANA INFO:\tGUILD has finished.\n")
 
@@ -1006,8 +1006,8 @@ def run_diana(options):
             top_nodes = top_node_to_vals.keys()
             top_nodes = [ int(x) for x in top_nodes ]
 
-            obodag = GODag("toolbox/go-basic.obo")
-            geneid2gos_human = read_ncbi_gene2go("toolbox/gene2go", taxids=[9606])
+            obodag = GODag("/sbi/users/interchange/quim/files_for_diana/go-basic.obo")
+            geneid2gos_human = read_ncbi_gene2go("/sbi/users/interchange/quim/files_for_diana/gene2go", taxids=[9606])
 
             temp_file = results_dir+"/temp_enrichment_goatools.txt"
             output_file = results_dir+"/enrichment_goatools.txt"
