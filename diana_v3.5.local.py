@@ -1473,7 +1473,7 @@ def run_diana(options):
 
     fr.write("\n#### RESULTS ####\n")
     fr.write("# Spearman\tP-value\tDot Product\tJaccard index (for seeds)\n")
-    fr.write("## Node profile comparison ##\n")
+    fr.write("## Node profile comparison (the complete profile) ##\n")
     fr.write("%0.3f\t%0.3f\t%0.3f\n" %(summary["node"][1],summary["node"][2], summary["node"][0]))
 
     fr.write("## Edge profile comparison ##\n")
