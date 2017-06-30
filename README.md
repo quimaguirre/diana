@@ -36,24 +36,23 @@ Change the paths in line 1009-1010 of diana_v3.5.local.py.
 ```
 python diana_v3.5.local.py 
   -d1 <drug name>
-  -s1 <drug targets>
+  -s1 <drug targets (in Entrez geneID)>
   -sif <network>
   -tis <type of network codes>
   -ex <thresholds list> # Cut-offs that will define the profiles 
   -db <database>
   -prof # If introduced, it generates the profiles
 ```
-python diana_v3.5.local.py -d1 oltipraz -s1 seeds/oltipraz.seeds -sif sif/human_eAFF_geneid_2017.sif -tis geneid -ex small_analysis_thresholds.list -db BIANA_JAN_2017 -prof
 
 Example:
 
 ```
 python diana_v3.5.local.py 
-  -d1 oltipraz
-  -s1 seeds/oltipraz.seeds
+  -d1 sulforophane
+  -s1 seeds/sulforophane.seeds
   -sif sif/human_eAFF_geneid_2017.sif
   -tis geneid
-  -ex top_thresholds.list
+  -ex small_analysis_thresholds.list
   -db BIANA_JAN_2017
   -prof
 ```
@@ -64,6 +63,8 @@ python diana_v3.5.local.py
 python diana_v3.5.local.py 
   -d1 <drug name 1>
   -d2 <drug name 2>
+  -s1 <targets from drug 1 (in Entrez geneID)>
+  -s2 <targets from drug 2 (in Entrez geneID)>
   -sif <network>
   -tis <type of network codes>
   -ex <thresholds list> # Cut-offs that will define the profiles 
@@ -75,11 +76,13 @@ Example:
 
 ```
 python diana_v3.5.local.py 
-  -d1 oltipraz
-  -d2 drug2
+  -d1 sulforophane
+  -d2 metmorfin
+  -s1 seeds/sulforophane.seeds
+  -s2 seeds/metmorfin.seeds
   -sif sif/human_eAFF_geneid_2017.sif
   -tis geneid
-  -ex top_thresholds.list
+  -ex small_analysis_thresholds.list
   -db BIANA_JAN_2017
   -comp
 ```
