@@ -1006,8 +1006,8 @@ def run_diana(options):
             top_nodes = top_node_to_vals.keys()
             top_nodes = [ int(x) for x in top_nodes ]
 
-            obodag = GODag("/sbi/users/interchange/quim/files_for_diana/go-basic.obo")
-            geneid2gos_human = read_ncbi_gene2go("/sbi/users/interchange/quim/files_for_diana/gene2go", taxids=[9606])
+            obodag = GODag("toolbox/go-basic.obo")
+            geneid2gos_human = read_ncbi_gene2go("toolbox/gene2go", taxids=[9606])
 
             temp_file = results_dir+"/temp_enrichment_goatools.txt"
             output_file = results_dir+"/enrichment_goatools.txt"
@@ -1227,8 +1227,8 @@ def run_diana(options):
         print("  DIANA INFO:\tJaccard index for the comparison of targets: {}\n".format(seeds_jaccard))
         # Comparison using PFAM families of the seeds and the Spearman / Dot product comparison
         print("  DIANA INFO:\t## Spearman's coefficient / Dot product comparison between PFAMs ##\n")
-        pfams1 = dbs.search_pfams_for_seeds(seeds1)
-        pfams2 = dbs.search_pfams_for_seeds(seeds2)
+        pfams1 = dbs.search_pfams_for_seeds(seeds1, options.database)
+        pfams2 = dbs.search_pfams_for_seeds(seeds2, options.database)
         pfams1_dict = generate_seeds_dict_for_comparison(pfams1)
         pfams2_dict = generate_seeds_dict_for_comparison(pfams2)
         summary_seed_pfam = comp.calculate_comparison(pfams1_dict, pfams2_dict)

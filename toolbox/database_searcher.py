@@ -1,4 +1,5 @@
 import cPickle
+import mysql.connector
 import re
 import sqlite3
 import sys
@@ -147,7 +148,7 @@ def search_seeds_in_file(dcdbid, provided_seeds = None):
     return list_of_targets
 
 
-def search_pfams_for_seeds(seeds):
+def search_pfams_for_seeds(seeds, database):
     """
     Performs a search in the database to find the PFAMs of the seeds.
     Returns a set of PFAMs
@@ -159,11 +160,43 @@ def search_pfams_for_seeds(seeds):
     all_pfams = set()
 
     for seed in seeds:
-        pfams = geneid2pfam[seed]
-        for pfam in pfams:
-            all_pfams.add(pfam)
+        if seed in geneid2pfam:
+            pfams = geneid2pfam[seed]
+            for pfam in pfams:
+                all_pfams.add(pfam)
+        else:
+            cnx = mysql.connector.connect(user='quim', password="",
+                                          host='localhost',
+                                          database=database)
+            pfams = obtain_pfams(cnx, seed)
+            for pfam in pfams:
+                all_pfams.add(pfam)
 
     return all_pfams
+
+
+def obtain_pfams(cnx, geneid):
+    """
+    Obtain the PFAM corresponding to a GeneID
+    """
+
+    cursor = cnx.cursor()
+
+    query = (''' SELECT P.value FROM externalEntityGeneID G, userEntityUnification_protocol_2 U1, userEntityUnification_protocol_2 U2, externalEntityPFAM P 
+             WHERE G.externalEntityID = U1.externalEntityID AND U1.userEntityID = U2.userEntityID AND U2.externalEntityID = P.externalEntityID AND G.value = %s
+             ''')
+
+    cursor.execute(query, (geneid,))
+
+    pfams = set()
+
+    for items in cursor:
+        for pfam in items:
+            pfams.add(pfam.upper())
+
+    cursor.close()
+
+    return pfams
 
 
 def process_drug_name(drug):
