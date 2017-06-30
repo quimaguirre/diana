@@ -1006,8 +1006,8 @@ def run_diana(options):
             top_nodes = top_node_to_vals.keys()
             top_nodes = [ int(x) for x in top_nodes ]
 
-            obodag = GODag("toolbox/go-basic.obo")
-            geneid2gos_human = read_ncbi_gene2go("toolbox/gene2go", taxids=[9606])
+            obodag = GODag("/sbi/users/interchange/quim/files_for_diana/go-basic.obo")
+            geneid2gos_human = read_ncbi_gene2go("/sbi/users/interchange/quim/files_for_diana/gene2go", taxids=[9606])
 
             temp_file = results_dir+"/temp_enrichment_goatools.txt"
             output_file = results_dir+"/enrichment_goatools.txt"
