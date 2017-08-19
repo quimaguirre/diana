@@ -1,0 +1,30 @@
+# num of genes	num of total genes	Log of odds ratio	P-value	Adjusted p-value	GO term ID	GO term name	GO type
+1	1	12.7491361643	-	1.45e-04	GO:0043402	glucocorticoid mediated signaling pathway	BP
+1	1	12.7491361643	-	1.45e-04	GO:0038051	glucocorticoid-activated RNA polymerase II transcription factor binding transcription factor activity	MF
+1	1	12.7491361643	-	1.45e-04	GO:0004883	glucocorticoid receptor activity	MF
+1	1	12.7491361643	-	1.45e-04	GO:0070524	11-beta-hydroxysteroid dehydrogenase (NADP+) activity	MF
+1	2	11.7491361643	-	2.90e-04	GO:0003845	11-beta-hydroxysteroid dehydrogenase [NAD(P)] activity	MF
+1	5	10.4272080694	-	7.26e-04	GO:1990239	steroid hormone binding	MF
+1	7	9.94178124228	-	1.02e-03	GO:0042921	glucocorticoid receptor signaling pathway	BP
+1	8	9.74913616434	-	8.71e-04	GO:0006704	glucocorticoid biosynthetic process	BP
+1	10	9.42720806945	-	1.45e-03	GO:0071383	cellular response to steroid hormone stimulus	BP
+1	27	7.99424866217	-	3.05e-03	GO:0005496	steroid binding	MF
+1	60	6.84224556873	-	8.55e-03	GO:0007059	chromosome segregation	BP
+1	77	6.48234962364	-	8.84e-03	GO:0030324	lung development	BP
+1	111	5.95472029799	-	1.50e-02	GO:0016569	covalent chromatin modification	BP
+1	150	5.52031747384	-	2.14e-02	GO:0006367	transcription initiation from RNA polymerase II promoter	BP
+1	234	4.87877144475	-	3.20e-02	GO:0007067	mitotic nuclear division	BP
+1	255	4.75478272748	-	3.26e-02	GO:0001077	transcriptional activator activity, RNA polymerase II core promoter proximal region sequence-specific binding	MF
+1	329	4.3871923906	-	4.14e-02	GO:0000978	RNA polymerase II core promoter proximal region sequence-specific DNA binding	MF
+1	333	4.36975779726	-	4.52e-02	GO:0051301	cell division	BP
+1	529	3.70201225222	-	6.74e-02	GO:0006915	apoptotic process	BP
+1	545	3.65902374467	-	6.89e-02	GO:0006366	transcription from RNA polymerase II promoter	BP
+1	587	3.55191947123	-	5.90e-02	GO:0055114	oxidation-reduction process	BP
+1	824	3.06263563715	-	8.97e-02	GO:0003700	transcription factor activity, sequence-specific DNA binding	MF
+1	981	2.81102683812	-	1.23e-01	GO:0045944	positive regulation of transcription from RNA polymerase II promoter	BP
+1	1102	2.64322765576	-	1.28e-01	GO:0008270	zinc ion binding	MF
+1	1106	2.6380004941	-	1.21e-01	GO:0007165	signal transduction	BP
+1	1271	2.43738784933	-	1.29e-01	GO:0006355	regulation of transcription, DNA-templated	BP
+1	1364	2.33550823531	-	1.77e-01	GO:0003723	RNA binding	MF
+1	1762	1.96613795542	-	1.85e-01	GO:0006351	transcription, DNA-templated	BP
+1	8884	-0.367857513211	-	1.00e+00	GO:0005515	protein binding	MF
