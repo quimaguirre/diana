@@ -1,0 +1,3 @@
+[submodule "diana/guild"]
+	path = diana/guild
+	url = https://github.com/emreg00/guild.git
