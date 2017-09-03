@@ -1,0 +1,17 @@
+# num of genes	num of total genes	Log of odds ratio	P-value	Adjusted p-value	GO term ID	GO term name	GO type
+1	2	2.70043971814	-	1.51e-01	GO:1901374	acetate ester transport	BP
+1	3	2.11547721742	-	1.51e-01	GO:0015874	norepinephrine transport	BP
+1	3	2.11547721742	-	1.51e-01	GO:0008513	secondary active organic cation transmembrane transporter activity	MF
+1	3	2.11547721742	-	1.51e-01	GO:0005333	norepinephrine transmembrane transporter activity	MF
+1	3	2.11547721742	-	1.51e-01	GO:0005277	acetylcholine transmembrane transporter activity	MF
+1	4	1.70043971814	-	2.22e-01	GO:0005329	dopamine transmembrane transporter activity	MF
+1	5	1.37851162325	-	2.22e-01	GO:0015697	quaternary ammonium group transport	BP
+1	5	1.37851162325	-	2.22e-01	GO:0015651	quaternary ammonium group transmembrane transporter activity	MF
+1	6	1.11547721742	-	7.69e-02	GO:0005326	neurotransmitter transporter activity	MF
+1	7	0.893084796083	-	7.69e-02	GO:0035878	nail development	BP
+1	7	0.893084796083	-	2.22e-01	GO:0015872	dopamine transport	BP
+1	7	0.893084796083	-	2.22e-01	GO:0015101	organic cation transmembrane transporter activity	MF
+1	7	0.893084796083	-	3.54e-01	GO:0004679	AMP-activated protein kinase activity	MF
+1	9	0.530514716699	-	7.69e-02	GO:0007589	body fluid secretion	BP
+1	13	0.0	-	7.69e-02	GO:0042136	neurotransmitter biosynthetic process	BP
+1	13	0.0	-	2.22e-01	GO:0072488	ammonium transmembrane transport	BP

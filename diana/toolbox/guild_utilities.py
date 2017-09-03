@@ -58,7 +58,7 @@ def prepare_scoring(network_file, seed_file, scoring_folder="./", random_network
     print "Creating background node score file"
     bg_node_file = scoring_folder + name + "node_scores_background.sif" #seed_file.split("/")[-1] + ".converted"
     bg_seed_file = scoring_folder + name + "seed_scores_background.sif" 
-    create_background_score_file(bg_node_file, bg_seed_file, nodes, seeds, seed_to_data, non_seed_score, delim)
+    create_background_score_file(bg_node_file, bg_seed_file, nodes, seeds, seed_to_data, non_seed_score, seed_score, delim)
 
     # Create modified edge file using node scores for netshort
     print "Creating node score converted edge file (for netshort)"
@@ -113,7 +113,7 @@ def create_node_score_file(node_score_file, seed_score_file, nodes, seeds, seed_
     return node_to_data
 
 
-def create_background_score_file(bg_node_file, bg_seed_file, nodes, seeds, seed_to_data, non_seed_score=0.01, delim=" "):
+def create_background_score_file(bg_node_file, bg_seed_file, nodes, seeds, seed_to_data, non_seed_score=0.01, seed_score=1.0, delim=" "):
     from random import shuffle
     non_seeds = list(nodes - seeds)
     shuffle(non_seeds)

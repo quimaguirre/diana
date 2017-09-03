@@ -210,7 +210,7 @@ def find_seeds_in_nodes_file(drug, nodes_file, new_seeds_file):
 
     return new_seeds
 
-def find_seeds_in_sif_file(drug, sif_file_items, initial_seeds, new_seeds_file):
+def find_seeds_in_sif_file(drug, sif_file_items, initial_seeds, new_seeds_file, workspace):
     """Finds the seeds that are in a sif file and creates a new seeds file. Returns the seeds in a list"""
 
     fs = open(new_seeds_file,"w")
@@ -224,7 +224,7 @@ def find_seeds_in_sif_file(drug, sif_file_items, initial_seeds, new_seeds_file):
     fs.close()
 
     # Produce a copy of the seeds file in the results directory
-    command = "cp "+new_seeds_file+" "+os.path.join(options.workspace, "data", drug, "guild_results_using_sif/seeds.txt")
+    command = "cp "+new_seeds_file+" "+os.path.join(workspace, "data", drug, "guild_results_using_sif/seeds.txt")
     os.system(command)
 
     return new_seeds
@@ -826,7 +826,9 @@ def run_diana(options):
             seeds_list = process_seeds(seeds)
 
             # Create the folder where the results will be stored
-            results_dir = os.path.join(data_dir, drug+"/guild_results_using_sif")
+            drug_dir = os.path.join(data_dir, drug)
+            results_dir = os.path.join(drug_dir, "guild_results_using_sif")
+            print(results_dir)
             try:
                 os.stat(results_dir)
             except:
@@ -846,7 +848,7 @@ def run_diana(options):
 
                 new_seeds_file = os.path.join(data_dir, drug+"/"+drug+"_seeds_guild_using_sif.txt")
                 sif_file_geneids = obtain_all_geneids_in_sif_file(options.sif)
-                new_seeds = find_seeds_in_sif_file(drug, sif_file_geneids, seeds_list, new_seeds_file)
+                new_seeds = find_seeds_in_sif_file(drug, sif_file_geneids, seeds_list, new_seeds_file, options.workspace)
 
                 print("  DIANA INFO:\tThere are %d seeds in the network from the %d initial ones.\n" %(len(new_seeds), len(seeds_list)) )
 

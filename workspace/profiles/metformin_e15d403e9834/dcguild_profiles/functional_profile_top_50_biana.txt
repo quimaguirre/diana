@@ -1,0 +1,14 @@
+# num of genes	num of total genes	Log of odds ratio	P-value	Adjusted p-value	GO term ID	GO term name	GO type
+2	2	1.0	-	4.80e-01	GO:1901374	acetate ester transport	BP
+1	1	1.0	-	1.00e+00	GO:0048241	epinephrine transport	BP
+1	1	1.0	-	1.00e+00	GO:0051615	histamine uptake	BP
+3	4	0.584962500721	-	2.20e-01	GO:0005329	dopamine transmembrane transporter activity	MF
+2	3	0.415037499279	-	4.80e-01	GO:0015874	norepinephrine transport	BP
+2	3	0.415037499279	-	4.80e-01	GO:0008513	secondary active organic cation transmembrane transporter activity	MF
+2	3	0.415037499279	-	4.80e-01	GO:0005333	norepinephrine transmembrane transporter activity	MF
+2	3	0.415037499279	-	4.80e-01	GO:0005277	acetylcholine transmembrane transporter activity	MF
+3	5	0.263034405834	-	2.20e-01	GO:0015697	quaternary ammonium group transport	BP
+3	5	0.263034405834	-	2.20e-01	GO:0015651	quaternary ammonium group transmembrane transporter activity	MF
+1	2	0.0	-	1.00e+00	GO:0033692	cellular polysaccharide biosynthetic process	BP
+1	2	0.0	-	1.00e+00	GO:0050509	N-acetylglucosaminyl-proteoglycan 4-beta-glucuronosyltransferase activity	MF
+1	2	0.0	-	1.00e+00	GO:0033906	hyaluronoglucuronidase activity	MF

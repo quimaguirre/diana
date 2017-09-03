@@ -1,0 +1,89 @@
+# num of genes	num of total genes	Log of odds ratio	P-value	Adjusted p-value	GO term ID	GO term name	GO type
+1	1	13.7491361643	-	7.26e-05	GO:0045713	low-density lipoprotein particle receptor biosynthetic process	BP
+1	1	13.7491361643	-	7.26e-05	GO:2000230	negative regulation of pancreatic stellate cell proliferation	BP
+1	1	13.7491361643	-	7.26e-05	GO:0060694	regulation of cholesterol transporter activity	BP
+1	1	13.7491361643	-	7.26e-05	GO:0004955	prostaglandin receptor activity	MF
+1	2	12.7491361643	-	1.45e-04	GO:0071306	cellular response to vitamin E	BP
+1	2	12.7491361643	-	1.45e-04	GO:1901558	response to metformin	BP
+1	3	12.1641736636	-	2.18e-04	GO:0055098	response to low-density lipoprotein particle	BP
+1	3	12.1641736636	-	2.18e-04	GO:0010871	negative regulation of receptor biosynthetic process	BP
+1	4	11.7491361643	-	2.91e-04	GO:0060336	negative regulation of interferon-gamma-mediated signaling pathway	BP
+1	5	11.4272080694	-	3.63e-04	GO:0060850	regulation of transcription involved in cell fate commitment	BP
+1	5	11.4272080694	-	3.63e-04	GO:0010891	negative regulation of sequestering of triglyceride	BP
+1	5	11.4272080694	-	3.63e-04	GO:0050544	arachidonic acid binding	MF
+1	6	11.1641736636	-	3.63e-04	GO:0010887	negative regulation of cholesterol storage	BP
+1	6	11.1641736636	-	4.36e-04	GO:0046321	positive regulation of fatty acid oxidation	BP
+1	6	11.1641736636	-	4.36e-04	GO:0010742	macrophage derived foam cell differentiation	BP
+1	7	10.9417812423	-	4.36e-04	GO:0071455	cellular response to hyperoxia	BP
+1	7	10.9417812423	-	5.08e-04	GO:0032966	negative regulation of collagen biosynthetic process	BP
+1	8	10.7491361643	-	5.08e-04	GO:0035357	peroxisome proliferator activated receptor signaling pathway	BP
+1	8	10.7491361643	-	5.08e-04	GO:0033993	response to lipid	BP
+1	8	10.7491361643	-	5.81e-04	GO:0060100	positive regulation of phagocytosis, engulfment	BP
+1	8	10.7491361643	-	5.81e-04	GO:0002674	negative regulation of acute inflammatory response	BP
+1	10	10.4272080694	-	5.08e-04	GO:0015909	long-chain fatty acid transport	BP
+1	10	10.4272080694	-	7.26e-04	GO:0031000	response to caffeine	BP
+1	13	10.0486964462	-	7.99e-04	GO:0050872	white fat cell differentiation	BP
+1	13	10.0486964462	-	8.72e-04	GO:0051974	negative regulation of telomerase activity	BP
+1	13	10.0486964462	-	8.72e-04	GO:0010745	negative regulation of macrophage derived foam cell differentiation	BP
+1	13	10.0486964462	-	8.72e-04	GO:0019395	fatty acid oxidation	BP
+1	14	9.94178124228	-	1.02e-03	GO:0042953	lipoprotein transport	BP
+1	15	9.84224556873	-	1.09e-03	GO:0051393	alpha-actinin binding	MF
+1	15	9.84224556873	-	1.09e-03	GO:0046965	retinoid X receptor binding	MF
+1	16	9.74913616434	-	9.44e-04	GO:0048714	positive regulation of oligodendrocyte differentiation	BP
+1	16	9.74913616434	-	1.16e-03	GO:0030224	monocyte differentiation	BP
+1	17	9.66167332309	-	1.09e-03	GO:0071380	cellular response to prostaglandin E stimulus	BP
+1	17	9.66167332309	-	1.16e-03	GO:0033189	response to vitamin A	BP
+1	20	9.42720806945	-	1.38e-03	GO:0033613	activating transcription factor binding	MF
+1	21	9.35681874156	-	1.31e-03	GO:0035902	response to immobilization stress	BP
+1	23	9.22557420828	-	1.38e-03	GO:0055088	lipid homeostasis	BP
+1	29	8.89115516921	-	2.03e-03	GO:0048662	negative regulation of smooth muscle cell proliferation	BP
+1	32	8.74913616434	-	2.25e-03	GO:0042594	response to starvation	BP
+1	35	8.61985314739	-	2.03e-03	GO:0001890	placenta development	BP
+1	35	8.61985314739	-	2.54e-03	GO:0004879	RNA polymerase II transcription factor activity, ligand-activated sequence-specific DNA binding	MF
+1	37	8.53968279871	-	2.54e-03	GO:0048469	cell maturation	BP
+1	38	8.50120865089	-	1.74e-03	GO:0009409	response to cold	BP
+1	39	8.46373394547	-	2.69e-03	GO:0030331	estrogen receptor binding	MF
+1	42	8.35681874156	-	2.47e-03	GO:0032526	response to retinoic acid	BP
+1	43	8.32287140963	-	2.32e-03	GO:0045165	cell fate commitment	BP
+1	43	8.32287140963	-	2.98e-03	GO:0001046	core promoter sequence-specific DNA binding	MF
+1	45	8.25728306801	-	3.12e-03	GO:0031100	animal organ regeneration	BP
+1	48	8.16417366361	-	2.69e-03	GO:0045600	positive regulation of fat cell differentiation	BP
+1	49	8.13442632022	-	3.34e-03	GO:0042752	regulation of circadian rhythm	BP
+1	49	8.13442632022	-	3.34e-03	GO:0030374	ligand-dependent nuclear receptor transcription coactivator activity	MF
+1	53	8.02121570977	-	3.49e-03	GO:0048511	rhythmic process	BP
+1	53	8.02121570977	-	3.56e-03	GO:0003707	steroid hormone receptor activity	MF
+1	54	7.99424866217	-	3.63e-03	GO:0043401	steroid hormone mediated signaling pathway	BP
+1	56	7.94178124228	-	3.34e-03	GO:0009612	response to mechanical stimulus	BP
+1	63	7.77185624084	-	3.85e-03	GO:0043627	response to estrogen	BP
+1	63	7.77185624084	-	4.50e-03	GO:0019903	protein phosphatase binding	MF
+1	64	7.74913616434	-	3.99e-03	GO:0008217	regulation of blood pressure	BP
+1	66	7.70474204498	-	4.21e-03	GO:0030855	epithelial cell differentiation	BP
+1	69	7.64061170756	-	3.92e-03	GO:0071300	cellular response to retinoic acid	BP
+1	71	7.59938904483	-	4.87e-03	GO:0007584	response to nutrient	BP
+1	73	7.55931160546	-	4.50e-03	GO:0008144	drug binding	MF
+1	77	7.48234962364	-	5.16e-03	GO:0032869	cellular response to insulin stimulus	BP
+1	78	7.46373394547	-	5.45e-03	GO:0006919	activation of cysteine-type endopeptidase activity involved in apoptotic process	BP
+1	96	7.16417366361	-	6.10e-03	GO:0042593	glucose homeostasis	BP
+1	102	7.07671082236	-	6.75e-03	GO:0051091	positive regulation of sequence-specific DNA binding transcription factor activity	BP
+1	116	6.89115516921	-	7.77e-03	GO:0030308	negative regulation of cell growth	BP
+1	122	6.81839882677	-	6.54e-03	GO:0006629	lipid metabolic process	BP
+1	150	6.52031747384	-	1.07e-02	GO:0006367	transcription initiation from RNA polymerase II promoter	BP
+1	165	6.38281395009	-	1.05e-02	GO:0007507	heart development	BP
+1	208	6.0486964462	-	1.42e-02	GO:0044212	transcription regulatory region DNA binding	MF
+1	278	5.63019509161	-	1.94e-02	GO:0008134	transcription factor binding	MF
+1	301	5.51551648758	-	1.96e-02	GO:0042493	response to drug	BP
+1	319	5.43172355057	-	2.22e-02	GO:0019899	enzyme binding	MF
+1	360	5.25728306801	-	1.97e-02	GO:0043565	sequence-specific DNA binding	MF
+1	368	5.22557420828	-	2.45e-02	GO:0003682	chromatin binding	MF
+1	434	4.98758493189	-	2.17e-02	GO:0045087	innate immune response	BP
+1	471	4.86955291472	-	3.06e-02	GO:0045892	negative regulation of transcription, DNA-templated	BP
+1	496	4.79493985395	-	3.34e-02	GO:0045893	positive regulation of transcription, DNA-templated	BP
+1	711	4.27543041472	-	4.58e-02	GO:0000122	negative regulation of transcription from RNA polymerase II promoter	BP
+1	756	4.18689374012	-	5.19e-02	GO:0042802	identical protein binding	MF
+1	824	4.06263563715	-	4.59e-02	GO:0003700	transcription factor activity, sequence-specific DNA binding	MF
+1	861	3.99926673694	-	1.98e-02	GO:0007186	G-protein coupled receptor signaling pathway	BP
+1	981	3.81102683812	-	6.38e-02	GO:0045944	positive regulation of transcription from RNA polymerase II promoter	BP
+1	1102	3.64322765576	-	6.62e-02	GO:0008270	zinc ion binding	MF
+1	1106	3.6380004941	-	6.24e-02	GO:0007165	signal transduction	BP
+1	1518	3.18118008892	-	8.32e-02	GO:0003677	DNA binding	MF
+1	8884	0.632142486789	-	1.00e+00	GO:0005515	protein binding	MF

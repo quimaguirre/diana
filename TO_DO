@@ -1,0 +1,5 @@
+TO DO
+
+- Permit to use other types of ID, not only geneID. Now, we can only use GeneID because we need geneIDs to run the functional enrichment analysis.
+- Facilitate installation of BIANA and installation of GUILD
+- Output: Results file in PDF? With images included of gantt charts!!

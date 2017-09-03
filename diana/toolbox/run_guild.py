@@ -4,7 +4,7 @@ import sys
 import os
 guild_utilities = imp.load_source('guild_utilities.py','.')
 
-from toolbox import guild_utilities
+import guild_utilities
 
 def main():
     # Set the seed and network files
@@ -45,11 +45,13 @@ def main():
      scoring_folder = "./guild/"
      random_networks_folder = scoring_folder
 
-    executable_path = "/sbi/users/interchange/SRC/guild/scoreN"
+    script_path = os.path.abspath(os.path.dirname(__file__))
+    #executable_path = os.path.join(script_path, 'scoreN')
+    executable_path = os.path.join(script_path, '../guild/guild')
 
     # Create input files for scoring
     guild_utilities.prepare_scoring(network_file, seed_file, scoring_folder, random_networks_folder, non_seed_score=0.01,seed_score=1.0,
-                                    edge_score=1.0, n_sample=100, delim=" ")
+                                    edge_score=1.0, n_sample=100, delim="\t")
 
     # Run GUILD and create output files, the case for Netcombo
     guild_utilities.run_scoring(scoring_folder, random_networks_folder, executable_path, scoring_type="netcombo")
