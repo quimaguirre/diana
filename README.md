@@ -34,7 +34,7 @@ To do it, run the following script:
 python path/to/diana/scripts/download_go_files.py
 ```
 
-Change the paths in line 1009-1010 of diana_v3.5.local.py.
+
 
 #### Generate the profiles of a drug:
 
