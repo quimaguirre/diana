@@ -1,6 +1,7 @@
 import argparse
 import mysql.connector
 import ntpath
+import shutil
 import time
 import sys, os, re
 
@@ -29,7 +30,7 @@ def parse_user_arguments(*args, **kwds):
         description = "Generate the profiles of the input drug",
         epilog      = "@oliva's lab 2017")
     parser.add_argument('-d','--drug_name',dest='drug_name',action = 'store',
-                        help = """ Name of the drug number 1. If you do not provide targets for this drug or the number of targets is not large enough,
+                        help = """ Name of the drug. If you do not provide targets for this drug or the number of targets is not large enough,
                         the program will use this name to search for targets in BIANA database. If targets are provided, this field will be only used
                         for naming purposes and will be completely optional.
                         If the name of the drug has more than one word or special characters (parentheses, single quotes), introduce the name between 
@@ -66,13 +67,24 @@ def parse_user_arguments(*args, **kwds):
                         5
                         10
                         """)
-    parser.add_argument('-ws','--worspace',dest='workspace',action = 'store',default=os.path.join(os.path.join(os.path.dirname(__file__), '..'), 'workspace'),
+    parser.add_argument('-ws','--workspace',dest='workspace',action = 'store',default=os.path.join(os.path.join(os.path.dirname(__file__), '..'), 'workspace'),
                         help = """Define the workspace directory where the data directory and the results directory will be created""")
     parser.add_argument('-db','--database',dest='database',action = 'store',default='BIANA_JUN_2017',
                         help = """Define the database to use for the generation of the network of expansion / search of targets: 
                         (default is BIANA_JUN_2017)""")
+    parser.add_argument('-dbu','--db_user',dest='db_user',action = 'store',default='quim',
+                        help = """Define the MySQL user to access to the database: 
+                        (default is quim)""")
+    parser.add_argument('-dbp','--db_pass',dest='db_pass',action = 'store',default='',
+                        help = """Define the MySQL password to access to the database: 
+                        (default is '')""")
+    parser.add_argument('-dbh','--db_host',dest='db_host',action = 'store',default='localhost',
+                        help = """Define the MySQL host to access to the database: 
+                        (default is localhost)""")
     parser.add_argument('-up','--unification',dest='unification_protocol',action = 'store',default='geneid_seqtax_v1',
                         help = """Define the unification protocol used in BIANA database (default is BIANA_JUN_2017)""")
+    parser.add_argument('-gu','--guild',dest='guild_executable_path',action = 'store',default=os.path.join(os.path.join(os.path.dirname(__file__), '..'), 'diana/guild/guild'),
+                        help = """Define the path to the executable path of GUILD program""")
 
     options=parser.parse_args()
 
@@ -129,8 +141,8 @@ def generate_profiles(options):
         drug_instance.obtain_targets_from_file(options.targets, options.proteins_type_id)
     else:
         # Create a connection to BIANA database
-        biana_cnx = mysql.connector.connect(user='quim', password="",
-                                            host='localhost',
+        biana_cnx = mysql.connector.connect(user=options.db_user, password=options.db_pass,
+                                            host=options.db_host,
                                             database=options.database)
         # Obtain the targets from BIANA
         drug_instance.obtain_targets_from_BIANA(biana_cnx, options.proteins_type_id, options.unification_protocol)
@@ -139,8 +151,10 @@ def generate_profiles(options):
     print( "  DIANA INFO:\tThe targets provided for the drug {} are:\n\t\t{}.\n".format( options.drug_name, ', '.join([ str(x) for x in drug_instance.targets]) ) )
 
     # Create a directory for the drug
-    drug_dir = os.path.join(data_dir, diana_drug.generate_drug_id(drug_instance.drug_name, drug_instance.targets))
+    drug_id = diana_drug.generate_drug_id(drug_instance.drug_name, drug_instance.targets)
+    drug_dir = os.path.join(data_dir, drug_id)
     create_directory(drug_dir)
+    print('  DIANA INFO:\tThe ID given to the drug, which will be used to create a directory and store the results, is: {}\n'.format(drug_id))
 
     # Create a directory for the dcTargets results
     dctargets_dir = os.path.join(drug_dir, 'dctargets_profiles')
@@ -149,6 +163,10 @@ def generate_profiles(options):
     # Create a directory for the dcGUILD results
     dcguild_dir = os.path.join(drug_dir, 'dcguild_profiles')
     create_directory(dcguild_dir)
+
+    # Create a directory for the dcStructure results
+    dcstructure_dir = os.path.join(drug_dir, 'dcstructure_profiles')
+    create_directory(dcstructure_dir)
 
     # Create a targets file
     targets_file = os.path.join(dctargets_dir, '{}_targets.txt'.format(drug_instance.drug_name))
@@ -221,6 +239,9 @@ def generate_profiles(options):
     # Check if the number of targets provided is sufficient for the analysis
     if len(targets_in_network) < 3:
         raise diana_drug.InsufficientTargets(targets_in_network)
+    else:
+        print( "  DIANA INFO:\tThe targets found in the network are:\n\t\t{}.\n".format( ', '.join([ str(x) for x in targets_in_network]) ) )
+
 
 
 
@@ -243,7 +264,7 @@ def generate_profiles(options):
     pvalue_file = os.path.join(guild_output_dir, 'output_scores.sif.netcombo.pval')
     if not fileExist(pvalue_file):
 
-        guild_command = 'python {} {} {} {} {} {}'.format( os.path.join(toolbox_dir, 'run_guild.py'), drug_dir, network_targets_file, options.sif, guild_output_dir, random_networks_dir )
+        guild_command = 'python {} {} {} {} {} {} {}'.format( os.path.join(toolbox_dir, 'run_guild.py'), drug_dir, network_targets_file, options.sif, guild_output_dir, random_networks_dir, options.guild_executable_path )
         os.system(guild_command)
         print('  DIANA INFO:\tGUILD has finished.\n')
 
@@ -265,6 +286,10 @@ def generate_profiles(options):
     #-------------------------------#
 
     print('  DIANA INFO:\tSTARTING GENERATION OF dcGUILD PROFILES\n')
+
+    # Copy the pvalue_file at the dcguild directory
+    new_pvalue_file = os.path.join(dcguild_dir, 'output_scores.sif.netcombo.pval')
+    shutil.copyfile(pvalue_file, new_pvalue_file)
 
     # Score the network
     scored_network_file = os.path.join(dcguild_dir, 'network_scored.txt')
@@ -297,7 +322,7 @@ def generate_profiles(options):
                 node_profile_geneid = node_profile_instance.translate_pvalue_file(translation_file, options.proteins_type_id, output_file, verbose=False)
 
 
-            output_file = os.path.join(dcguild_dir, 'functional_profile_top_{}_{}.txt'.format(str(top_threshold), guild_profile_instance.type_id))
+            output_file = os.path.join(dcguild_dir, 'functional_profile_top_{}_{}.txt'.format(str(top_threshold), options.proteins_type_id))
             if not fileExist(output_file):
 
                 # Generate the FUNCTIONAL profile from the top % scoring nodes of the pvalue file
@@ -331,8 +356,8 @@ def generate_profiles(options):
 
     if not fileExist(pfam_file):
         # Create a connection to BIANA database
-        biana_cnx = mysql.connector.connect(user='quim', password="",
-                                            host='localhost',
+        biana_cnx = mysql.connector.connect(user=options.db_user, password=options.db_pass,
+                                            host=options.db_host,
                                             database=options.database)
         # Obtain the PFAMs from BIANA
         drug_instance.obtain_pfams_from_targets(biana_cnx, pfam_file, options.unification_protocol)
@@ -355,14 +380,43 @@ def generate_profiles(options):
             all_nodes_geneid = set(guild_profile_geneid.node_to_values.keys())
             for target in drug_instance.targets:
                 all_nodes_geneid.add(target)
-            targets_functional_profile_instance = top_scoring.functional_top_scoring(obodag, geneid2gos_human, list(all_nodes_geneid), drug_instance.targets, output_file)
+            top_scoring.functional_top_scoring(obodag, geneid2gos_human, list(all_nodes_geneid), drug_instance.targets, output_file)
         else:
             # Here we also add the targets that are not in the network among all the nodes in the network, to use them as background
             all_nodes_geneid = set(guild_profile_instance.node_to_values.keys())
             for target in drug_instance.targets:
                 all_nodes_geneid.add(target)
-            targets_functional_profile_instance = top_scoring.functional_top_scoring(obodag, geneid2gos_human, list(all_nodes_geneid), drug_instance.targets, output_file)
+            top_scoring.functional_top_scoring(obodag, geneid2gos_human, list(all_nodes_geneid), drug_instance.targets, output_file)
 
+
+
+    #-----------------------------------#
+    #   GENERATE DCSTRUCTURE PROFILES   #
+    #-----------------------------------#
+
+    print('  DIANA INFO:\tSTARTING GENERATION OF dcSTRUCTURE PROFILES\n')
+
+    # Obtain the SMILES of the compound from the database
+    structure_file = os.path.join(dcstructure_dir, 'structure_profile.txt')
+
+    if not fileExist(structure_file):
+        # Create a connection to BIANA database
+        biana_cnx = mysql.connector.connect(user=options.db_user, password=options.db_pass,
+                                            host=options.db_host,
+                                            database=options.database)
+        # Obtain the PFAMs from BIANA
+        drug_instance.obtain_SMILES_from_BIANA(biana_cnx, structure_file, options.unification_protocol)
+        biana_cnx.close()
+    else:
+        drug_instance.obtain_SMILES_from_file(structure_file)
+
+    print( "  DIANA INFO:\tThe SMILES obtained are\n\t\t{}.\n".format( ', '.join([ str(x) for x in drug_instance.smiles]) ) )
+
+
+
+    # End marker for time
+    end = time.time()
+    print('\n  DIANA INFO:\tTIME OF EXECUTION: {:.3f} seconds or {:.3f} minutes.\n'.format(end - start, (end - start) / 60))
 
     return
 
@@ -430,12 +484,13 @@ def get_targets_in_sif_file(sif_file, targets):
     Get the targets that are inside the network given by the user
     """
     targets_in_network = set()
+    str_tar = [str(x) for x in targets]
     with open(sif_file, 'r') as sif_fd:
         for line in sif_fd:
             node1, score, node2 = line.strip().split('\t')
-            if node1 in targets:
+            if node1 in str_tar:
                 targets_in_network.add(node1)
-            if node2 in targets:
+            if node2 in str_tar:
                 targets_in_network.add(node2)
     return list(targets_in_network)
 

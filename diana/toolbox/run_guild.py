@@ -8,7 +8,14 @@ import guild_utilities
 
 def main():
     # Set the seed and network files
-    if len(sys.argv)>5:
+    if len(sys.argv)>6:
+     data_dir       =sys.argv[1]+"/"
+     seed_file      =sys.argv[2]
+     network_file   =sys.argv[3]
+     scoring_folder =sys.argv[4]+"/"
+     random_networks_folder =sys.argv[5]+"/"
+     executable_path = sys.argv[6]
+    elif len(sys.argv)==6:
      data_dir       =sys.argv[1]+"/"
      seed_file      =sys.argv[2]
      network_file   =sys.argv[3]
@@ -47,7 +54,6 @@ def main():
 
     script_path = os.path.abspath(os.path.dirname(__file__))
     #executable_path = os.path.join(script_path, 'scoreN')
-    executable_path = os.path.join(script_path, '../guild/guild')
 
     # Create input files for scoring
     guild_utilities.prepare_scoring(network_file, seed_file, scoring_folder, random_networks_folder, non_seed_score=0.01,seed_score=1.0,

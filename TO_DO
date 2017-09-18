@@ -1,5 +1,53 @@
 TO DO
 
+- Ask Emre why it does not let me reuse random networks...
+	Error:
+	Arguments: scoring type z, nRepetition 1, nIteration 5, nodeFile Documents/diana/scripts/../workspace/profiles/haloperidol_09c673d47894/guild_output/node_scores.sif, edgeFile Documents/diana/scripts/../workspace/profiles/haloperidol_09c673d47894/guild_output/edge_scores.sif, outputFile Documents/diana/scripts/../workspace/profiles/haloperidol_09c673d47894/guild_output/output_scores.sif.netzcore
+	libc++abi.dylib: terminating with unexpected exception of type boost::exception_detail::clone_impl<boost::exception_detail::error_info_injector<std::out_of_range> >: Unable to find key in unordered_map.
 - Permit to use other types of ID, not only geneID. Now, we can only use GeneID because we need geneIDs to run the functional enrichment analysis.
 - Facilitate installation of BIANA and installation of GUILD
-- Output: Results file in PDF? With images included of gantt charts!!
+- Output: Results file in PDF? With images included of venn charts!!
+
+Commands:
+
+GENERATE PROFILES
+
+# Without neither network nor targets
+$> python Documents/diana/scripts/generate_profiles.py -d 'metformin' -pt 'geneid' -rad 1 -res y2h
+
+
+
+# With network and targets
+python /home/quim/project/diana/scripts/generate_profiles.py -d 'metformin' -t /home/quim/project/diana/workspace/targets/metformin.targets -pt 'geneid' -sif /home/quim/project/diana/workspace/sif/human_eAFF_geneid_2017.sif
+
+# With network and without targets
+python /home/quim/project/diana/scripts/generate_profiles.py -d 'haloperidol' -pt 'geneid' -sif /home/quim/project/diana/workspace/sif/human_eAFF_geneid_2017.sif
+
+
+COMPARE PROFILES
+
+$> python /home/quim/project/diana/scripts/compare_profiles.py -d1 'metformin' -t1 /home/quim/project/diana/workspace/targets/metformin.targets -d2 'haloperidol' -pt 'geneid'
+
+
+
+
+
+
+GENERATE PROFILES IN SBI
+
+python /home/quim/project/diana/scripts/generate_profiles.py -d 'DCC0303' -pt 'geneid' -sif /home/quim/project/diana/workspace/sif/human_eAFF_geneid_2017.sif -gu /home/quim/project/diana/diana/toolbox/scoreN
+
+
+
+
+
+GITHUB
+
+$> cd Documents/diana_git/
+$> git pull origin master
+$> cp /Users/quim/Documents/diana . # Or copy directly from finder the directory
+$> git status
+$> git add *
+$> git rm */*/.DS_Store
+$> git commit -m "Generation of profiles improved"
+$> git push -u origin master 

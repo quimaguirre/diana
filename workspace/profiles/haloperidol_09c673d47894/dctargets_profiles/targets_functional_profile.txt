@@ -1,0 +1,318 @@
+# num of genes	num of total genes	Log of odds ratio	P-value	Adjusted p-value	GO term ID	GO term name	GO type
+3	3	9.58109594403	-	1.87e-09	GO:0009822	alkaloid catabolic process	BP
+2	2	9.58109594403	-	1.61e-06	GO:0009820	alkaloid metabolic process	BP
+2	2	9.58109594403	-	1.61e-06	GO:0006778	porphyrin-containing compound metabolic process	BP
+2	2	9.58109594403	-	1.61e-06	GO:0090325	regulation of locomotion involved in locomotory behavior	BP
+1	1	9.58109594403	-	1.31e-03	GO:0071615	oxidative deethylation	BP
+1	1	9.58109594403	-	1.31e-03	GO:0090350	negative regulation of cellular organofluorine metabolic process	BP
+1	1	9.58109594403	-	1.31e-03	GO:0043603	cellular amide metabolic process	BP
+1	1	9.58109594403	-	1.31e-03	GO:0009692	ethylene metabolic process	BP
+1	1	9.58109594403	-	1.31e-03	GO:0042321	negative regulation of circadian sleep/wake cycle, sleep	BP
+1	1	9.58109594403	-	1.31e-03	GO:0099040	ceramide translocation	BP
+1	1	9.58109594403	-	1.31e-03	GO:0019341	dibenzo-p-dioxin catabolic process	BP
+1	1	9.58109594403	-	1.31e-03	GO:0019627	urea metabolic process	BP
+1	1	9.58109594403	-	1.31e-03	GO:0009403	toxin biosynthetic process	BP
+2	2	9.58109594403	-	1.61e-06	GO:0070576	vitamin D 24-hydroxylase activity	MF
+2	2	9.58109594403	-	1.61e-06	GO:0052741	(R)-limonene 6-monooxygenase activity	MF
+2	2	9.58109594403	-	1.61e-06	GO:0018675	(S)-limonene 6-monooxygenase activity	MF
+2	2	9.58109594403	-	1.61e-06	GO:0018676	(S)-limonene 7-monooxygenase activity	MF
+1	1	9.58109594403	-	1.31e-03	GO:0050649	testosterone 6-beta-hydroxylase activity	MF
+1	1	9.58109594403	-	1.31e-03	GO:0047021	15-hydroxyprostaglandin dehydrogenase (NADP+) activity	MF
+1	1	9.58109594403	-	1.31e-03	GO:0016711	flavonoid 3'-monooxygenase activity	MF
+1	1	9.58109594403	-	1.31e-03	GO:0050221	prostaglandin-E2 9-reductase activity	MF
+1	1	9.58109594403	-	1.31e-03	GO:0033780	taurochenodeoxycholate 6alpha-hydroxylase activity	MF
+1	1	9.58109594403	-	1.31e-03	GO:0050591	quinine 3-monooxygenase activity	MF
+1	1	9.58109594403	-	1.31e-03	GO:0099038	ceramide-translocating ATPase activity	MF
+1	1	9.58109594403	-	1.31e-03	GO:0047638	albendazole monooxygenase activity	MF
+1	1	9.58109594403	-	1.31e-03	GO:0016679	oxidoreductase activity, acting on diphenols and related substances as donors	MF
+1	1	9.58109594403	-	1.31e-03	GO:0102320	1,8-cineole 2-exo-monooxygenase activity	MF
+5	6	9.31806153819	-	2.07e-15	GO:0042737	drug catabolic process	BP
+5	6	9.31806153819	-	1.24e-14	GO:0016098	monoterpenoid metabolic process	BP
+4	5	9.25916784914	-	1.02e-11	GO:0101020	estrogen 16-alpha-hydroxylase activity	MF
+3	4	9.16605844475	-	7.47e-09	GO:0034875	caffeine oxidase activity	MF
+4	6	8.9961334433	-	1.02e-11	GO:0002933	lipid hydroxylation	BP
+4	6	8.9961334433	-	3.05e-11	GO:0046483	heterocycle metabolic process	BP
+2	3	8.9961334433	-	4.83e-06	GO:0034776	response to histamine	BP
+2	3	8.9961334433	-	4.83e-06	GO:0032787	monocarboxylic acid metabolic process	BP
+2	3	8.9961334433	-	4.83e-06	GO:0060160	negative regulation of dopamine receptor signaling pathway	BP
+3	5	8.84413034986	-	1.87e-08	GO:0051584	regulation of dopamine uptake involved in synaptic transmission	BP
+5	9	8.73309903747	-	1.15e-13	GO:0070989	oxidative demethylation	BP
+1	2	8.58109594403	-	1.31e-03	GO:0051100	negative regulation of binding	BP
+1	2	8.58109594403	-	1.31e-03	GO:0046717	acid secretion	BP
+1	2	8.58109594403	-	2.61e-03	GO:0044380	protein localization to cytoskeleton	BP
+1	2	8.58109594403	-	2.61e-03	GO:0050883	musculoskeletal movement, spinal reflex action	BP
+1	2	8.58109594403	-	2.61e-03	GO:0017143	insecticide metabolic process	BP
+1	2	8.58109594403	-	2.61e-03	GO:1900168	positive regulation of glial cell-derived neurotrophic factor secretion	BP
+1	2	8.58109594403	-	2.61e-03	GO:0007208	phospholipase C-activating serotonin receptor signaling pathway	BP
+1	2	8.58109594403	-	2.61e-03	GO:0032416	negative regulation of sodium:proton antiporter activity	BP
+1	2	8.58109594403	-	2.61e-03	GO:1901529	positive regulation of anion channel activity	BP
+1	2	8.58109594403	-	2.61e-03	GO:0002016	regulation of blood volume by renin-angiotensin	BP
+1	2	8.58109594403	-	2.61e-03	GO:0046960	sensitization	BP
+1	2	8.58109594403	-	2.61e-03	GO:0001976	neurological system process involved in regulation of systemic arterial blood pressure	BP
+1	2	8.58109594403	-	1.31e-03	GO:0030343	vitamin D3 25-hydroxylase activity	MF
+1	2	8.58109594403	-	1.31e-03	GO:0090555	phosphatidylethanolamine-translocating ATPase activity	MF
+1	2	8.58109594403	-	1.31e-03	GO:0001567	cholesterol 25-hydroxylase activity	MF
+1	2	8.58109594403	-	2.61e-03	GO:0071886	1-(4-iodo-2,5-dimethoxyphenyl)propan-2-amine binding	MF
+4	9	8.41117094258	-	1.42e-10	GO:0097267	omega-hydroxylase P450 pathway	BP
+2	5	8.25916784914	-	4.83e-06	GO:0006706	steroid catabolic process	BP
+2	5	8.25916784914	-	1.61e-05	GO:0032451	demethylase activity	MF
+4	12	7.9961334433	-	1.42e-10	GO:0042738	exogenous drug catabolic process	BP
+2	6	7.9961334433	-	4.83e-06	GO:0009804	coumarin metabolic process	BP
+2	6	7.9961334433	-	9.64e-06	GO:0021853	cerebral cortex GABAergic interneuron migration	BP
+1	3	7.9961334433	-	1.31e-03	GO:0036378	calcitriol biosynthetic process from calciol	BP
+1	3	7.9961334433	-	2.61e-03	GO:2001225	regulation of chloride transport	BP
+1	3	7.9961334433	-	2.61e-03	GO:0009624	response to nematode	BP
+1	3	7.9961334433	-	2.61e-03	GO:0035483	gastric emptying	BP
+1	3	7.9961334433	-	2.61e-03	GO:0018894	dibenzo-p-dioxin metabolic process	BP
+1	3	7.9961334433	-	3.91e-03	GO:0014854	response to inactivity	BP
+1	3	7.9961334433	-	3.91e-03	GO:0047484	regulation of response to osmotic stress	BP
+1	3	7.9961334433	-	3.91e-03	GO:0033076	isoquinoline alkaloid metabolic process	BP
+1	3	7.9961334433	-	3.91e-03	GO:0010041	response to iron(III) ion	BP
+1	3	7.9961334433	-	3.91e-03	GO:0033602	negative regulation of dopamine secretion	BP
+1	3	7.9961334433	-	3.91e-03	GO:0051586	positive regulation of dopamine uptake involved in synaptic transmission	BP
+1	3	7.9961334433	-	3.91e-03	GO:0021769	orbitofrontal cortex development	BP
+1	3	7.9961334433	-	3.91e-03	GO:0035106	operant conditioning	BP
+1	3	7.9961334433	-	3.91e-03	GO:0004952	dopamine neurotransmitter receptor activity	MF
+7	24	7.80348836536	-	8.48e-17	GO:0017144	drug metabolic process	BP
+2	7	7.77374102197	-	2.41e-05	GO:0030814	regulation of cAMP metabolic process	BP
+3	11	7.70662682611	-	3.06e-07	GO:0042417	dopamine metabolic process	BP
+6	23	7.64249648869	-	1.79e-15	GO:0070330	aromatase activity	MF
+2	8	7.58109594403	-	3.37e-05	GO:0050665	hydrogen peroxide biosynthetic process	BP
+1	4	7.58109594403	-	1.31e-03	GO:0014832	urinary bladder smooth muscle contraction	BP
+1	4	7.58109594403	-	3.91e-03	GO:0042904	9-cis-retinoic acid biosynthetic process	BP
+1	4	7.58109594403	-	5.21e-03	GO:0007210	serotonin receptor signaling pathway	BP
+1	4	7.58109594403	-	5.21e-03	GO:0042373	vitamin K metabolic process	BP
+1	4	7.58109594403	-	5.21e-03	GO:0060161	positive regulation of dopamine receptor signaling pathway	BP
+1	4	7.58109594403	-	5.21e-03	GO:0010513	positive regulation of phosphatidylinositol biosynthetic process	BP
+1	4	7.58109594403	-	5.21e-03	GO:0070988	demethylation	BP
+1	4	7.58109594403	-	5.21e-03	GO:0046959	habituation	BP
+2	8	7.58109594403	-	4.83e-06	GO:0001591	dopamine neurotransmitter receptor activity, coupled via Gi/Go	MF
+2	8	7.58109594403	-	9.64e-06	GO:0016712	oxidoreductase activity, acting on paired donors, with incorporation or reduction of molecular oxygen, reduced flavin or flavoprotein as one donor, and incorporation of one atom of oxygen	MF
+1	4	7.58109594403	-	3.91e-03	GO:0090554	phosphatidylcholine-translocating ATPase activity	MF
+1	4	7.58109594403	-	5.21e-03	GO:0001588	dopamine neurotransmitter receptor activity, coupled via Gs	MF
+1	4	7.58109594403	-	5.21e-03	GO:0004090	carbonyl reductase (NADPH) activity	MF
+3	13	7.46561872661	-	5.30e-07	GO:0060134	prepulse inhibition	BP
+3	13	7.46561872661	-	1.04e-07	GO:0035240	dopamine binding	MF
+8	35	7.45181292708	-	2.73e-19	GO:0004497	monooxygenase activity	MF
+4	19	7.33316843058	-	2.02e-09	GO:0048148	behavioral response to cocaine	BP
+5	24	7.31806153819	-	9.50e-13	GO:0008395	steroid hydroxylase activity	MF
+3	15	7.25916784914	-	1.56e-07	GO:0001963	synaptic transmission, dopaminergic	BP
+2	10	7.25916784914	-	1.61e-05	GO:0007195	adenylate cyclase-inhibiting dopamine receptor signaling pathway	BP
+2	10	7.25916784914	-	3.37e-05	GO:0030432	peristalsis	BP
+2	10	7.25916784914	-	3.37e-05	GO:0042359	vitamin D metabolic process	BP
+2	10	7.25916784914	-	5.76e-05	GO:0007191	adenylate cyclase-activating dopamine receptor signaling pathway	BP
+2	10	7.25916784914	-	7.20e-05	GO:0002031	G-protein coupled receptor internalization	BP
+1	5	7.25916784914	-	6.51e-03	GO:0051823	regulation of synapse structural plasticity	BP
+1	5	7.25916784914	-	6.51e-03	GO:0001661	conditioned taste aversion	BP
+1	5	7.25916784914	-	6.51e-03	GO:0048755	branching morphogenesis of a nerve	BP
+1	5	7.25916784914	-	6.51e-03	GO:0009812	flavonoid metabolic process	BP
+1	5	7.25916784914	-	6.51e-03	GO:0046883	regulation of hormone secretion	BP
+4	21	7.18877852125	-	2.75e-09	GO:0019373	epoxygenase P450 pathway	BP
+8	42	7.18877852125	-	5.73e-18	GO:0019825	oxygen binding	MF
+7	37	7.17899750045	-	3.40e-15	GO:0008202	steroid metabolic process	BP
+2	11	7.12166432539	-	7.20e-05	GO:0021756	striatum development	BP
+1	6	6.9961334433	-	5.21e-03	GO:0031223	auditory behavior	BP
+1	6	6.9961334433	-	5.21e-03	GO:0051552	flavone metabolic process	BP
+1	6	6.9961334433	-	6.51e-03	GO:0021984	adenohypophysis development	BP
+1	6	6.9961334433	-	7.81e-03	GO:0071870	cellular response to catecholamine stimulus	BP
+2	13	6.88065622588	-	4.49e-05	GO:0060158	phospholipase C-activating dopamine receptor signaling pathway	BP
+2	13	6.88065622588	-	1.05e-04	GO:0071280	cellular response to copper ion	BP
+2	13	6.88065622588	-	1.25e-04	GO:0035815	positive regulation of renal sodium excretion	BP
+3	20	6.84413034986	-	6.74e-07	GO:0001659	temperature homeostasis	BP
+3	21	6.77374102197	-	6.74e-07	GO:0014059	regulation of dopamine secretion	BP
+2	14	6.77374102197	-	4.49e-05	GO:0051967	negative regulation of synaptic transmission, glutamatergic	BP
+2	14	6.77374102197	-	1.05e-04	GO:0007625	grooming behavior	BP
+1	7	6.77374102197	-	6.51e-03	GO:0045187	regulation of circadian sleep/wake cycle, sleep	BP
+1	7	6.77374102197	-	7.81e-03	GO:0015872	dopamine transport	BP
+1	7	6.77374102197	-	7.81e-03	GO:0007617	mating behavior	BP
+1	7	6.77374102197	-	7.81e-03	GO:0014824	artery smooth muscle contraction	BP
+1	7	6.77374102197	-	9.11e-03	GO:0099565	chemical synaptic transmission, postsynaptic	BP
+1	7	6.77374102197	-	9.11e-03	GO:0009635	response to herbicide	BP
+1	7	6.77374102197	-	7.81e-03	GO:0008559	xenobiotic-transporting ATPase activity	MF
+1	7	6.77374102197	-	9.11e-03	GO:0004972	NMDA glutamate receptor activity	MF
+2	16	6.58109594403	-	5.76e-05	GO:0050709	negative regulation of protein secretion	BP
+1	8	6.58109594403	-	7.81e-03	GO:0060137	maternal process involved in parturition	BP
+1	8	6.58109594403	-	9.11e-03	GO:0009308	amine metabolic process	BP
+1	8	6.58109594403	-	1.04e-02	GO:0007270	neuron-neuron synaptic transmission	BP
+1	8	6.58109594403	-	9.11e-03	GO:0016655	oxidoreductase activity, acting on NAD(P)H, quinone or similar compound as acceptor	MF
+1	8	6.58109594403	-	1.04e-02	GO:0031748	D1 dopamine receptor binding	MF
+3	25	6.52220225497	-	3.26e-06	GO:0001975	response to amphetamine	BP
+2	17	6.49363310277	-	8.79e-05	GO:0008392	arachidonic acid epoxygenase activity	MF
+1	9	6.41117094258	-	5.21e-03	GO:0043266	regulation of potassium ion transport	BP
+1	9	6.41117094258	-	5.21e-03	GO:0052696	flavonoid glucuronidation	BP
+1	9	6.41117094258	-	5.21e-03	GO:0052697	xenobiotic glucuronidation	BP
+1	9	6.41117094258	-	9.11e-03	GO:0010579	positive regulation of adenylate cyclase activity involved in G-protein coupled receptor signaling pathway	BP
+1	9	6.41117094258	-	1.04e-02	GO:0060124	positive regulation of growth hormone secretion	BP
+1	9	6.41117094258	-	1.04e-02	GO:0042908	xenobiotic transport	BP
+1	9	6.41117094258	-	1.04e-02	GO:0072089	stem cell proliferation	BP
+1	9	6.41117094258	-	1.04e-02	GO:0050795	regulation of behavior	BP
+1	9	6.41117094258	-	1.17e-02	GO:0043268	positive regulation of potassium ion transport	BP
+1	10	6.25916784914	-	1.04e-02	GO:0050966	detection of mechanical stimulus involved in sensory perception of pain	BP
+1	10	6.25916784914	-	1.04e-02	GO:0043267	negative regulation of potassium ion transport	BP
+1	10	6.25916784914	-	1.17e-02	GO:0048715	negative regulation of oligodendrocyte differentiation	BP
+1	10	6.25916784914	-	1.30e-02	GO:0042053	regulation of dopamine metabolic process	BP
+2	21	6.18877852125	-	2.72e-04	GO:0035902	response to immobilization stress	BP
+8	86	6.15483118932	-	4.42e-15	GO:0006805	xenobiotic metabolic process	BP
+1	11	6.12166432539	-	1.17e-02	GO:0030431	sleep	BP
+1	11	6.12166432539	-	1.17e-02	GO:0046488	phosphatidylinositol metabolic process	BP
+1	11	6.12166432539	-	1.17e-02	GO:0045745	positive regulation of G-protein coupled receptor protein signaling pathway	BP
+1	11	6.12166432539	-	1.17e-02	GO:0070365	hepatocyte differentiation	BP
+1	11	6.12166432539	-	1.17e-02	GO:0043666	regulation of phosphoprotein phosphatase activity	BP
+1	11	6.12166432539	-	1.17e-02	GO:0019371	cyclooxygenase pathway	BP
+1	11	6.12166432539	-	7.81e-03	GO:0051378	serotonin binding	MF
+2	24	5.9961334433	-	1.91e-04	GO:0050482	arachidonic acid secretion	BP
+1	12	5.9961334433	-	9.11e-03	GO:0046323	glucose import	BP
+1	12	5.9961334433	-	1.56e-02	GO:0055093	response to hyperoxia	BP
+1	13	5.88065622588	-	9.11e-03	GO:1901386	negative regulation of voltage-gated calcium channel activity	BP
+1	13	5.88065622588	-	1.30e-02	GO:0045824	negative regulation of innate immune response	BP
+1	13	5.88065622588	-	1.43e-02	GO:0032228	regulation of synaptic transmission, GABAergic	BP
+1	13	5.88065622588	-	1.56e-02	GO:0046685	response to arsenic-containing substance	BP
+1	13	5.88065622588	-	1.56e-02	GO:0035810	positive regulation of urine volume	BP
+2	27	5.82620844186	-	3.33e-04	GO:0007628	adult walking behavior	BP
+2	27	5.82620844186	-	5.54e-04	GO:0043278	response to morphine	BP
+1	14	5.77374102197	-	7.81e-03	GO:0042573	retinoic acid metabolic process	BP
+1	14	5.77374102197	-	9.11e-03	GO:0051481	negative regulation of cytosolic calcium ion concentration	BP
+1	14	5.77374102197	-	9.11e-03	GO:0048149	behavioral response to ethanol	BP
+1	14	5.77374102197	-	9.11e-03	GO:0052695	cellular glucuronidation	BP
+1	14	5.77374102197	-	1.56e-02	GO:0042711	maternal behavior	BP
+1	14	5.77374102197	-	1.68e-02	GO:1903351	cellular response to dopamine	BP
+2	29	5.7231149489	-	4.01e-04	GO:0045776	negative regulation of blood pressure	BP
+7	102	5.71602552411	-	2.39e-12	GO:0016491	oxidoreductase activity	MF
+5	73	5.71319948003	-	1.39e-08	GO:0008144	drug binding	MF
+1	15	5.67420534842	-	1.30e-02	GO:0008209	androgen metabolic process	BP
+1	15	5.67420534842	-	1.68e-02	GO:0050965	detection of temperature stimulus involved in sensory perception of pain	BP
+1	15	5.67420534842	-	1.94e-02	GO:0007215	glutamate receptor signaling pathway	BP
+1	15	5.67420534842	-	1.56e-02	GO:0016594	glycine binding	MF
+8	126	5.60381602053	-	5.62e-14	GO:0020037	heme binding	MF
+3	48	5.58109594403	-	2.23e-05	GO:0008542	visual learning	BP
+2	32	5.58109594403	-	6.40e-04	GO:0042220	response to cocaine	BP
+1	16	5.58109594403	-	1.81e-02	GO:0060292	long term synaptic depression	BP
+1	16	5.58109594403	-	2.07e-02	GO:0014002	astrocyte development	BP
+1	16	5.58109594403	-	2.07e-02	GO:1900273	positive regulation of long-term synaptic potentiation	BP
+2	34	5.49363310277	-	3.66e-04	GO:0007194	negative regulation of adenylate cyclase activity	BP
+1	17	5.49363310277	-	1.94e-02	GO:0021542	dentate gyrus development	BP
+1	17	5.49363310277	-	2.07e-02	GO:0033189	response to vitamin A	BP
+8	138	5.47257148725	-	8.27e-14	GO:0005506	iron ion binding	MF
+2	36	5.41117094258	-	5.54e-04	GO:0032467	positive regulation of cytokinesis	BP
+2	36	5.41117094258	-	7.32e-04	GO:0051209	release of sequestered calcium ion into cytosol	BP
+1	18	5.41117094258	-	1.56e-02	GO:0019226	transmission of nerve impulse	BP
+1	18	5.41117094258	-	2.20e-02	GO:0009416	response to light stimulus	BP
+1	18	5.41117094258	-	2.33e-02	GO:0010039	response to iron ion	BP
+1	18	5.41117094258	-	2.33e-02	GO:0045821	positive regulation of glycolytic process	BP
+1	18	5.41117094258	-	1.30e-02	GO:0001972	retinoic acid binding	MF
+1	18	5.41117094258	-	2.33e-02	GO:0005234	extracellular-glutamate-gated ion channel activity	MF
+1	19	5.33316843058	-	1.81e-02	GO:0002052	positive regulation of neuroblast proliferation	BP
+1	19	5.33316843058	-	1.94e-02	GO:0002028	regulation of sodium ion transport	BP
+1	19	5.33316843058	-	2.20e-02	GO:0051968	positive regulation of synaptic transmission, glutamatergic	BP
+1	19	5.33316843058	-	2.33e-02	GO:0048169	regulation of long-term neuronal synaptic plasticity	BP
+1	19	5.33316843058	-	2.33e-02	GO:0042311	vasodilation	BP
+1	19	5.33316843058	-	2.33e-02	GO:0001965	G-protein alpha-subunit binding	MF
+1	21	5.18877852125	-	1.68e-02	GO:0032094	response to food	BP
+1	22	5.12166432539	-	1.81e-02	GO:0045332	phospholipid translocation	BP
+1	22	5.12166432539	-	2.07e-02	GO:0045333	cellular respiration	BP
+1	22	5.12166432539	-	2.07e-02	GO:0006855	drug transmembrane transport	BP
+1	22	5.12166432539	-	2.71e-02	GO:0002092	positive regulation of receptor internalization	BP
+2	46	5.05753398797	-	1.28e-03	GO:0007611	learning or memory	BP
+1	23	5.05753398797	-	2.58e-02	GO:0008306	associative learning	BP
+1	23	5.05753398797	-	2.84e-02	GO:0035255	ionotropic glutamate receptor binding	MF
+1	24	4.9961334433	-	2.20e-02	GO:0019369	arachidonic acid metabolic process	BP
+1	24	4.9961334433	-	3.09e-02	GO:0035235	ionotropic glutamate receptor signaling pathway	BP
+1	24	4.9961334433	-	1.04e-02	GO:0004993	G-protein coupled serotonin receptor activity	MF
+2	49	4.96638609991	-	8.81e-04	GO:0051898	negative regulation of protein kinase B signaling	BP
+1	25	4.93723975425	-	2.84e-02	GO:0043473	pigmentation	BP
+1	25	4.93723975425	-	3.09e-02	GO:0048678	response to axon injury	BP
+1	25	4.93723975425	-	1.04e-02	GO:0030594	neurotransmitter receptor activity	MF
+1	26	4.88065622588	-	2.71e-02	GO:0007202	activation of phospholipase C activity	BP
+1	26	4.88065622588	-	2.96e-02	GO:0045840	positive regulation of mitotic nuclear division	BP
+1	27	4.82620844186	-	3.22e-02	GO:0040014	regulation of multicellular organism growth	BP
+1	27	4.82620844186	-	3.22e-02	GO:0051281	positive regulation of release of sequestered calcium ion into cytosol	BP
+2	55	4.7997362305	-	2.21e-03	GO:0032922	circadian regulation of gene expression	BP
+1	28	4.77374102197	-	2.07e-02	GO:0051482	positive regulation of cytosolic calcium ion concentration involved in phospholipase C-activating G-protein coupled signaling pathway	BP
+1	28	4.77374102197	-	3.34e-02	GO:0001662	behavioral fear response	BP
+1	28	4.77374102197	-	2.07e-02	GO:0015020	glucuronosyltransferase activity	MF
+1	28	4.77374102197	-	2.71e-02	GO:0005496	steroid binding	MF
+2	57	4.74820592986	-	1.75e-03	GO:0007612	learning	BP
+3	87	4.7231149489	-	1.44e-04	GO:0019216	regulation of lipid metabolic process	BP
+1	29	4.7231149489	-	2.33e-02	GO:0019228	neuronal action potential	BP
+1	30	4.67420534842	-	2.71e-02	GO:0046676	negative regulation of insulin secretion	BP
+1	30	4.67420534842	-	3.22e-02	GO:0002027	regulation of heart rate	BP
+1	30	4.67420534842	-	3.47e-02	GO:0007616	long-term memory	BP
+2	61	4.65035860646	-	1.22e-03	GO:0007416	synapse assembly	BP
+1	31	4.62689963364	-	3.09e-02	GO:0048565	digestive tract development	BP
+1	31	4.62689963364	-	3.09e-02	GO:0045907	positive regulation of vasoconstriction	BP
+1	31	4.62689963364	-	3.47e-02	GO:0014065	phosphatidylinositol 3-kinase signaling	BP
+1	31	4.62689963364	-	3.85e-02	GO:0071276	cellular response to cadmium ion	BP
+2	63	4.60381602053	-	2.05e-03	GO:0007613	memory	BP
+1	32	4.58109594403	-	2.84e-02	GO:1900087	positive regulation of G1/S transition of mitotic cell cycle	BP
+1	32	4.58109594403	-	3.60e-02	GO:0040018	positive regulation of multicellular organism growth	BP
+1	32	4.58109594403	-	3.97e-02	GO:0046677	response to antibiotic	BP
+1	33	4.53670182467	-	4.10e-02	GO:0008219	cell death	BP
+1	35	4.45181292708	-	3.47e-02	GO:0035094	response to nicotine	BP
+1	36	4.41117094258	-	3.72e-02	GO:0007190	activation of adenylate cyclase activity	BP
+1	39	4.29569372516	-	2.96e-02	GO:0007631	feeding behavior	BP
+1	39	4.29569372516	-	4.10e-02	GO:0030819	positive regulation of cAMP biosynthetic process	BP
+1	39	4.29569372516	-	4.35e-02	GO:0060291	long-term synaptic potentiation	BP
+1	39	4.29569372516	-	3.72e-02	GO:0042626	ATPase activity, coupled to transmembrane movement of substances	MF
+2	79	4.27731519585	-	3.29e-03	GO:0007626	locomotory behavior	BP
+2	81	4.24124594114	-	3.39e-03	GO:0006874	cellular calcium ion homeostasis	BP
+1	41	4.22354393941	-	3.97e-02	GO:0007189	adenylate cyclase-activating G-protein coupled receptor signaling pathway	BP
+1	41	4.22354393941	-	4.47e-02	GO:0043010	camera-type eye development	BP
+1	42	4.18877852125	-	3.72e-02	GO:0008152	metabolic process	BP
+1	45	4.0892428477	-	4.10e-02	GO:0007187	G-protein coupled receptor signaling pathway, coupled to cyclic nucleotide second messenger	BP
+1	49	3.96638609991	-	4.97e-02	GO:0035176	social behavior	BP
+1	50	3.93723975425	-	4.60e-02	GO:0045600	positive regulation of fat cell differentiation	BP
+1	50	3.93723975425	-	5.84e-02	GO:0071407	cellular response to organic cyclic compound	BP
+6	302	3.92765370542	-	8.13e-07	GO:0042493	response to drug	BP
+1	53	3.85317548946	-	5.97e-02	GO:0043406	positive regulation of MAP kinase activity	BP
+1	53	3.85317548946	-	5.97e-02	GO:0006606	protein import into nucleus	BP
+1	54	3.82620844186	-	6.21e-02	GO:0008104	protein localization	BP
+1	63	3.60381602053	-	5.22e-02	GO:0007200	phospholipase C-activating G-protein coupled receptor signaling pathway	BP
+1	63	3.60381602053	-	6.95e-02	GO:0009611	response to wounding	BP
+1	66	3.53670182467	-	7.31e-02	GO:0030855	epithelial cell differentiation	BP
+1	66	3.53670182467	-	8.04e-02	GO:0032147	activation of protein kinase activity	BP
+1	68	3.49363310277	-	5.22e-02	GO:0032259	methylation	BP
+1	69	3.47257148725	-	6.82e-02	GO:0060079	excitatory postsynaptic potential	BP
+1	71	3.43134882452	-	7.55e-02	GO:0009791	post-embryonic development	BP
+1	71	3.43134882452	-	7.31e-02	GO:0009055	electron carrier activity	MF
+1	73	3.39127138515	-	8.04e-02	GO:0001618	virus receptor activity	MF
+8	593	3.36920764948	-	2.28e-08	GO:0055114	oxidation-reduction process	BP
+1	78	3.29569372516	-	7.92e-02	GO:0030324	lung development	BP
+2	160	3.25916784914	-	1.41e-02	GO:0032496	response to lipopolysaccharide	BP
+2	160	3.25916784914	-	1.63e-02	GO:0001666	response to hypoxia	BP
+2	164	3.22354393941	-	1.60e-02	GO:0007568	aging	BP
+1	82	3.22354393941	-	7.92e-02	GO:0007409	axonogenesis	BP
+4	330	3.21477372978	-	6.58e-04	GO:0019899	enzyme binding	MF
+1	83	3.20605651268	-	9.24e-02	GO:0046718	viral entry into host cell	BP
+1	84	3.18877852125	-	1.01e-01	GO:0050731	positive regulation of peptidyl-tyrosine phosphorylation	BP
+1	86	3.15483118932	-	1.03e-01	GO:0048013	ephrin receptor signaling pathway	BP
+1	92	3.05753398797	-	9.24e-02	GO:0009636	response to toxic substance	BP
+1	92	3.05753398797	-	1.03e-01	GO:0032355	response to estradiol	BP
+2	190	3.01124033569	-	1.71e-02	GO:0070374	positive regulation of ERK1 and ERK2 cascade	BP
+1	103	2.89459541684	-	1.02e-01	GO:0010468	regulation of gene expression	BP
+1	103	2.89459541684	-	1.17e-01	GO:0045471	response to ethanol	BP
+2	210	2.86685042636	-	1.69e-02	GO:0007268	chemical synaptic transmission	BP
+1	107	2.83962895762	-	1.08e-01	GO:0030336	negative regulation of cell migration	BP
+1	108	2.82620844186	-	1.21e-01	GO:0009615	response to virus	BP
+1	115	2.73560589308	-	9.48e-02	GO:0034765	regulation of ion transmembrane transport	BP
+1	115	2.73560589308	-	1.26e-01	GO:0005088	Ras guanyl-nucleotide exchange factor activity	MF
+1	126	2.60381602053	-	1.17e-01	GO:0006629	lipid metabolic process	BP
+1	130	2.558728131	-	1.56e-01	GO:0000086	G2/M transition of mitotic cell cycle	BP
+1	135	2.50428034697	-	1.19e-01	GO:0005215	transporter activity	MF
+2	287	2.41618901735	-	2.96e-02	GO:0006810	transport	BP
+1	158	2.27731519585	-	2.58e-02	GO:0007608	sensory perception of smell	BP
+1	175	2.12988483219	-	1.74e-01	GO:0016055	Wnt signaling pathway	BP
+1	187	2.03420148414	-	1.91e-01	GO:0030335	positive regulation of cell migration	BP
+1	205	1.90161584452	-	1.74e-01	GO:0034220	ion transmembrane transport	BP
+1	220	1.7997362305	-	2.41e-01	GO:0032403	protein complex binding	MF
+2	480	1.67420534842	-	9.23e-02	GO:0008284	positive regulation of cell proliferation	BP
+1	245	1.64445800502	-	1.90e-01	GO:0055085	transmembrane transport	BP
+2	492	1.63858143869	-	1.06e-01	GO:0046982	protein heterodimerization activity	MF
+1	252	1.60381602053	-	2.78e-01	GO:0019904	protein domain specific binding	MF
+1	266	1.52581350852	-	2.83e-01	GO:0000165	MAPK cascade	BP
+1	294	1.38142359919	-	2.85e-01	GO:0010628	positive regulation of gene expression	BP
+1	354	1.11349039394	-	3.50e-01	GO:0008283	cell proliferation	BP
+2	766	0.9998953621	-	2.15e-01	GO:0042803	protein homodimerization activity	MF
+1	407	0.912210959759	-	3.66e-01	GO:0008285	negative regulation of cell proliferation	BP
+2	1041	0.557341590726	-	3.42e-01	GO:0045944	positive regulation of transcription from RNA polymerase II promoter	BP
+1	579	0.403676406036	-	4.85e-01	GO:0043547	positive regulation of GTPase activity	BP
+1	755	0.0207631098129	-	5.92e-01	GO:0000122	negative regulation of transcription from RNA polymerase II promoter	BP

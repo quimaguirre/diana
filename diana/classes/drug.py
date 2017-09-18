@@ -19,13 +19,20 @@ class Drug(object):
         """
 
         self.drug_name = drug_name.lower()
+        self.type_name = self.recognize_name(drug_name.lower())
         self.targets = []
         self.pfams = []
+        self.smiles = []
         self.type_id = None
         self.type_id_to_table = {
             'geneid' : 'externalEntityGeneID',
             'uniprotentry' : 'externalEntityUniprotEntry',
             'uniprotaccession' : 'externalEntityUniprotAccession',
+        }
+        self.type_name_to_table = {
+            'name' : 'externalEntityName',
+            'drugbank' : 'externalEntityDrugBankID',
+            'dcdb' : 'externalEntityDCDB_drugID',
         }
 
     ###########
@@ -57,13 +64,14 @@ class Drug(object):
         self.type_id = type_id.lower() # Annotate the type of ID of the targets
 
         type_id_table = self.return_targets_biana_table(self.type_id) # Obtain the table containing the type of ID introduced
+        type_name_table = self.return_drug_biana_table(self.type_name) # Obtain the table containing the type of name introduced
 
         up_table = self.return_unification_protocol_table(biana_cnx, unification_protocol)
 
         cursor = biana_cnx.cursor() # Start cursor to MySQL
 
-        query1 = (''' SELECT externalEntityID FROM externalEntityName D WHERE value = %s
-                 ''')
+        query1 = (''' SELECT externalEntityID FROM {} WHERE value = %s
+                 '''.format(type_name_table))
         query2 = (''' SELECT G.value FROM externalEntity E1, {} U1, {} U2, externalEntity E2, externalEntityRelationParticipant R2, externalEntityRelationParticipant R3, {} U3, {} U4, {} G
                      WHERE E1.externalEntityID = U1.externalEntityID AND U1.userEntityID = U2.userEntityID AND U2.externalEntityID = E2.externalEntityID AND E2.type = 'drug' AND E2.externalEntityID = R2.externalEntityID AND R2.externalEntityRelationID = R3.externalEntityRelationID
                      AND R3.externalEntityID = U3.externalEntityID AND U3.userEntityID = U4.userEntityID AND U4.externalEntityID = G.externalEntityID AND E1.externalEntityID = %s
@@ -101,6 +109,30 @@ class Drug(object):
 
         return
 
+    def recognize_name(self, drug_name):
+        """
+        Recognizes the type of name of the drug
+        (dcdb, drugbank or name)
+        """
+
+        dcdb_pattern = re.compile('^dcc[0-9]{4}$')
+        drugbank_pattern = re.compile('^db[0-9]{5}$')
+
+        if dcdb_pattern.match(drug_name):
+            return 'dcdb'
+        elif drugbank_pattern.match(drug_name):
+            return 'drugbank'
+        else:
+            return 'name'
+
+    def return_drug_biana_table(self, type_name):
+        """
+        Returns the table in BIANA where the type of drug name 
+        introduced is stored.
+        """
+        if type_name in self.type_name_to_table:
+            return self.type_name_to_table[type_name]
+
     def return_targets_biana_table(self, type_id):
         """
         Returns the table in BIANA where the annotations of the type of ID 
@@ -131,7 +163,6 @@ class Drug(object):
         cursor.close()
 
         return up_table
-
 
     def obtain_pfams_from_file(self, pfam_file):
         """
@@ -185,6 +216,53 @@ class Drug(object):
             print('No PFAMS found for the targets introduced: {}.\n'.format(', '.join(self.targets)))
 
         return
+
+    def obtain_SMILES_from_file(self, smiles_file):
+        """
+        Obtains the SMILES from an input file and stores them into a list.
+        The file must contain the SMILES separated by new lines.
+        """
+        with open(smiles_file, 'r') as smiles_file_fd:
+            for line in smiles_file_fd:
+                self.smiles.append(line.strip())
+        return
+
+    def obtain_SMILES_from_BIANA(self, biana_cnx, output_file, unification_protocol):
+        """
+        Obtains the SMILES from BIANA database using as query the name of the drug.
+        "biana_cnx" parameter stands for the variable containing the connexion to the MySQL database.
+        Stores the SMILES in an output file.
+        If there is more than one different SMILES, they are printed separated by new lines.
+        """
+
+        up_table = self.return_unification_protocol_table(biana_cnx, unification_protocol)
+        type_name_table = self.return_drug_biana_table(self.type_name) # Obtain the table containing the type of name introduced
+
+        query = (''' SELECT S.value FROM {} N, {} U1, {} U2, externalEntitySMILES S
+                     WHERE N.externalEntityID = U1.externalEntityID AND U1.userEntityID = U2.userEntityID AND U2.externalEntityID = S.externalEntityID AND N.value = %s
+                 '''.format(type_name_table, up_table, up_table))
+
+        cursor = biana_cnx.cursor() # Start cursor to MySQL
+
+        cursor.execute(query, (self.drug_name,))
+
+        smiles = set()
+        for items in cursor:
+            for result in items:
+                smiles.add(result)
+
+        cursor.close()
+
+        if len(smiles) > 0:
+            self.smiles = list(smiles)
+            with open(output_file, 'w') as smiles_fd:
+                for result in self.smiles:
+                    smiles_fd.write('{}\n'.format(result))
+        else:
+            print('No SMILES found for the drug {}.\n'.format(self.drug_name))
+
+        return
+
 
 
 

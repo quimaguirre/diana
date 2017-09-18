@@ -788,11 +788,27 @@ class EdgeProfile(Network):
         self._tissue_specific = False
 
         self.network = self.parse_network(tissue_specific=self._tissue_specific)
+        self.edge_to_values = self.parse_edge_profile()
 
 
     ###########
     # METHODS #
     ###########
+
+    def parse_edge_profile(self):
+        """
+           Obtains from the edges profile a dict containing:
+           - Key = frozenset([node1, node2])
+           - Value = (Score, "useless")
+        """
+        edge_to_values = {}
+        with open(self.network_file,'r') as f:
+            for line in f:
+                node1, score, node2 = line.strip().split('\t')
+                edge = frozenset([node1, node2])
+                edge_to_values[edge] = (float(score), 'useless')
+        return edge_to_values
+
 
     def translate_network(self, translation_file, translation_id, output_file, verbose=False):
         """
@@ -863,16 +879,18 @@ class FunctionalProfile(object):
 
     def parse_functional_profile(self):
         """
-        Obtains the score and p-value for every node in the p-value file
+        Parses a functional profile obtained from an functional enrichment analysis of a list of nodes.
+        Returns a dictionary with:
+        - Key = GO term id
+        - Value = Set --> (Log of odds ratio, Adjusted p-value)
         """
         go_id_to_values = {}
-        f = open(self.functional_file, 'r')
-        for line in f:
-            if line[0] == '#':
-                continue
-            num_genes, total_genes, log_odds_ratio, pval, adj_pval, go_id, go_name, go_type = line.strip().split('\t')
-            go_id_to_values[go_id] = (log_odds_ratio, adj_pval, go_name, go_type)
-        f.close()
+        with open(self.functional_file, 'r') as f:
+            for line in f:
+                if line[0] == '#':
+                    continue
+                num_genes, total_genes, log_odds_ratio, pval, adj_pval, go_id, go_name, go_type = line.strip().split('\t')
+                go_id_to_values[go_id] = (float(log_odds_ratio), float(adj_pval))
         return go_id_to_values
 
 
