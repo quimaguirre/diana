@@ -22,6 +22,19 @@ Drug Interactions ANAlyzer (DIANA) is a Python software which permits the predic
 * **workspace**: Folder where the results of the analysis are stored
 * **workspace/profiles**: Folder containing the profiles generated
 * **workspace/comparisons**: Folder containing the comparisons of profiles
+* **config.ini**: Configuration file, containing the default parameters to run DIANA
+
+### Prepare the configuration file
+
+Before starting running DIANA, we need to modify the parameters in the configuration file as we want.
+
+The configuration file is in the main directory, as **config.ini**
+
+Here we can modify the parameters of BIANA database if we have it.
+
+If we do not have BIANA, we can set use_cluster as True and use the downloaded data.
+
+We also have to introduce the path to Guild executable. In case that you do not have it, you can download it and install it from https://github.com/emreg00/guild
 
 ### Execution
 
@@ -50,14 +63,7 @@ python path/to/diana/scripts/generate_profiles.py
   -th <thresholds list> # Cut-offs that will define the profiles generated
   -rad <radius> # The radius to generate the network of expansion if no network is introduced
   -tax <taxid> # The Taxonomy ID restriction to generate the network of expansion if no network is introduced
-  -res <restriction> # Other restriction options to generate the network of expansion if no network is introduced
   -ws <workspace> # Directory where the results will be saved
-  -db <database> # The name of the BIANA database
-  -dbu <db_user> # The name of the MySQL user
-  -dbp <db_pass> # The password of the MySQL user
-  -dbh <db_host> # The MySQL host
-  -up <unification_protocol> # The unification protocol used in BIANA
-  -gu <guild_executable_path> # The path to the executable of GUILD
 ```
 
 Example of generate the profile having network and the targets:
@@ -95,19 +101,21 @@ python path/to/diana/scripts/compare_profiles.py
   -t1 <targets from drug 1 (in Entrez geneID)>
   -t2 <targets from drug 2 (in Entrez geneID)>
   -pt <type IDs of the proteins (default is geneid)>
+  -sif <network (in SIF format and geneID)>
   -th <thresholds list> # Cut-offs that will define the profiles generated
   -ws <workspace> # Directory where the results will be saved
-  -db <database> # The name of the BIANA database
-  -dbu <db_user> # The name of the MySQL user
-  -dbp <db_pass> # The password of the MySQL user
-  -dbh <db_host> # The MySQL host
-  -up <unification_protocol> # The unification protocol used in BIANA
 ```
 
 In the following example, we compare the profiles created for metformin using the targets in 'metformin.targets', with the profiles created for haloperidol using the targets from BIANA:
 
 ```
-python path/to/diana/scripts/compare_profiles.py -d1 'metformin' -t1 path/to/diana/workspace/targets/metformin.targets -d2 'haloperidol'
+python path/to/diana/scripts/compare_profiles.py -d1 'metformin' -t1 path/to/diana/workspace/targets/metformin.targets -d2 'haloperidol' -sif path/to/diana/workspace/sif/human_eAFF_geneid_2017.sif
 ```
+
+
+
+#### Analyze the results:
+
+There is a pipeline on how to analyze results in README_analysis_one_target.
 
 
