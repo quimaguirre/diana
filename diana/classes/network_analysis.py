@@ -731,13 +731,13 @@ class GUILDProfile(object):
         return GUILDProfile(output_file, self.type_id, threshold)
 
 
-    def create_functional_profile(self, obodag, geneid2gos, all_node_to_vals, output_file):
+    def create_functional_profile(self, obodag, geneid2gos, all_node_to_vals, output_file, temp_file):
         """
         Perform a functional enrichment analysis of the nodes of the top scoring profile,
         creating a functional profile.
         It requires all the nodes of the network as well, which will be used as background genes.
         """
-        TOP.functional_top_scoring(obodag, geneid2gos, all_node_to_vals.keys(), self.node_to_values.keys(), output_file)
+        TOP.functional_top_scoring(obodag, geneid2gos, all_node_to_vals.keys(), self.node_to_values.keys(), output_file, temp_file)
 
         return FunctionalProfile(output_file, self.top, self.pvalue_file)
 

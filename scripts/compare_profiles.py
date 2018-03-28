@@ -1,6 +1,7 @@
 import argparse
+import ConfigParser
 import copy
-import mysql.connector
+import ntpath
 import numpy as np
 import time
 import sys, os, re
@@ -30,13 +31,13 @@ def parse_user_arguments(*args, **kwds):
                         help = """ Name of the drug number 1. If you do not provide targets for this drug or the number of targets is not large enough,
                         the program will use this name to search for targets in BIANA database. If targets are provided, this field will be only used
                         for naming purposes and will be completely optional.
-                        If the name of the drug has more than one word or special characters (parentheses, single quotes), introduce the name between 
+                        If the name of the drug has more than one word or special characters (parentheses, single quotes), introduce the name between
                         double quotes. """)
     parser.add_argument('-d2','--drug_name2',dest='drug_name2',action = 'store',
                         help = """ Name of the drug number 2. If you do not provide targets for this drug or the number of targets is not large enough,
                         the program will use this name to search for targets in BIANA database. If targets are provided, this field will be only used
                         for naming purposes and will be completely optional.
-                        If the name of the drug has more than one word or special characters (parentheses, single quotes), introduce the name between 
+                        If the name of the drug has more than one word or special characters (parentheses, single quotes), introduce the name between
                         double quotes. """)
     parser.add_argument('-t1','--targets1',dest='targets1',action = 'store',
                         help = 'Input file with the targets of the drug 1. Each target must be separated by a newline character.')
@@ -44,9 +45,11 @@ def parse_user_arguments(*args, **kwds):
                         help = 'Input file with the targets of the drug 2. Each target must be separated by a newline character.')
     parser.add_argument('-pt','--proteins_type_id',dest='proteins_type_id',action = 'store', default='geneid',
                         help = 'Input the type of ID of the targets introduced / proteins of the network. It must be the same! (default is geneid).')
+    parser.add_argument('-sif','--sif_file',dest='sif',action = 'store',
+                        help = 'Input file with a protein-protein interaction network in SIF format.')
     parser.add_argument('-th','--threshold_list',dest='threshold_list',action = 'store',
                         help = """List of percentages that will be used as cut-offs to define the profiles of the drugs. It has to be a file containing:
-                        - Different numbers that will be the threshold values separated by newline characters. 
+                        - Different numbers that will be the threshold values separated by newline characters.
                         For example, a file called "top_threshold.list" containing:
                         0.1
                         0.5
@@ -54,22 +57,8 @@ def parse_user_arguments(*args, **kwds):
                         5
                         10
                         """)
-    parser.add_argument('-ws','--worspace',dest='workspace',action = 'store',default=os.path.join(os.path.join(os.path.dirname(__file__), '..'), 'workspace'),
+    parser.add_argument('-ws','--workspace',dest='workspace',action = 'store',default=os.path.join(os.path.join(os.path.dirname(__file__), '..'), 'workspace'),
                         help = """Define the workspace directory where the data directory and the results directory will be created""")
-    parser.add_argument('-db','--database',dest='database',action = 'store',default='BIANA_JUN_2017',
-                        help = """Define the database to use for the search of targets: 
-                        (default is BIANA_JUN_2017)""")
-    parser.add_argument('-dbu','--db_user',dest='db_user',action = 'store',default='quim',
-                        help = """Define the MySQL user to access to the database: 
-                        (default is quim)""")
-    parser.add_argument('-dbp','--db_pass',dest='db_pass',action = 'store',default='',
-                        help = """Define the MySQL password to access to the database: 
-                        (default is '')""")
-    parser.add_argument('-dbh','--db_host',dest='db_host',action = 'store',default='localhost',
-                        help = """Define the MySQL host to access to the database: 
-                        (default is localhost)""")
-    parser.add_argument('-up','--unification',dest='unification_protocol',action = 'store',default='geneid_seqtax_v1',
-                        help = """Define the unification protocol used in BIANA database (default is BIANA_JUN_2017)""")
 
     options=parser.parse_args()
 
@@ -114,14 +103,50 @@ def compare_profiles(options):
     comparison_instance = comparison.ComparisonResult()
 
 
+    #--------------------------------------#
+    #   GET INFORMATION FROM CONFIG FILE   #
+    #--------------------------------------#
+
+    # Read the config file
+    config_file = os.path.join(main_path, 'config.ini')
+    config = ConfigParser.ConfigParser()
+    config.read(config_file)
+
+
+
+    #-------------------------#
+    #   PREPARE FOR CLUSTER   #
+    #-------------------------#
+
+    use_cluster = user=config.get('Cluster', 'use_cluster')
+
+
+
+    #--------------------#
+    #   SIF CONTROLLER   #
+    #--------------------#
+
+    # SIF CONTROLLER: Checks the network in SIF format provided by the user.
+
+    # Check if the network file is provided
+    if options.sif and os.path.isfile(options.sif):
+        # Obtain the network filename
+        network_filename = ntpath.basename(options.sif)
+
+    else:
+        # If not, we output an error
+        print('  DIANA INFO:\tThe network SIF file is missing. Please, introduce the parameter -sif.\n\t\tIf you do not have a network, use the script generate_profiles_without_network.py or use one of the networks in the sif folder.\n')
+        sys.exit(10)
+
+
 
     #------------------------#
     #   TARGETS CONTROLLER   #
     #------------------------#
 
-    # TARGETS CONTROLLER: Checks the targets provided by the user. If necessary, performs a search 
+    # TARGETS CONTROLLER: Checks the targets provided by the user. If necessary, performs a search
     # in BIANA database to obtain more targets
-    # Gets the ID of the drug using the drug_name and the targets provided. 
+    # Gets the ID of the drug using the drug_name and the targets provided.
     # The ID is used to find the folder containing the results
 
     for drug_instance, targets, num_drug in [(drug1_instance, options.targets1, 1), (drug2_instance, options.targets2, 2)]:
@@ -130,18 +155,31 @@ def compare_profiles(options):
         if targets and os.path.isfile(targets):
             drug_instance.obtain_targets_from_file(targets, options.proteins_type_id)
         else:
-            # Create a connection to BIANA database
-            biana_cnx = mysql.connector.connect(user=options.db_user, password=options.db_pass,
-                                                host=options.db_host,
-                                                database=options.database)
-            # Obtain the targets from BIANA
-            drug_instance.obtain_targets_from_BIANA(biana_cnx, options.proteins_type_id, options.unification_protocol)
-            biana_cnx.close()
+            if use_cluster == 'false':
+                import mysql.connector
+                # Create a connection to BIANA database
+                biana_cnx = mysql.connector.connect(user=config.get('BIANA', 'user'), password=config.get('BIANA', 'password'),
+                                                    host=config.get('BIANA', 'host'),
+                                                    database=config.get('BIANA', 'database'))
+                # Obtain the targets from BIANA
+                drug_instance.obtain_targets_from_BIANA(biana_cnx, options.proteins_type_id, config.get('BIANA', 'unification_protocol'))
+                biana_cnx.close()
+                targets_in_network = get_targets_in_sif_file(options.sif, drug_instance.targets)
+                drug_instance.targets = targets_in_network
+            else:
+                # Obtain the targets from a Pickle file
+                if drug_instance.type_name == 'dcdb':
+                    drug2targets_file = os.path.join(toolbox_dir, 'dcdb2targets.pcl')
+                elif drug_instance.type_name == 'drugbank':
+                    drug2targets_file = os.path.join(toolbox_dir, 'drugbank_to_targets.pcl')
+                drug_instance.obtain_targets_from_pickle(drug2targets_file, 'geneid')
+                targets_in_network = get_targets_in_sif_file(options.sif, drug_instance.targets)
+                drug_instance.targets = targets_in_network
 
         print( "  DIANA INFO:\tThe targets provided for the drug {} are:\n\t\t{}.\n".format( drug_instance.drug_name, ', '.join([ str(x) for x in drug_instance.targets]) ) )
 
-        # Create a directory for the drug
-        drug_id = diana_drug.generate_drug_id(drug_instance.drug_name, drug_instance.targets)
+        # Check the directory for the drug
+        drug_id = diana_drug.generate_drug_id(drug_instance.drug_name, drug_instance.targets, network_filename)
         print('  DIANA INFO:\tThe ID for drug {} is: {}\n'.format(drug_instance.drug_name, drug_id))
         if num_drug == 1:
             drug1_dir = drug_dir = os.path.join(data_dir, drug_id)
@@ -350,13 +388,70 @@ def compare_profiles(options):
         print('  DIANA INFO:\tThe SMILES of the drugs are missing! It is not possible to compute the structural similarity\n')
 
 
+    #----------------------------------#
+    #   COMPARISON OF DCATC PROFILES   #
+    #----------------------------------#
+
+    print('  DIANA INFO:\tSTARTING COMPARISON OF dcATC PROFILES\n')
+
+    # Directories for the dcatc results
+    dcatc_dir1 = os.path.join(drug1_dir, 'dcatc_profiles')
+    dcatc_dir2 = os.path.join(drug2_dir, 'dcatc_profiles')
+
+    ATC_file1 = os.path.join(dcatc_dir1, 'ATC_profile.txt')
+    ATC_file2 = os.path.join(dcatc_dir2, 'ATC_profile.txt')
+
+    # Get ATCs from ATC profiles
+    if fileExist(ATC_file1) and fileExist(ATC_file2):
+        drug1_instance.obtain_ATCs_from_file(ATC_file1)
+        drug2_instance.obtain_ATCs_from_file(ATC_file2)
+        drug1_instance.ATCs = set([x[0] for x in drug1_instance.ATCs])
+        drug2_instance.ATCs = set([x[0] for x in drug2_instance.ATCs])
+        ATCs1_dict = comparison.generate_targets_dict_for_comparison(drug1_instance.ATCs)
+        ATCs2_dict = comparison.generate_targets_dict_for_comparison(drug2_instance.ATCs)
+        print('  DIANA INFO:\tComparing ATCs {} of drug1 and ATcs {} of drug2\n'.format(', '.join(drug1_instance.ATCs), ', '.join(drug2_instance.ATCs)))
+        summary_ATCs = comparison.calculate_comparison(ATCs1_dict, ATCs2_dict)
+        comparison_instance.dcatc_result = summary_ATCs
+        print(summary_ATCs)
+    else:
+        comparison_instance.dcatc_result = ['-', '-', '-']
+        print('  DIANA INFO:\tThe ATCs of the drugs are missing! It is not possible to compute the ATC comparison\n')
+
+
+    #---------------------------------#
+    #   COMPARISON OF DCSE PROFILES   #
+    #---------------------------------#
+
+    print('  DIANA INFO:\tSTARTING COMPARISON OF dcSE PROFILES\n')
+
+    # Directories for the dcse results
+    dcse_dir1 = os.path.join(drug1_dir, 'dcse_profiles')
+    dcse_dir2 = os.path.join(drug2_dir, 'dcse_profiles')
+
+    SE_file1 = os.path.join(dcse_dir1, 'SE_profile.txt')
+    SE_file2 = os.path.join(dcse_dir2, 'SE_profile.txt')
+
+    # Get SEs from SE profiles
+    if fileExist(SE_file1) and fileExist(SE_file2):
+        drug1_instance.obtain_SE_from_file(SE_file1)
+        drug2_instance.obtain_SE_from_file(SE_file2)
+
+        SEs1_dict = comparison.generate_targets_dict_for_comparison(drug1_instance.SEs)
+        SEs2_dict = comparison.generate_targets_dict_for_comparison(drug2_instance.SEs)
+        summary_SEs = comparison.calculate_comparison(SEs1_dict, SEs2_dict)
+        comparison_instance.dcse_result = summary_SEs
+        print(summary_SEs)
+    else:
+        comparison_instance.dcse_result = ['-', '-', '-']
+        print('  DIANA INFO:\tThe SIDE EFFECTS of the drugs are missing! It is not possible to compute the SE comparison\n')
+
 
     #-------------------#
     #   WRITE RESULTS   #
     #-------------------#
 
     # Create a directory for the comparison of the two drugs
-    comparison_id =  '{}_{}'.format(diana_drug.generate_drug_id(drug1_instance.drug_name, drug1_instance.targets), diana_drug.generate_drug_id(drug2_instance.drug_name, drug2_instance.targets))
+    comparison_id =  '{}---{}'.format(diana_drug.generate_drug_id(drug1_instance.drug_name, drug1_instance.targets, network_filename), diana_drug.generate_drug_id(drug2_instance.drug_name, drug2_instance.targets, network_filename))
     comparison_dir = os.path.join(results_dir, comparison_id)
     create_directory(comparison_dir)
 
@@ -364,16 +459,18 @@ def compare_profiles(options):
     results_table = os.path.join(comparison_dir, 'results_table.tsv')
     comparison_instance.output_results_table(results_table, threshold_list)
 
-    # Output the venn diagram of common targets
-    venn_plot_targets = os.path.join(comparison_dir, 'venn_plot_targets.png')
-    shared_targets = set(drug1_instance.targets) & set(drug2_instance.targets)
-    comparison.plot_venn_2(drug1_instance.drug_name, drug2_instance.drug_name, set(drug1_instance.targets), set(drug2_instance.targets), shared_targets, venn_plot_targets)
+    if use_cluster == 'false':
 
-    # Output the venn diagram of common nodes/edges/functions using median_threshold
-    venn_plot_nodes = os.path.join(comparison_dir, 'venn_plot_nodes.png')
-    venn_plot_edges = os.path.join(comparison_dir, 'venn_plot_edges.png')
-    venn_plot_functions = os.path.join(comparison_dir, 'venn_plot_functions.png')
-    comparison_instance.output_venn_diagram_dcguild(drug1_instance.drug_name, drug2_instance.drug_name, venn_plot_nodes, venn_plot_edges, venn_plot_functions)
+        # Output the venn diagram of common targets
+        venn_plot_targets = os.path.join(comparison_dir, 'venn_plot_targets.png')
+        shared_targets = set(drug1_instance.targets) & set(drug2_instance.targets)
+        comparison.plot_venn_2(drug1_instance.drug_name, drug2_instance.drug_name, set(drug1_instance.targets), set(drug2_instance.targets), shared_targets, venn_plot_targets)
+
+        # Output the venn diagram of common nodes/edges/functions using median_threshold
+        venn_plot_nodes = os.path.join(comparison_dir, 'venn_plot_nodes.png')
+        venn_plot_edges = os.path.join(comparison_dir, 'venn_plot_edges.png')
+        venn_plot_functions = os.path.join(comparison_dir, 'venn_plot_functions.png')
+        comparison_instance.output_venn_diagram_dcguild(drug1_instance.drug_name, drug2_instance.drug_name, venn_plot_nodes, venn_plot_edges, venn_plot_functions)
 
 
 
@@ -426,6 +523,22 @@ def check_directory(directory):
         os.stat(directory)
     except:
         raise DirNotFound(directory)
+
+
+def get_targets_in_sif_file(sif_file, targets):
+    """
+    Get the targets that are inside the network given by the user
+    """
+    targets_in_network = set()
+    str_tar = [str(x) for x in targets]
+    with open(sif_file, 'r') as sif_fd:
+        for line in sif_fd:
+            node1, score, node2 = line.strip().split('\t')
+            if node1 in str_tar:
+                targets_in_network.add(node1)
+            if node2 in str_tar:
+                targets_in_network.add(node2)
+    return list(targets_in_network)
 
 
 class FileNotFound(Exception):

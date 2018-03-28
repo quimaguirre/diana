@@ -1,5 +1,5 @@
 import argparse
-import mysql.connector
+import ConfigParser
 import ntpath
 import shutil
 import time
@@ -8,7 +8,6 @@ import sys, os, re
 from context import diana
 import diana.classes.drug as diana_drug
 import diana.classes.network_analysis as network_analysis
-import diana.classes.network_generation as network_generation
 import diana.classes.top_scoring as top_scoring
 from diana.classes.goatools.obo_parser import GODag
 from diana.classes.goatools.associations import read_ncbi_gene2go
@@ -33,7 +32,7 @@ def parse_user_arguments(*args, **kwds):
                         help = """ Name of the drug. If you do not provide targets for this drug or the number of targets is not large enough,
                         the program will use this name to search for targets in BIANA database. If targets are provided, this field will be only used
                         for naming purposes and will be completely optional.
-                        If the name of the drug has more than one word or special characters (parentheses, single quotes), introduce the name between 
+                        If the name of the drug has more than one word or special characters (parentheses, single quotes), introduce the name between
                         double quotes. """)
     parser.add_argument('-t','--targets',dest='targets',action = 'store',
                         help = 'Input file with the targets of the drug. Each target must be separated by a newline character.')
@@ -43,23 +42,9 @@ def parse_user_arguments(*args, **kwds):
                         help = """" Input file with a protein-protein interaction network in SIF format.
                         If not introduced, the program will create a network of expansion using the targets as center and expanding as many neighbors
                         as specified in the parameter radius. """)
-    parser.add_argument('-rad','--radius',dest='radius',action = 'store',default='3',
-                        help = """ Define the radius of expansion for the creation of the network from targets (default is 3).
-                        Only used if no network file provided. """)
-    parser.add_argument('-tax','--taxid',dest='taxid',action = 'store',default='9606',
-                        help = """Define the restriction of species for the creation of the network from targets using a Taxonomy ID (default is '9606' (human))""")
-    parser.add_argument('-res','--restriction',dest='restriction',action = 'store',
-                        help = """Define an experiment restriction for the creation of the network from targets.\n
-                        Options:\n
-                        - AFF: Use interactions at least described by affinity methods (i.e. Tandem Affinity Purification)\n
-                        - Y2H: Use interactions at least described by yeast two hybrid methods (Y2H)\n
-                        - eAFF: Use all interactions except those described by affinity methods (i.e. Tandem Affinity Purification)\n
-                        - eY2H: Use all interactions except those described by yeast two hybrid methods (Y2H)\n
-                        - None: Not use experiment restrictions
-                        """)
     parser.add_argument('-th','--threshold_list',dest='threshold_list',action = 'store',
                         help = """List of percentages that will be used as cut-offs to define the profiles of the drugs. It has to be a file containing:
-                        - Different numbers that will be the threshold values separated by newline characters. 
+                        - Different numbers that will be the threshold values separated by newline characters.
                         For example, a file called "top_threshold.list" containing:
                         0.1
                         0.5
@@ -69,22 +54,6 @@ def parse_user_arguments(*args, **kwds):
                         """)
     parser.add_argument('-ws','--workspace',dest='workspace',action = 'store',default=os.path.join(os.path.join(os.path.dirname(__file__), '..'), 'workspace'),
                         help = """Define the workspace directory where the data directory and the results directory will be created""")
-    parser.add_argument('-db','--database',dest='database',action = 'store',default='BIANA_JUN_2017',
-                        help = """Define the database to use for the generation of the network of expansion / search of targets: 
-                        (default is BIANA_JUN_2017)""")
-    parser.add_argument('-dbu','--db_user',dest='db_user',action = 'store',default='quim',
-                        help = """Define the MySQL user to access to the database: 
-                        (default is quim)""")
-    parser.add_argument('-dbp','--db_pass',dest='db_pass',action = 'store',default='',
-                        help = """Define the MySQL password to access to the database: 
-                        (default is '')""")
-    parser.add_argument('-dbh','--db_host',dest='db_host',action = 'store',default='localhost',
-                        help = """Define the MySQL host to access to the database: 
-                        (default is localhost)""")
-    parser.add_argument('-up','--unification',dest='unification_protocol',action = 'store',default='geneid_seqtax_v1',
-                        help = """Define the unification protocol used in BIANA database (default is BIANA_JUN_2017)""")
-    parser.add_argument('-gu','--guild',dest='guild_executable_path',action = 'store',default=os.path.join(os.path.join(os.path.dirname(__file__), '..'), 'diana/guild/guild'),
-                        help = """Define the path to the executable path of GUILD program""")
 
     options=parser.parse_args()
 
@@ -128,30 +97,114 @@ def generate_profiles(options):
     drug_instance = diana_drug.Drug(options.drug_name)
 
 
+    #--------------------------------------#
+    #   GET INFORMATION FROM CONFIG FILE   #
+    #--------------------------------------#
+
+    # Read the config file
+    config_file = os.path.join(main_path, 'config.ini')
+    config = ConfigParser.ConfigParser()
+    config.read(config_file)
+
+
+    #-------------------------#
+    #   PREPARE FOR CLUSTER   #
+    #-------------------------#
+
+    use_cluster = user=config.get('Cluster', 'use_cluster')
+
+    if use_cluster == 'true':
+        if drug_instance.type_name == 'dcdb':
+            drug2targets_file = os.path.join(toolbox_dir, 'dcdb2targets.pcl')
+            pfam_pickle_file = os.path.join(toolbox_dir, 'dcdb_target_to_pfams.pcl')
+            smiles_pickle_file = os.path.join(toolbox_dir, 'dcdb2smiles.pcl')
+            ATC_pickle_file = os.path.join(toolbox_dir, 'dcdb2atcs.pcl')
+            SE_pickle_file = os.path.join(toolbox_dir, 'dcdb2side_effects.pcl')
+        elif drug_instance.type_name == 'drugbank':
+            drug2targets_file = os.path.join(toolbox_dir, 'drugbank_to_targets.pcl')
+            pfam_pickle_file = os.path.join(toolbox_dir, 'drugbank_target_to_pfams.pcl')
+            smiles_pickle_file = os.path.join(toolbox_dir, 'drugbank_to_smiles.pcl')
+            ATC_pickle_file = os.path.join(toolbox_dir, 'drugbank_to_atcs.pcl')
+            SE_pickle_file = os.path.join(toolbox_dir, 'drugbank_to_side_effects.pcl')
+        else:
+            print('Type of drug name {} not available! Introduce the drug in DCDB or DrugBank!'.format(drug_instance.type_name))
+            sys.exit(10)
+        if not fileExist(drug2targets_file) or not fileExist(pfam_pickle_file) or not fileExist(smiles_pickle_file):
+            print('Before using the cluster, prepare the files for the cluster by running \'prepare_files_cluster.py\'')
+            sys.exit(10)
+    elif use_cluster == 'false':
+        import mysql.connector
+        pass
+    else:
+        print('The parameter use_cluster of the config file must be \'true\' or \'false\'')
+        sys.exit(10)
+
 
     #------------------------#
     #   TARGETS CONTROLLER   #
     #------------------------#
 
-    # TARGETS CONTROLLER: Checks the targets provided by the user. If necessary, performs a search 
+    # TARGETS CONTROLLER: Checks the targets provided by the user. If necessary, performs a search
     # in BIANA database to obtain more targets
 
     # Check if the targets file is provided
     if options.targets and os.path.isfile(options.targets):
         drug_instance.obtain_targets_from_file(options.targets, options.proteins_type_id)
     else:
-        # Create a connection to BIANA database
-        biana_cnx = mysql.connector.connect(user=options.db_user, password=options.db_pass,
-                                            host=options.db_host,
-                                            database=options.database)
-        # Obtain the targets from BIANA
-        drug_instance.obtain_targets_from_BIANA(biana_cnx, options.proteins_type_id, options.unification_protocol)
-        biana_cnx.close()
+        if use_cluster == 'false':
+            # Create a connection to BIANA database
+            biana_cnx = mysql.connector.connect(user=config.get('BIANA', 'user'), password=config.get('BIANA', 'password'),
+                                                host=config.get('BIANA', 'host'),
+                                                database=config.get('BIANA', 'database'))
+            # Obtain the targets from BIANA
+            drug_instance.obtain_targets_from_BIANA(biana_cnx, options.proteins_type_id, config.get('BIANA', 'unification_protocol'))
+            biana_cnx.close()
+        else:
+            # Obtain the targets from a Pickle file
+            drug_instance.obtain_targets_from_pickle(drug2targets_file, 'geneid')
 
     print( "  DIANA INFO:\tThe targets provided for the drug {} are:\n\t\t{}.\n".format( options.drug_name, ', '.join([ str(x) for x in drug_instance.targets]) ) )
 
+
+    #--------------------#
+    #   SIF CONTROLLER   #
+    #--------------------#
+
+    # SIF CONTROLLER: Checks the network in SIF format provided by the user.
+
+    # Check if the network file is provided
+    if options.sif and os.path.isfile(options.sif):
+        # If the network file is provided, we create a Network instance
+        network_instance = network_analysis.Network(options.sif, None, options.proteins_type_id, 'sif')
+        targets_in_network = get_targets_in_sif_file(options.sif, drug_instance.targets)
+        drug_instance.targets = targets_in_network
+        translation_file = None # Just defining the variable to know that there is no translation file when sif is provided
+
+        # We create a directory in the random networks directory for this network
+        #network_filename = ntpath.basename(options.sif).split('.')[0]
+        network_filename = ntpath.basename(options.sif)
+        random_networks_dir = os.path.join(random_networks_dir, network_filename)
+        create_directory(random_networks_dir)
+
+    else:
+        # If not, we output an error
+        print('  DIANA INFO:\tThe network SIF file is missing. Please, introduce the parameter -sif.\n\t\tIf you do not have a network, use the script generate_profiles_without_network.py or use one of the networks in the sif folder.\n')
+        sys.exit(10)
+
+
+    # Check if the number of targets provided is sufficient for the analysis
+    if len(targets_in_network) < 1:
+        raise diana_drug.InsufficientTargets(targets_in_network)
+    else:
+        print( "  DIANA INFO:\tThe targets found in the network are:\n\t\t{}.\n".format( ', '.join([ str(x) for x in targets_in_network]) ) )
+
+
+    #------------------------------------------#
+    #   CREATE DIRECTORIES AND GENERAL FILES   #
+    #------------------------------------------#
+
     # Create a directory for the drug
-    drug_id = diana_drug.generate_drug_id(drug_instance.drug_name, drug_instance.targets)
+    drug_id = diana_drug.generate_drug_id(drug_instance.drug_name, drug_instance.targets, network_filename)
     drug_dir = os.path.join(data_dir, drug_id)
     create_directory(drug_dir)
     print('  DIANA INFO:\tThe ID given to the drug, which will be used to create a directory and store the results, is: {}\n'.format(drug_id))
@@ -168,81 +221,17 @@ def generate_profiles(options):
     dcstructure_dir = os.path.join(drug_dir, 'dcstructure_profiles')
     create_directory(dcstructure_dir)
 
+    # Create a directory for the dcATCs results
+    ATCs_dir = os.path.join(drug_dir, 'dcatc_profiles')
+    create_directory(ATCs_dir)
+
+    # Create a directory for the dcse results
+    SE_dir = os.path.join(drug_dir, 'dcse_profiles')
+    create_directory(SE_dir)
+
     # Create a targets file
     targets_file = os.path.join(dctargets_dir, '{}_targets.txt'.format(drug_instance.drug_name))
     diana_drug.create_targets_file(drug_instance.targets, targets_file)
-
-
-
-    #--------------------#
-    #   SIF CONTROLLER   #
-    #--------------------#
-
-    # SIF CONTROLLER: Checks the network in SIF format provided by the user.
-    # If no file provided, generates a network expanding it from the targets provided.
-    # The network is expanded as many neighbors as indicated in the parameter 'radius'.
-
-    # Check if the network file is provided
-    if options.sif and os.path.isfile(options.sif):
-        # If the network file is provided, we create a Network instance
-        network_instance = network_analysis.Network(options.sif, None, options.proteins_type_id, 'sif')
-        targets_in_network = get_targets_in_sif_file(options.sif, drug_instance.targets)
-        translation_file = None # Just defining the variable to know that there is no translation file when sif is provided
-
-        # We create a directory in the random networks directory for this network
-        network_filename = ntpath.basename(options.sif).split('.')[0]
-        random_networks_dir = os.path.join(random_networks_dir, network_filename)
-        create_directory(random_networks_dir)
-
-    else:
-        # If not, we create a network from the targets
-        print('  DIANA INFO:\tGenerating network for {}. This can take a few minutes...\n'.format(options.drug_name))
-
-        network_dir = os.path.join(drug_dir, 'network_of_expansion')
-        create_directory(network_dir)
-        node_file = os.path.join(network_dir, '{}_network.nodes'.format(drug_instance.drug_name))
-        edge_file = os.path.join(network_dir, '{}_network.edges'.format(drug_instance.drug_name))
-        translation_file = os.path.join(network_dir, '{}_network_trans_to_{}.trans'.format(drug_instance.drug_name, options.proteins_type_id))
-        targets_translation_file = os.path.join(network_dir, 'targets_to_BIANA.trans')
-
-        if not fileExist(edge_file):
-
-            # By direct command (it works)
-            restriction = process_restriction(options.restriction)
-            command = 'python {} -iseed {} -radius {} -taxid {} -stype {} -ttype {} -trans {} -strans {} -node {} -edge {} -db {} -up {} {}'.format(
-                      os.path.join(toolbox_dir, 'generate_netscore_files_vapr2017.py'),
-                      targets_file, options.radius, options.taxid, options.proteins_type_id, options.proteins_type_id, translation_file, targets_translation_file, node_file, edge_file,
-                      options.database, options.unification_protocol, restriction
-                      )
-            os.system(command)
-
-            # By importing the module (it does not work!!!)
-            # restricted_to_TAP, restricted_to_Y2H, restricted_to_user, except_TAP, except_Y2H, except_user = network_generation.check_restriction(options.restriction)
-            # network_generation.generate_network(drug_instance.targets, drug_instance.type_id, options.radius, options.taxid, translation_file, options.proteins_type_id, node_file, edge_file,
-            #              restricted_to_TAP = restricted_to_TAP, restricted_to_Y2H = restricted_to_Y2H, restricted_to_user = restricted_to_user,
-            #              except_TAP = except_TAP, except_Y2H = except_Y2H, except_user = except_user,
-            #              database = options.database, unification_protocol = options.unification_protocol,
-            #              output_format = 'sif', verbose = False)
-
-        else:
-            print('  DIANA INFO:\tThe network of expansion for {} was already done and it has been skipped.\n'.format(options.drug_name))
-
-        network_instance = network_analysis.Network(edge_file, None, 'biana', 'sif')
-        options.sif = edge_file
-        targets_in_network = get_targets_in_network_of_expansion(node_file)
-
-        # Create a directory of random networks corresponding to this network
-        random_networks_dir = os.path.join(random_networks_dir, '{}_network'.format(drug_instance.drug_name))
-        create_directory(random_networks_dir)
-
-
-    # Check if the number of targets provided is sufficient for the analysis
-    if len(targets_in_network) < 3:
-        raise diana_drug.InsufficientTargets(targets_in_network)
-    else:
-        print( "  DIANA INFO:\tThe targets found in the network are:\n\t\t{}.\n".format( ', '.join([ str(x) for x in targets_in_network]) ) )
-
-
 
 
     #--------------------------------#
@@ -264,7 +253,7 @@ def generate_profiles(options):
     pvalue_file = os.path.join(guild_output_dir, 'output_scores.sif.netcombo.pval')
     if not fileExist(pvalue_file):
 
-        guild_command = 'python {} {} {} {} {} {} {}'.format( os.path.join(toolbox_dir, 'run_guild.py'), drug_dir, network_targets_file, options.sif, guild_output_dir, random_networks_dir, options.guild_executable_path )
+        guild_command = 'python {} {} {} {} {} {} {}'.format( os.path.join(toolbox_dir, 'run_guild.py'), drug_dir, network_targets_file, options.sif, guild_output_dir, random_networks_dir, config.get('Paths', 'guild_path') )
         os.system(guild_command)
         print('  DIANA INFO:\tGUILD has finished.\n')
 
@@ -323,13 +312,14 @@ def generate_profiles(options):
 
 
             output_file = os.path.join(dcguild_dir, 'functional_profile_top_{}_{}.txt'.format(str(top_threshold), options.proteins_type_id))
+            temp_file = os.path.join(dcguild_dir, 'temp_enrichment_goatools.txt')
             if not fileExist(output_file):
 
                 # Generate the FUNCTIONAL profile from the top % scoring nodes of the pvalue file
                 if node_profile_instance.type_id == 'biana' and translation_file:
-                    functional_profile_instance = node_profile_geneid.create_functional_profile(obodag, geneid2gos_human, guild_profile_geneid.node_to_values, output_file)
+                    functional_profile_instance = node_profile_geneid.create_functional_profile(obodag, geneid2gos_human, guild_profile_geneid.node_to_values, output_file, temp_file)
                 else:
-                    functional_profile_instance = node_profile_instance.create_functional_profile(obodag, geneid2gos_human, guild_profile_instance.node_to_values, output_file)
+                    functional_profile_instance = node_profile_instance.create_functional_profile(obodag, geneid2gos_human, guild_profile_instance.node_to_values, output_file, temp_file)
 
 
         output_file = os.path.join(dcguild_dir, 'edge_profile_top_{}_{}.txt'.format(str(top_threshold), guild_profile_instance.type_id))
@@ -355,13 +345,17 @@ def generate_profiles(options):
     pfam_file = os.path.join(dctargets_dir, 'pfam_profile.txt')
 
     if not fileExist(pfam_file):
-        # Create a connection to BIANA database
-        biana_cnx = mysql.connector.connect(user=options.db_user, password=options.db_pass,
-                                            host=options.db_host,
-                                            database=options.database)
-        # Obtain the PFAMs from BIANA
-        drug_instance.obtain_pfams_from_targets(biana_cnx, pfam_file, options.unification_protocol)
-        biana_cnx.close()
+        if use_cluster == 'false':
+            # Create a connection to BIANA database
+            biana_cnx = mysql.connector.connect(user=config.get('BIANA', 'user'), password=config.get('BIANA', 'password'),
+                                                host=config.get('BIANA', 'host'),
+                                                database=config.get('BIANA', 'database'))
+            # Obtain the PFAMs from BIANA
+            drug_instance.obtain_pfams_from_targets(biana_cnx, pfam_file, config.get('BIANA', 'unification_protocol'))
+            biana_cnx.close()
+        else:
+            # Obtain the PFAMs from a Pickle file
+            drug_instance.obtain_pfams_from_pickle(pfam_pickle_file, pfam_file)
     else:
         drug_instance.obtain_pfams_from_file(pfam_file)
 
@@ -370,6 +364,7 @@ def generate_profiles(options):
 
     # Create the FUNCTIONAL profile from targets
     output_file = os.path.join(dctargets_dir, 'targets_functional_profile.txt')
+    temp_file = os.path.join(dctargets_dir, 'temp_enrichment_goatools.txt')
     if not fileExist(output_file):
 
         if guild_profile_instance.type_id == 'biana' and translation_file:
@@ -380,13 +375,65 @@ def generate_profiles(options):
             all_nodes_geneid = set(guild_profile_geneid.node_to_values.keys())
             for target in drug_instance.targets:
                 all_nodes_geneid.add(target)
-            top_scoring.functional_top_scoring(obodag, geneid2gos_human, list(all_nodes_geneid), drug_instance.targets, output_file)
+            top_scoring.functional_top_scoring(obodag, geneid2gos_human, list(all_nodes_geneid), drug_instance.targets, output_file, temp_file)
         else:
             # Here we also add the targets that are not in the network among all the nodes in the network, to use them as background
             all_nodes_geneid = set(guild_profile_instance.node_to_values.keys())
             for target in drug_instance.targets:
                 all_nodes_geneid.add(target)
-            top_scoring.functional_top_scoring(obodag, geneid2gos_human, list(all_nodes_geneid), drug_instance.targets, output_file)
+            top_scoring.functional_top_scoring(obodag, geneid2gos_human, list(all_nodes_geneid), drug_instance.targets, output_file, temp_file)
+
+
+
+    #---------------------------#
+    #   GENERATE ATC PROFILES   #
+    #---------------------------#
+
+    print('  DIANA INFO:\tSTARTING GENERATION OF ATCs PROFILES\n')
+
+    #inside TARGETS CONTROLLER insert function that creates directory. By now: ATC_dir
+    ATC_file = os.path.join(ATCs_dir,'ATC_profile.txt')
+
+    if not fileExist(ATC_file):
+        if use_cluster == 'false':
+            #search in BIANA
+            biana_cnx = mysql.connector.connect(user=config.get('BIANA', 'user'), password=config.get('BIANA', 'password'),
+                                                host=config.get('BIANA', 'host'),
+                                                database=config.get('BIANA', 'database'))
+            drug_instance.obtain_ATCs_from_BIANA(biana_cnx, ATC_file, config.get('BIANA', 'unification_protocol'))
+            biana_cnx.close()
+        else:
+            # Obtain the ATCs from a Pickle file
+            drug_instance.obtain_ATCs_from_pickle(ATC_pickle_file, ATC_file)
+    else:
+        drug_instance.obtain_ATCs_from_file(ATC_file)
+    print( "  DIANA INFO:\tThe ATCs obtained from the targets are\n\t\t{}.\n".format( ', '.join([ str(x) for x in drug_instance.ATCs])))
+
+
+
+    #-----------------------------------#
+    #   GENERATE SIDE EFFECT PROFILES   #
+    #-----------------------------------#
+
+    print('  DIANA INFO:\tSTARTING GENERATION OF SEs PROFILES\n')
+
+    SE_file = os.path.join(SE_dir,'SE_profile.txt')
+
+    if not fileExist(SE_file):
+        if use_cluster == 'false':
+            #search in BIANA
+            biana_cnx = mysql.connector.connect(user=config.get('BIANA', 'user'), password=config.get('BIANA', 'password'),
+                                                host=config.get('BIANA', 'host'),
+                                                database=config.get('BIANA', 'database'))
+            drug_instance.obtain_SE_from_BIANA(biana_cnx, SE_file, config.get('BIANA', 'unification_protocol'))
+            biana_cnx.close()
+        else:
+            # Obtain the SEs from a Pickle file
+            drug_instance.obtain_SE_from_pickle(SE_pickle_file, SE_file)
+    else:
+        drug_instance.obtain_SE_from_file(SE_file)
+    if len(drug_instance.SEs) > 0:
+        print( "  DIANA INFO:\tThe Side Effects obtained from the targets are\n\t\t{}.\n".format( ', '.join([ str(x) for x in drug_instance.SEs])))
 
 
 
@@ -400,18 +447,32 @@ def generate_profiles(options):
     structure_file = os.path.join(dcstructure_dir, 'structure_profile.txt')
 
     if not fileExist(structure_file):
-        # Create a connection to BIANA database
-        biana_cnx = mysql.connector.connect(user=options.db_user, password=options.db_pass,
-                                            host=options.db_host,
-                                            database=options.database)
-        # Obtain the PFAMs from BIANA
-        drug_instance.obtain_SMILES_from_BIANA(biana_cnx, structure_file, options.unification_protocol)
-        biana_cnx.close()
+        if use_cluster == 'false':
+            # Create a connection to BIANA database
+            biana_cnx = mysql.connector.connect(user=config.get('BIANA', 'user'), password=config.get('BIANA', 'password'),
+                                                host=config.get('BIANA', 'host'),
+                                                database=config.get('BIANA', 'database'))
+            # Obtain the PFAMs from BIANA
+            drug_instance.obtain_SMILES_from_BIANA(biana_cnx, structure_file, config.get('BIANA', 'unification_protocol'))
+            biana_cnx.close()
+        else:
+            # Obtain the SMILES from Pickle file
+            drug_instance.obtain_SMILES_from_pickle(smiles_pickle_file, structure_file)
     else:
         drug_instance.obtain_SMILES_from_file(structure_file)
 
     print( "  DIANA INFO:\tThe SMILES obtained are\n\t\t{}.\n".format( ', '.join([ str(x) for x in drug_instance.smiles]) ) )
 
+
+
+    #--------------------------------#
+    #   GENERATE A PARAMETERS FILE   #
+    #--------------------------------#
+
+    # Generate parameters file
+    parameters_file = os.path.join(drug_dir, 'parameters.txt')
+    if not fileExist(parameters_file):
+        create_parameters_file(drug_id, drug_instance.drug_name, drug_instance.targets, network_filename, parameters_file)
 
 
     # End marker for time
@@ -445,25 +506,15 @@ def create_directory(directory):
         os.mkdir(directory)
     return
 
-def process_restriction(restriction):
+def create_parameters_file(diana_id, drug_name, targets, network_name, output_file):
     """
-    Checks if the restriction has been correctly introduced.
-    Returns the value that will be introduced in the command to generate the network of expansion.
+    Creates a file containing the parameters used in the analysis.
     """
-    if not restriction:
-        return ''
-    else:
-        res = restriction.lower()
-        if res == 'eaff':
-            return '-eAFF'
-        elif res == 'ey2h':
-            return '-eY2H'
-        elif res == 'y2h':
-            return '-rY2H'
-        elif res == 'aff':
-            return '-rAFF'
-        else:
-            raise network_generation.IncorrectRestrictionType(res)
+    targets = [str(x) for x in targets] # Transform the targets to strings
+    with open(output_file, 'w') as output_fd:
+        output_fd.write('#diana_id\tdrug\ttargets\tnetwork\n')
+        output_fd.write('{}\t{}\t{}\t{}\n'.format( diana_id, drug_name, ';'.join(targets), network_name ))
+    return
 
 def get_targets_in_network_of_expansion(node_file):
     """
@@ -537,4 +588,3 @@ def translate_targets_to_type_id(targets_translation_file, targets):
 
 if  __name__ == "__main__":
     main()
-

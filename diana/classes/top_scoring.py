@@ -101,7 +101,7 @@ def edge_top_scoring(network_file, node_to_vals, threshold, output_file):
     return
 
 
-def functional_top_scoring(obodag, geneid2gos, all_nodes, top_nodes, output_file):
+def functional_top_scoring(obodag, geneid2gos, all_nodes, top_nodes, output_file, temp_file):
     """
     Creates profiles with the most relevant functions using the thresholds provided by the user.
     The profile is created selecting the top most relevant nodes, and computing a functional enrichment analysis of them.
@@ -110,8 +110,9 @@ def functional_top_scoring(obodag, geneid2gos, all_nodes, top_nodes, output_file
         @obodag:                Dictionary containing the Gene Ontology
         @geneid2gos:            Dictionary containing the equivalences from geneID to GOs
         @all_nodes:             A list containing all the nodes of the network
-        @top_nodes:      A list containing the selected nodes to do the enrichment analysis
+        @top_nodes:             A list containing the selected nodes to do the enrichment analysis
         @output_file:           Resulting file which will contain the most relevant edges
+        @temp_file:             A file where the functional enrichment will be temporary calculated
     """
 
     # Get background genes
@@ -120,7 +121,6 @@ def functional_top_scoring(obodag, geneid2gos, all_nodes, top_nodes, output_file
     # Get top genes
     top_nodes = [ int(x) for x in top_nodes ]
 
-    temp_file = "temp_enrichment_goatools.txt"
     calculate_functional_enrichment_profile(obodag, geneid2gos, top_nodes, all_nodes, temp_file, output_file)
     #GOA.calculate_functional_enrichment_profile(obodag, geneid2gos, top_nodes, all_nodes, temp_file, output_file)
 
@@ -157,7 +157,7 @@ def create_network_from_sif_file(network_file_in_sif, use_edge_data = False, del
     """
     Creates a NetworkX graph object from a sif file
     """
-    setNode, setEdge, dictDummy, dictEdge = get_nodes_and_edges_from_sif_file(network_file_in_sif, store_edge_type = use_edge_data, delim = delim)
+    setNode, setEdge, dictDummy, dictEdge = get_nodes_and_edges_from_sif_file(network_file_in_sif, store_edge_type = use_edge_data, delim = delim, data_to_float = False )
     g=nx.Graph()
     if include_unconnected:
         g.add_nodes_from(setNode)

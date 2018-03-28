@@ -1,6 +1,5 @@
 import argparse
 import cPickle
-import mysql.connector
 import os, sys
 
 """

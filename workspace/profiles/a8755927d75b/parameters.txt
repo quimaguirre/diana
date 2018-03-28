@@ -1,0 +1,2 @@
+#diana_id	drug	targets	network
+a8755927d75b	db07596	760	human_eAFF_geneid_2017.sif

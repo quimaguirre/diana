@@ -1,3 +1,0 @@
-# num of genes	num of total genes	Log of odds ratio	P-value	Adjusted p-value	GO term ID	GO term name	GO type
-1	7	1.89308479608	-	3.85e-02	GO:0035878	nail development	BP
-1	7	1.89308479608	-	1.92e-01	GO:0004679	AMP-activated protein kinase activity	MF

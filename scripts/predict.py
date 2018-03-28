@@ -1,3 +1,4 @@
+import ConfigParser
 import cPickle
 import pandas as pd
 import time
@@ -47,22 +48,8 @@ def parse_user_arguments(*args, **kwds):
                         5
                         10
                         """)
-    parser.add_argument('-ws','--worspace',dest='workspace',action = 'store',default=os.path.join(os.path.join(os.path.dirname(__file__), '..'), 'workspace'),
+    parser.add_argument('-ws','--workspace',dest='workspace',action = 'store',default=os.path.join(os.path.join(os.path.dirname(__file__), '..'), 'workspace'),
                         help = """Define the workspace directory where the data directory and the results directory will be created""")
-    parser.add_argument('-db','--database',dest='database',action = 'store',default='BIANA_JUN_2017',
-                        help = """Define the database to use for the search of targets: 
-                        (default is BIANA_JUN_2017)""")
-    parser.add_argument('-dbu','--db_user',dest='db_user',action = 'store',default='quim',
-                        help = """Define the MySQL user to access to the database: 
-                        (default is quim)""")
-    parser.add_argument('-dbp','--db_pass',dest='db_pass',action = 'store',default='',
-                        help = """Define the MySQL password to access to the database: 
-                        (default is '')""")
-    parser.add_argument('-dbh','--db_host',dest='db_host',action = 'store',default='localhost',
-                        help = """Define the MySQL host to access to the database: 
-                        (default is localhost)""")
-    parser.add_argument('-up','--unification',dest='unification_protocol',action = 'store',default='geneid_seqtax_v1',
-                        help = """Define the unification protocol used in BIANA database (default is BIANA_JUN_2017)""")
 
     options=parser.parse_args()
 
@@ -89,6 +76,11 @@ def predict(options):
 
     # Get the script path
     main_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+    # Read the config file
+    config_file = os.path.join(main_path, 'config.ini')
+    config = ConfigParser.ConfigParser()
+    config.read(config_file)
 
     # Check that the other_data directory exists
     other_data_dir = os.path.join(main_path, 'workspace/other_data')

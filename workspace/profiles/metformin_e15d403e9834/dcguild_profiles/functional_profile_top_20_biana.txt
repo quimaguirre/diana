@@ -1,5 +1,0 @@
-# num of genes	num of total genes	Log of odds ratio	P-value	Adjusted p-value	GO term ID	GO term name	GO type
-1	2	0.241008099504	-	4.23e-01	GO:0033692	cellular polysaccharide biosynthetic process	BP
-1	2	0.241008099504	-	1.00e+00	GO:1901374	acetate ester transport	BP
-1	2	0.241008099504	-	4.23e-01	GO:0050509	N-acetylglucosaminyl-proteoglycan 4-beta-glucuronosyltransferase activity	MF
-1	2	0.241008099504	-	4.23e-01	GO:0033906	hyaluronoglucuronidase activity	MF

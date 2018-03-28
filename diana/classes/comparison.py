@@ -19,6 +19,8 @@ class ComparisonResult(object):
         self.dctargets_results = {'target':[], 'pfam':[], 'function':[]}
         self.dcguild_results = {'node':{}, 'edge':{}, 'function':{}}
         self.dcstructure_result = None
+        self.dcatc_result = []
+        self.dcse_result = []
         self.example_threshold = None
         self.node_examples = []
         self.edge_examples = []
@@ -81,6 +83,8 @@ class ComparisonResult(object):
                 results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'dcguild', 'function', top_threshold, self.dcguild_results['function'][top_threshold][0], self.dcguild_results['function'][top_threshold][1], self.dcguild_results['function'][top_threshold][2] ))
 
             results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'dcstructure', 'structure', '-', self.dcstructure_result, self.dcstructure_result, self.dcstructure_result ))
+            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'dcatc', 'atc', '-', self.dcatc_result[0], self.dcatc_result[1], self.dcatc_result[2] ))
+            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'dcse', 'se', '-', self.dcse_result[0], self.dcse_result[1], self.dcse_result[2] ))
 
     def output_venn_diagram_dcguild(self, drug1_name, drug2_name, output_venn_nodes, output_venn_edges, output_venn_functions):
         """
@@ -275,6 +279,16 @@ def calculate_jaccard_index(set1, set2):
     size_intersection = float(len(set1.intersection(set2)))
     size_union = float(len(set1.union(set2)))
     return size_intersection / size_union
+
+
+def calculate_simpson_index(set1, set2):
+    """Calculates the Simpson index of two sets"""
+    size_intersection = float(len(set1.intersection(set2)))
+    size_smaller_set = min(float(len(set1)), float(len(set2)))
+    if size_smaller_set <= 0:
+        return 0
+    else:
+        return size_intersection / size_smaller_set
 
 
 def generate_targets_dict_for_comparison(targets_list):

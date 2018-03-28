@@ -1,0 +1,190 @@
+
+-------------------------------------
+1. Design the experiment for DrugBank
+-------------------------------------
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/design_experiment_all_profiles.py -o /home/quim/PHD/Projects/DIANA/diana/workspace/drugbank_all_profiles_1_target.txt -min 1 -sif /home/quim/PHD/Projects/DIANA/diana/workspace/sif/human_eAFF_geneid_2017.sif
+
+
+----------------------------------
+2. Generate the profiles in MARVIN
+----------------------------------
+
+python run_all_profiles_cluster.py -i diana/workspace/drugbank_all_profiles_1_target.txt -s diana/workspace/sif/human_eAFF_geneid_2017.sif -t diana/diana/toolbox/drugbank_to_targets.pcl -w drugbank_profiles_1_target --dummy dummy
+
+# Copy the files
+scp -r quim@hydra:/users/sbi/quim/DIANA/drugbank_profiles_1_target/profiles /sbi/users/quim/DIANA_data
+
+
+------------------------------------------------------------------------
+3.1. Design the experiment for DCDB with Side Effects / ATC and 1 target
+------------------------------------------------------------------------
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/design_experiment_dcdb.py -min 1 -sif /home/quim/PHD/Projects/DIANA/diana/workspace/sif/human_eAFF_geneid_2017.sif -cr /home/quim/PHD/Projects/DIANA/diana/workspace/crossings_file_1_target_SE_ATC.txt --restrict_se
+
+Some interesting data about the features of the drugs:
+The number of DCDB IDs with targets is: 574
+The number of DCDB IDs with at least one PFAM is: 573
+The number of DCDB IDs with at least one SIDE EFFECT is: 369
+The number of DCDB IDs with at least one ATC is: 544
+The number of DCDB drugs with at least one SMILES is: 514
+
+Some interesting data of the design:
+The number of DCDB IDs considered is: 365
+The number of DrugBank IDs considered is: 365
+There are 66430 possible DCDB crossings
+There are 66688 possible DrugBank crossings
+Number of pharmacodynamical drug interactions:	511
+Number of non-pharmacodynamical drug interactions:	66177
+In the initial comparison there were: 239 crossings
+In the current comparison there are: 113 crossings
+
+
+------------------------------------------------------------
+3.2. Design the experiment for DCDB in general with 1 target
+------------------------------------------------------------
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/design_experiment_dcdb.py -min 1 -sif /home/quim/PHD/Projects/DIANA/diana/workspace/sif/human_eAFF_geneid_2017.sif -cr /home/quim/PHD/Projects/DIANA/diana/workspace/crossings_file_1_target.txt
+
+Some interesting data of the design:
+The number of DCDB IDs considered is: 513
+The number of DrugBank IDs considered is: 513
+There are 131328 possible DCDB crossings
+There are 131699 possible DrugBank crossings
+Number of pharmacodynamical drug interactions:	828
+Number of non-pharmacodynamical drug interactions:	130871
+In the initial comparison there were: 239 crossings
+In the current comparison there are: 129 crossings
+
+
+-------------------------------------------------------------
+3.3. Design the experiment for DCDB in general with 3 targets
+-------------------------------------------------------------
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/design_experiment_dcdb.py -min 3 -sif /home/quim/PHD/Projects/DIANA/diana/workspace/sif/human_eAFF_geneid_2017.sif -cr /home/quim/PHD/Projects/DIANA/diana/workspace/crossings_file_3_targets.txt
+
+Some interesting data of the design:
+The number of DCDB IDs considered is: 210
+The number of DrugBank IDs considered is: 208
+There are 21945 possible DCDB crossings
+There are 21688 possible DrugBank crossings
+Number of pharmacodynamical drug interactions:	198
+Number of non-pharmacodynamical drug interactions:	21490
+In the initial comparison there were: 239 crossings
+In the current comparison there are: 31 crossings
+
+
+-----------------------------
+4. Compare profiles in MARVIN
+-----------------------------
+
+# One by one (not a good way)
+python run_comparison_profiles_cluster.py -c diana/workspace/crossings_file_1_target_SE_ATC.txt -s diana/workspace/sif/human_eAFF_geneid_2017.sif -t diana/diana/toolbox/drugbank_to_targets.pcl -w drugbank_profiles_1_target --dummy dummy
+
+# By groups (recommended way)
+python run_comparison_profiles_groups.py -c diana/workspace/crossings_file_1_target_SE_ATC.txt -s diana/workspace/sif/human_eAFF_geneid_2017.sif -t diana/diana/toolbox/drugbank_to_targets.pcl -w drugbank_profiles_1_target --dummy dummy
+
+# Copy the files
+scp -r quim@hydra:/users/sbi/quim/DIANA/drugbank_profiles_1_target/comparisons /sbi/users/quim/DIANA_data
+
+# Compare drugs with at least 3 targets (by groups)
+python run_comparison_profiles_groups.py -c diana/workspace/crossings_file_3_targets.txt -s diana/workspace/sif/human_eAFF_geneid_2017.sif -t diana/diana/toolbox/drugbank_to_targets.pcl -w drugbank_profiles_1_target --dummy dummy
+
+# Copy the files
+scp -r quim@hydra:/users/sbi/quim/DIANA/drugbank_profiles_1_target/comparisons_3_targets /sbi/users/quim/DIANA_data
+
+
+--------------------------------------
+5.1. Analyze results (1 target-ATC/SE)
+--------------------------------------
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/select_classifier.py -cr /home/quim/PHD/Projects/DIANA/diana/workspace/crossings_file_1_target_SE_ATC.txt -sif /home/quim/PHD/Projects/DIANA/diana/workspace/sif/human_eAFF_geneid_2017.sif -ws /sbi/users/quim/DIANA_data --consider_se
+
+Interesting data about the processing:
+Number of drug combinations after removing missing values:	511
+Number of non-drug combinations after removing missing values:	66177
+Number of drug combinations after removing me-too conflictive drug pairs:	503
+Number of non-drug combinations after removing me-too conflictive drug pairs:	66067
+Number of features:	61
+Reduction to 9 components
+Number of selected features: 19
+Selected columns: dct_target_jaccard, dct_pfam_jaccard, dct_function_spearman, dct_function_dot_product, dcg_node_1_spearman, dcg_node_1_dot_product, dcg_edge_1_spearman, dcg_edge_1_dot_product, dcg_function_1_spearman, dcg_function_1_dot_product, dcg_node_5_spearman, dcg_node_5_dot_product, dcg_edge_5_spearman, dcg_edge_5_dot_product, dcg_function_5_spearman, dcg_function_5_dot_product, dcstructure, dcatc_jaccard, dcse_jaccard, combination
+
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/tune_algorithm.py -cr /home/quim/PHD/Projects/DIANA/diana/workspace/crossings_file_1_target_SE_ATC.txt -sif /home/quim/PHD/Projects/DIANA/diana/workspace/sif/human_eAFF_geneid_2017.sif -ws /sbi/users/quim/DIANA_data --consider_se
+
+Best combination of parameters:
+{'clf__gamma': 0.01, 'clf__C': 100, 'clf__kernel': 'rbf'}	28
+
+
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/analyze_general_performance.py -ws /sbi/users/quim/DIANA_data --consider_se
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/analyze_general_performance.py -ws /sbi/users/quim/DIANA_data --consider_se --different_atc
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/plot_general_performance.py -a1 /sbi/users/quim/DIANA_data/analysis/tables/general_performance_aucs_withoutPCA.txt -a2 /sbi/users/quim/DIANA_data/analysis/tables/general_performance_aucs_diff_ATC_withoutPCA.txt -o /sbi/users/quim/DIANA_data/analysis/figures/general_performance_comparison.png
+
+
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/analyze_results_by_targets.py -ws /sbi/users/quim/DIANA_data --consider_se
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/analyze_results_by_target_ranges.py -ws /sbi/users/quim/DIANA_data --consider_se
+
+num_targets = [[1],[2],[3,4,5],[6]]
+Range 1 = 49 drug combinations
+Range 2 = 38 drug combinations
+Range 3-5 = 23 drug combinations
+Range 6 = 27 drug classify_drug_combinations
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/classify_drug_combinations.py -ws /sbi/users/quim/DIANA_data --consider_se
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/analyze_results_by_classification.py -ws /sbi/users/quim/DIANA_data -cl pathway --consider_se
+Number of DC for different_targets_different_pathways: 86
+Number of DC for different_targets_similar_pathways: 383
+Number of DC for similar_targets: 34
+
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/analyze_dcGUILD_by_feature.py -ws /sbi/users/quim/DIANA_data --consider_se
+
+
+--------------------------------
+5.2. Analyze results (3 targets)
+--------------------------------
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/select_classifier.py -cr /home/quim/PHD/Projects/DIANA/diana/workspace/crossings_file_3_targets.txt -sif /home/quim/PHD/Projects/DIANA/diana/workspace/sif/human_eAFF_geneid_2017.sif -ws /sbi/users/quim/DIANA_data
+
+Interesting data about the processing:
+Number of drug combinations after removing missing values:	194
+Number of non-drug combinations after removing missing values:	21287
+Number of drug combinations after removing me-too conflictive drug pairs:	188
+Number of non-drug combinations after removing me-too conflictive drug pairs:	21249
+Number of features:	55
+Reduction to 7 components
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/analyze_results_by_targets.py -ws /sbi/users/quim/DIANA_data
+
+
+--------------------------------
+6. Comparison with other methods
+--------------------------------
+
+./home/quim/Programs/MatLab/bin/matlab
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/select_classifier.py -cr /home/quim/PHD/Projects/DIANA/diana/diana/toolbox/comparison_other_methods/comparison_crossings.txt -sif /home/quim/PHD/Projects/DIANA/diana/workspace/sif/human_eAFF_geneid_2017.sif -ws /sbi/users/quim/DIANA_data --consider_se --comparison
+
+Number of drug combinations after removing missing values:	98
+Number of non-drug combinations after removing missing values:	2827
+Number of me-too drug combinations:	18
+Number of non me-too drug combinations:	832
+Number of drug combinations after removing me-too conflictive drug pairs:	97
+Number of non-drug combinations after removing me-too conflictive drug pairs:	2819
+Number of features:	61
+Reduction to 8 components
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/analyze_general_performance.py -ws /sbi/users/quim/DIANA_data --consider_se --comparison
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/analyze_general_performance.py -ws /sbi/users/quim/DIANA_data --consider_se --different_atc --comparison
+
+python /home/quim/PHD/Projects/DIANA/diana/scripts/analyze_general_performance.py -ws /sbi/users/quim/DIANA_data --consider_se --without_repetition --comparison
+
+
