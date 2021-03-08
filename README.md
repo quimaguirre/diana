@@ -37,17 +37,6 @@ We also have to introduce the path to Guild executable. In case that you do not 
 
 ### Execution
 
-#### Download the GO files:
-
-First, make sure that you have downloaded the Gene Ontology files.
-To do it, run the following script:
-
-```
-python path/to/diana/scripts/download_go_files.py
-```
-
-
-
 #### Generate the profiles of a drug:
 
 Now, create the profiles of the drugs that you want to compare.
@@ -78,7 +67,6 @@ python path/to/diana/scripts/generate_profiles.py -j metformin -d metformin -sif
 ```
 
 
-
 #### Compare the profiles of a pair of drugs:
 
 With this script we can compare the profiles of a pair of drugs:
@@ -97,7 +85,6 @@ In the following example, we compare the profiles created for metformin with the
 ```
 python path/to/diana/scripts/compare_profiles.py -j1 metformin -j2 haloperidol -sif path/to/diana/workspace/sif/human_eAFF_geneid_2017.sif
 ```
-
 
 #### Analyze the results:
 
