@@ -1,8 +1,9 @@
 import argparse
-import ConfigParser
+import configparser
 import copy
 import ntpath
 import numpy as np
+import pandas as pd
 import time
 import sys, os, re
 
@@ -10,11 +11,17 @@ from context import diana
 import diana.classes.drug as diana_drug
 import diana.classes.comparison as comparison
 import diana.classes.network_analysis as network_analysis
+import diana.classes.functional_analysis as functional_analysis
 
 
 
 
 def main():
+    """
+    Generate profiles for drugs using GUILD.
+    Optimized for Python 3.
+    python /home/quim/PHD/Projects/DIANA/diana/scripts/compare_profiles.py -d1 DB11699 -d2 DB00177 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.sif
+    """
 
     options = parse_user_arguments()
     compare_profiles(options)
@@ -27,24 +34,14 @@ def parse_user_arguments(*args, **kwds):
     parser = argparse.ArgumentParser(
         description = "Compare the profiles of the input drugs",
         epilog      = "@oliva's lab 2017")
-    parser.add_argument('-d1','--drug_name1',dest='drug_name1',action = 'store',
-                        help = """ Name of the drug number 1. If you do not provide targets for this drug or the number of targets is not large enough,
-                        the program will use this name to search for targets in BIANA database. If targets are provided, this field will be only used
-                        for naming purposes and will be completely optional.
+    parser.add_argument('-j1','--job_id_drug1',dest='job_id_drug1',action = 'store',
+                        help = """ Identifier of the drug number 1. 
                         If the name of the drug has more than one word or special characters (parentheses, single quotes), introduce the name between
                         double quotes. """)
-    parser.add_argument('-d2','--drug_name2',dest='drug_name2',action = 'store',
-                        help = """ Name of the drug number 2. If you do not provide targets for this drug or the number of targets is not large enough,
-                        the program will use this name to search for targets in BIANA database. If targets are provided, this field will be only used
-                        for naming purposes and will be completely optional.
+    parser.add_argument('-j2','--job_id_drug2',dest='job_id_drug2',action = 'store',
+                        help = """ Identifier of the drug number 2.
                         If the name of the drug has more than one word or special characters (parentheses, single quotes), introduce the name between
                         double quotes. """)
-    parser.add_argument('-t1','--targets1',dest='targets1',action = 'store',
-                        help = 'Input file with the targets of the drug 1. Each target must be separated by a newline character.')
-    parser.add_argument('-t2','--targets2',dest='targets2',action = 'store',
-                        help = 'Input file with the targets of the drug 2. Each target must be separated by a newline character.')
-    parser.add_argument('-pt','--proteins_type_id',dest='proteins_type_id',action = 'store', default='geneid',
-                        help = 'Input the type of ID of the targets introduced / proteins of the network. It must be the same! (default is geneid).')
     parser.add_argument('-sif','--sif_file',dest='sif',action = 'store',
                         help = 'Input file with a protein-protein interaction network in SIF format.')
     parser.add_argument('-th','--threshold_list',dest='threshold_list',action = 'store',
@@ -83,21 +80,29 @@ def compare_profiles(options):
     print("\t\tStarting Drug Interactions ANAlysis (DIANA), a program created by @OLIVA'S LAB. Second part: Comparison of drug profiles\n")
     print("\t\t------------------------------------------------------------------------------------------------------------------------\n")
 
-    # Get the script path
+    # Get the script path and define directories used
     main_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    toolbox_dir = os.path.join(main_path, 'diana/toolbox')
-
-    # Check that the profiles directory exists
-    data_dir = os.path.join(options.workspace, "profiles")
-    check_directory(data_dir)
+    scripts_dir = os.path.join(main_path, 'scripts')
+    mappings_dir = os.path.join(main_path, 'mappings')
+    data_dir = os.path.join(main_path, 'data')
+    workspace_dir = options.workspace
+    create_directory(workspace_dir)
+    profiles_dir = os.path.join(workspace_dir, 'profiles')
 
     # Create a directory for the results of the comparison
-    results_dir = os.path.join(options.workspace, "comparisons")
+    results_dir = os.path.join(workspace_dir, "comparisons")
     create_directory(results_dir)
 
-    # Create drug instances
-    drug1_instance = diana_drug.Drug(options.drug_name1)
-    drug2_instance = diana_drug.Drug(options.drug_name2)
+    # Create directories for additional data
+    other_data_dir = os.path.join(workspace_dir, 'additional_data')
+    create_directory(other_data_dir)
+    random_networks_dir = os.path.join(other_data_dir, 'random_networks')
+    create_directory(random_networks_dir)
+    associations_dir = os.path.join(other_data_dir, 'gene_function_associations')
+    create_directory(associations_dir)
+    numbers_dir = os.path.join(other_data_dir, 'numbers')
+    create_directory(numbers_dir)
+
 
     # Create a ComparisonResult instance
     comparison_instance = comparison.ComparisonResult()
@@ -109,17 +114,8 @@ def compare_profiles(options):
 
     # Read the config file
     config_file = os.path.join(main_path, 'config.ini')
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.read(config_file)
-
-
-
-    #-------------------------#
-    #   PREPARE FOR CLUSTER   #
-    #-------------------------#
-
-    use_cluster = user=config.get('Cluster', 'use_cluster')
-
 
 
     #--------------------#
@@ -129,250 +125,190 @@ def compare_profiles(options):
     # SIF CONTROLLER: Checks the network in SIF format provided by the user.
 
     # Check if the network file is provided
-    if options.sif and os.path.isfile(options.sif):
-        # Obtain the network filename
+    if options.sif and fileExist(options.sif):
+        # Get the network name
         network_filename = ntpath.basename(options.sif)
-
     else:
         # If not, we output an error
-        print('  DIANA INFO:\tThe network SIF file is missing. Please, introduce the parameter -sif.\n\t\tIf you do not have a network, use the script generate_profiles_without_network.py or use one of the networks in the sif folder.\n')
+        print('  DIANA INFO:\tThe network SIF file is missing. Please, introduce the parameter -sif.\n\t\tIf you do not have a network, use one of the networks in the sif folder.\n')
         sys.exit(10)
 
 
+    #------------------------------#
+    #   CREATE/READ NUMBERS FILE   #
+    #------------------------------#
 
-    #------------------------#
-    #   TARGETS CONTROLLER   #
-    #------------------------#
+    # Define parameters for the functional enrichment
+    type_functions = ['gobp', 'gomf', 'reactome']
+    type_corrections = ['fdr_bh', 'bonferroni']
 
-    # TARGETS CONTROLLER: Checks the targets provided by the user. If necessary, performs a search
-    # in BIANA database to obtain more targets
-    # Gets the ID of the drug using the drug_name and the targets provided.
-    # The ID is used to find the folder containing the results
+    # Numbers file associated to all targets
+    target_numbers_file = os.path.join(numbers_dir, 'target_numbers.txt')
+    if not fileExist(target_numbers_file):
+        with open(target_numbers_file, 'w') as num_fd:
+            num_fd.write('#feature\tnumber\n')
+            # Get targets
+            drugbank_geneid_mapping_file = os.path.join(mappings_dir, 'drugbank_geneid_drug_target_interactions.txt')
+            targets = diana_drug.get_all_targets_from_mappings(drugbank_geneid_mapping_file)
+            num_fd.write('target\t{}\n'.format(len(targets)))
+            # Get PFAMs
+            geneid_target_mapping_file = os.path.join(mappings_dir, 'geneid_target_mappings.txt')
+            pfams = diana_drug.get_all_pfams_from_mappings(geneid_target_mapping_file)
+            num_fd.write('pfam\t{}\n'.format(len(pfams)))
+            # Get functions
+            target_associations_dir = os.path.join(associations_dir, 'targets')
+            for type_function in type_functions:
+                associations_file = os.path.join(target_associations_dir, '{}_to_gene.txt'.format(type_function))
+                functions = functional_analysis.get_functions_from_associations_file(associations_file)
+                num_fd.write('{}\t{}\n'.format(type_function, len(functions)))
+            # Get ATCs
+            drugbank_atc_file = os.path.join(mappings_dir, 'drugbank_drug_atc.txt')
+            atcs = diana_drug.get_all_atcs_from_mappings(drugbank_atc_file)
+            num_fd.write('atc\t{}\n'.format(len(atcs)))
+            # Get SEs
+            drugbank_side_effects_file = os.path.join(mappings_dir, 'drugbank_drug_side_effects.txt')
+            ses = diana_drug.get_all_ses_from_mappings(drugbank_side_effects_file)
+            num_fd.write('se\t{}\n'.format(len(ses)))
+    else:
+        target_numbers_df = pd.read_csv(target_numbers_file, sep='\t', index_col=None)
 
-    for drug_instance, targets, num_drug in [(drug1_instance, options.targets1, 1), (drug2_instance, options.targets2, 2)]:
-
-        # Check if the targets file is provided
-        if targets and os.path.isfile(targets):
-            drug_instance.obtain_targets_from_file(targets, options.proteins_type_id)
-        else:
-            if use_cluster == 'false':
-                import mysql.connector
-                # Create a connection to BIANA database
-                biana_cnx = mysql.connector.connect(user=config.get('BIANA', 'user'), password=config.get('BIANA', 'password'),
-                                                    host=config.get('BIANA', 'host'),
-                                                    database=config.get('BIANA', 'database'))
-                # Obtain the targets from BIANA
-                drug_instance.obtain_targets_from_BIANA(biana_cnx, options.proteins_type_id, config.get('BIANA', 'unification_protocol'))
-                biana_cnx.close()
-                targets_in_network = get_targets_in_sif_file(options.sif, drug_instance.targets)
-                drug_instance.targets = targets_in_network
-            else:
-                # Obtain the targets from a Pickle file
-                if drug_instance.type_name == 'dcdb':
-                    drug2targets_file = os.path.join(toolbox_dir, 'dcdb2targets.pcl')
-                elif drug_instance.type_name == 'drugbank':
-                    drug2targets_file = os.path.join(toolbox_dir, 'drugbank_to_targets.pcl')
-                drug_instance.obtain_targets_from_pickle(drug2targets_file, 'geneid')
-                targets_in_network = get_targets_in_sif_file(options.sif, drug_instance.targets)
-                drug_instance.targets = targets_in_network
-
-        print( "  DIANA INFO:\tThe targets provided for the drug {} are:\n\t\t{}.\n".format( drug_instance.drug_name, ', '.join([ str(x) for x in drug_instance.targets]) ) )
-
-        # Check the directory for the drug
-        drug_id = diana_drug.generate_drug_id(drug_instance.drug_name, drug_instance.targets, network_filename)
-        print('  DIANA INFO:\tThe ID for drug {} is: {}\n'.format(drug_instance.drug_name, drug_id))
-        if num_drug == 1:
-            drug1_dir = drug_dir = os.path.join(data_dir, drug_id)
-            check_directory(drug1_dir)
-        elif num_drug == 2:
-            drug2_dir = drug_dir = os.path.join(data_dir, drug_id)
-            check_directory(drug2_dir)
-
-
-
-    #--------------------------------------#
-    #   COMPARISON OF DCTARGETS PROFILES   #
-    #--------------------------------------#
-
-    print('  DIANA INFO:\tSTARTING COMPARISON OF dcTARGETS PROFILES\n')
-
-    # Directories for the dcTargets results
-    dctargets_dir1 = os.path.join(drug1_dir, 'dctargets_profiles')
-    dctargets_dir2 = os.path.join(drug2_dir, 'dctargets_profiles')
-
-    pfam_file1 = os.path.join(dctargets_dir1, 'pfam_profile.txt')
-    pfam_file2 = os.path.join(dctargets_dir2, 'pfam_profile.txt')
-
-    targets_functional_file1 = os.path.join(dctargets_dir1, 'targets_functional_profile.txt')
-    targets_functional_file2 = os.path.join(dctargets_dir2, 'targets_functional_profile.txt')
-
-    # Get PFAMs from PFAM profiles
-    check_file(pfam_file1)
-    drug1_instance.obtain_pfams_from_file(pfam_file1)
-
-    check_file(pfam_file2)
-    drug2_instance.obtain_pfams_from_file(pfam_file2)
-
-    # Obtain functional profile instances
-    check_file(targets_functional_file1)
-    targets_functions_instance1 = network_analysis.FunctionalProfile(targets_functional_file1, 'targets', 'targets')
-
-    check_file(targets_functional_file2)
-    targets_functions_instance2 = network_analysis.FunctionalProfile(targets_functional_file2, 'targets', 'targets')
-
-    # Compare targets
-    targets1_dict = comparison.generate_targets_dict_for_comparison(drug1_instance.targets)
-    targets2_dict = comparison.generate_targets_dict_for_comparison(drug2_instance.targets)
-    summary_targets = comparison.calculate_comparison(targets1_dict, targets2_dict)
-    comparison_instance.add_dctargets_result('target', summary_targets)
-    print(summary_targets)
-
-    # Compare PFAMs
-    pfams1_dict = comparison.generate_targets_dict_for_comparison(drug1_instance.pfams)
-    pfams2_dict = comparison.generate_targets_dict_for_comparison(drug2_instance.pfams)
-    summary_pfams = comparison.calculate_comparison(pfams1_dict, pfams2_dict)
-    comparison_instance.add_dctargets_result('pfam', summary_pfams)
-    print(summary_pfams)
-
-    # Compare functional profiles
-    summary_target_functions = comparison.calculate_comparison(targets_functions_instance1.go_id_to_values, targets_functions_instance2.go_id_to_values)
-    comparison_instance.add_dctargets_result('function', summary_target_functions)
-    print(summary_target_functions)
+    # Numbers file associated to network
+    network_numbers_file = os.path.join(numbers_dir, '{}_numbers.txt'.format(network_filename))
+    if not fileExist(network_numbers_file):
+        with open(network_numbers_file, 'w') as num_fd:
+            num_fd.write('#feature\tnumber\n')
+            # We create a Network instance
+            network_instance = network_analysis.Network(network_file=options.sif, type_id='geneid', network_format='sif')
+            # We keep the number of nodes
+            num_fd.write('node\t{}\n'.format(len(network_instance.get_nodes())))
+            num_fd.write('edge\t{}\n'.format(len(network_instance.get_edges())))
+            # Get functions
+            network_associations_dir = os.path.join(associations_dir, network_filename)
+            for type_function in type_functions:
+                associations_file = os.path.join(network_associations_dir, '{}_to_gene.txt'.format(type_function))
+                functions = functional_analysis.get_functions_from_associations_file(associations_file)
+                num_fd.write('{}\t{}\n'.format(type_function, len(functions)))
+    else:
+        network_numbers_df = pd.read_csv(network_numbers_file, sep='\t', index_col=None)
 
 
+    #-------------------#
+    #   READ PROFILES   #
+    #-------------------#
 
-    #------------------------------------#
-    #   COMPARISON OF DCGUILD PROFILES   #
-    #------------------------------------#
-
-    print('  DIANA INFO:\tSTARTING COMPARISON OF dcGUILD PROFILES\n')
-
-    # Directories for the dcGUILD results
-    dcguild_dir1 = os.path.join(drug1_dir, 'dcguild_profiles')
-    dcguild_dir2 = os.path.join(drug2_dir, 'dcguild_profiles')
-
-    # Get the complete node profile (the pvalue_file)
-    pvalue_file1 = os.path.join(dcguild_dir1, 'output_scores.sif.netcombo.pval')
-    check_file(pvalue_file1)
-    guild_profile_instance1 = network_analysis.GUILDProfile(pvalue_file1, options.proteins_type_id, 100)
-
-    pvalue_file2 = os.path.join(dcguild_dir2, 'output_scores.sif.netcombo.pval')
-    check_file(pvalue_file2)
-    guild_profile_instance2 = network_analysis.GUILDProfile(pvalue_file2, options.proteins_type_id, 100)
-
-    # Get the complete edge profile (the network_scored)
-    scored_network_file1 = os.path.join(dcguild_dir1, 'network_scored.txt')
-    check_file(scored_network_file1)
-    scored_network_instance1 = network_analysis.EdgeProfile(scored_network_file1, None, options.proteins_type_id, 'sif', 100)
-
-    scored_network_file2 = os.path.join(dcguild_dir2, 'network_scored.txt')
-    check_file(scored_network_file2)
-    scored_network_instance2 = network_analysis.EdgeProfile(scored_network_file2, None, options.proteins_type_id, 'sif', 100)
-
-
+    print('  DIANA INFO:\tREADING PROFILES\n')
 
     # Get the list of thresholds to create the profiles
     if options.threshold_list and fileExist(options.threshold_list):
         threshold_list = get_values_from_threshold_file(options.threshold_list)
     else:
-        threshold_list = [1, 5, 10, 20, 50]
+        threshold_list = [1, 2, 5, 'functions']
     print('  DIANA INFO:\tList of percentages used to define the drug profiles: {}\n'.format(', '.join([str(x) for x in threshold_list])))
 
-    # We will use the median threshold to output an example in the results
-    comparison_instance.get_median_threshold(threshold_list)
+    # Check if the directories of the drugs exist
+    if options.job_id_drug1:
+        drug_dir1 = os.path.join(profiles_dir, options.job_id_drug1)
+        check_directory(drug_dir1)
+    else:
+        print('  DIANA INFO:\tjob_id_drug1 parameter is missing. Please, introduce the parameter -j1 with the job identifier of the drug.\n')
+        sys.exit(10)
 
+    if options.job_id_drug2:
+        drug_dir2 = os.path.join(profiles_dir, options.job_id_drug2)
+        check_directory(drug_dir2)
+    else:
+        print('  DIANA INFO:\tjob_id_drug2 parameter is missing. Please, introduce the parameter -j2 with the job identifier of the drug.\n')
+        sys.exit(10)
+
+    # Read profiles for drug 1
+    drug_instance1, guild_profile_instance1, scored_network_instance1, target_function_results1, guild_results1 = read_drug_profiles(drug_dir=drug_dir1, threshold_list=threshold_list)
+    # Read profiles for drug 2
+    drug_instance2, guild_profile_instance2, scored_network_instance2, target_function_results2, guild_results2 = read_drug_profiles(drug_dir=drug_dir2, threshold_list=threshold_list)
+
+
+    #----------------------#
+    #   COMPARE PROFILES   #
+    #----------------------#
+
+    # Compare targets
+    targets_dict1 = comparison.generate_targets_dict_for_comparison(drug_instance1.targets)
+    targets_dict2 = comparison.generate_targets_dict_for_comparison(drug_instance2.targets)
+    num_targets = int(target_numbers_df[target_numbers_df['#feature'] == 'target']['number'])
+    summary_targets = comparison.calculate_comparison(targets_dict1, targets_dict2, num_targets)
+    comparison_instance.add_target_result('target', summary_targets)
+    print(summary_targets)
+
+    # Compare PFAMs
+    pfams_dict1 = comparison.generate_targets_dict_for_comparison(drug_instance1.pfams)
+    pfams_dict2 = comparison.generate_targets_dict_for_comparison(drug_instance2.pfams)
+    num_pfams = int(target_numbers_df[target_numbers_df['#feature'] == 'pfam']['number'])
+    summary_pfams = comparison.calculate_comparison(pfams_dict1, pfams_dict2, num_pfams)
+    comparison_instance.add_target_result('pfam', summary_pfams)
+    print(summary_pfams)
+
+    # Compare functional profiles
+    for type_function in type_functions:
+        num_functions = int(target_numbers_df[target_numbers_df['#feature'] == type_function]['number'])
+        for type_correction in type_corrections:
+            targets_functions_instance1 = target_function_results1['{}-{}'.format(type_function, type_correction)]
+            targets_functions_instance2 = target_function_results2['{}-{}'.format(type_function, type_correction)]
+            summary_target_functions = comparison.calculate_comparison(targets_functions_instance1.term_id_to_pvalue, targets_functions_instance2.term_id_to_pvalue, num_functions)
+            comparison_instance.add_target_result('{}-{}'.format(type_function, type_correction), summary_target_functions)
+            print('Target: {} - {}'.format(type_function, type_correction))
+            print(summary_target_functions)
+
+    # Compare GUILD profiles
     for top_threshold in threshold_list:
 
-        # Obtain node profiles
-        node_file1 = os.path.join(dcguild_dir1, 'node_profile_top_{}_{}.txt'.format(str(top_threshold), options.proteins_type_id.lower()))
-        node_file2 = os.path.join(dcguild_dir2, 'node_profile_top_{}_{}.txt'.format(str(top_threshold), options.proteins_type_id.lower()))
+        if top_threshold == 'functions':
+            for type_function in type_functions:
+                num_functions = int(target_numbers_df[target_numbers_df['#feature'] == type_function]['number'])
+                for type_correction in type_corrections:
+                    # Compare node profiles
+                    print('NODE PROFILES, THRESHOLD: {} - {} - {}'.format(top_threshold, type_function, type_correction))
+                    node_profile1_values = copy.copy(guild_results1['node-{}-{}-{}'.format(top_threshold, type_function, type_correction)].node_to_score)
+                    node_profile2_values = copy.copy(guild_results2['node-{}-{}-{}'.format(top_threshold, type_function, type_correction)].node_to_score)
+                    guild_profile1_values = copy.copy(guild_profile_instance1.node_to_score)
+                    guild_profile2_values = copy.copy(guild_profile_instance2.node_to_score)
+                    summary_nodes = comparison.calculate_comparison_top_scoring(node_profile1_values, guild_profile1_values, node_profile2_values, guild_profile2_values)
+                    comparison_instance.add_dcguild_result('node', top_threshold, summary_nodes)
+                    print(summary_nodes)
+        else:
+            # Compare node profiles
+            print('NODE PROFILES, THRESHOLD: {}'.format(top_threshold))
+            node_profile1_values = copy.copy(guild_results1['node-{}'.format(top_threshold)].node_to_score)
+            node_profile2_values = copy.copy(guild_results2['node-{}'.format(top_threshold)].node_to_score)
+            guild_profile1_values = copy.copy(guild_profile_instance1.node_to_score)
+            guild_profile2_values = copy.copy(guild_profile_instance2.node_to_score)
+            summary_nodes = comparison.calculate_comparison_top_scoring(node_profile1_values, guild_profile1_values, node_profile2_values, guild_profile2_values)
+            comparison_instance.add_dcguild_result('node', top_threshold, summary_nodes)
+            print(summary_nodes)
 
-        check_file(node_file1)
-        node_profile_instance1 = network_analysis.GUILDProfile(node_file1, options.proteins_type_id, top_threshold)
+    sys.exit(0)
 
-        check_file(node_file2)
-        node_profile_instance2 = network_analysis.GUILDProfile(node_file2, options.proteins_type_id, top_threshold)
+    # Compare edge profiles
+    print('EDGE PROFILES, THRESHOLD: {}'.format(top_threshold))
+    edge_profile1_values = copy.copy(edge_profile_instance1.edge_to_values)
+    edge_profile2_values = copy.copy(edge_profile_instance2.edge_to_values)
+    scored_network1_values = copy.copy(scored_network_instance1.edge_to_values)
+    scored_network2_values = copy.copy(scored_network_instance2.edge_to_values)
+    summary_edges = comparison.calculate_comparison_top_scoring(edge_profile1_values, scored_network1_values , edge_profile2_values, scored_network2_values)
+    comparison_instance.add_dcguild_result('edge', top_threshold, summary_edges)
+    print(summary_edges)
 
-        # Obtain edge profiles
-        edge_file1 = os.path.join(dcguild_dir1, 'edge_profile_top_{}_{}.txt'.format(str(top_threshold), options.proteins_type_id.lower()))
-        edge_file2 = os.path.join(dcguild_dir2, 'edge_profile_top_{}_{}.txt'.format(str(top_threshold), options.proteins_type_id.lower()))
+    # Compare functional profiles
+    print('FUNCTIONAL PROFILES, THRESHOLD: {}'.format(top_threshold))
+    functional_profile1_values = copy.copy(functional_profile_instance1.go_id_to_values)
+    functional_profile2_values = copy.copy(functional_profile_instance2.go_id_to_values)
+    summary_functions = comparison.calculate_comparison(functional_profile1_values, functional_profile2_values)
+    comparison_instance.add_dcguild_result('function', top_threshold, summary_functions)
+    print(summary_functions)
 
-        check_file(edge_file1)
-        edge_profile_instance1 = network_analysis.EdgeProfile(edge_file1, None, options.proteins_type_id, 'sif', top_threshold)
-
-        check_file(edge_file2)
-        edge_profile_instance2 = network_analysis.EdgeProfile(edge_file2, None, options.proteins_type_id, 'sif', top_threshold)
-
-        # Obtain functional profiles
-        functional_file1 = os.path.join(dcguild_dir1, 'functional_profile_top_{}_{}.txt'.format(str(top_threshold), options.proteins_type_id.lower()))
-        functional_file2 = os.path.join(dcguild_dir2, 'functional_profile_top_{}_{}.txt'.format(str(top_threshold), options.proteins_type_id.lower()))
-
-        check_file(functional_file1)
-        functional_profile_instance1 = network_analysis.FunctionalProfile(functional_file1, top_threshold, node_file1)
-
-        check_file(functional_file2)
-        functional_profile_instance2 = network_analysis.FunctionalProfile(functional_file2, top_threshold, node_file2)
-
-
-        # Compare node profiles
-        print('NODE PROFILES, THRESHOLD: {}'.format(top_threshold))
-        node_profile1_values = copy.copy(node_profile_instance1.node_to_values)
-        node_profile2_values = copy.copy(node_profile_instance2.node_to_values)
-        guild_profile1_values = copy.copy(guild_profile_instance1.node_to_values)
-        guild_profile2_values = copy.copy(guild_profile_instance2.node_to_values)
-        summary_nodes = comparison.calculate_comparison_top_scoring(node_profile1_values, guild_profile1_values , node_profile2_values, guild_profile2_values)
-        comparison_instance.add_dcguild_result('node', top_threshold, summary_nodes)
-        print(summary_nodes)
-
-        # Compare edge profiles
-        print('EDGE PROFILES, THRESHOLD: {}'.format(top_threshold))
-        edge_profile1_values = copy.copy(edge_profile_instance1.edge_to_values)
-        edge_profile2_values = copy.copy(edge_profile_instance2.edge_to_values)
-        scored_network1_values = copy.copy(scored_network_instance1.edge_to_values)
-        scored_network2_values = copy.copy(scored_network_instance2.edge_to_values)
-        summary_edges = comparison.calculate_comparison_top_scoring(edge_profile1_values, scored_network1_values , edge_profile2_values, scored_network2_values)
-        comparison_instance.add_dcguild_result('edge', top_threshold, summary_edges)
-        print(summary_edges)
-
-        # Compare functional profiles
-        print('FUNCTIONAL PROFILES, THRESHOLD: {}'.format(top_threshold))
-        functional_profile1_values = copy.copy(functional_profile_instance1.go_id_to_values)
-        functional_profile2_values = copy.copy(functional_profile_instance2.go_id_to_values)
-        summary_functions = comparison.calculate_comparison(functional_profile1_values, functional_profile2_values)
-        comparison_instance.add_dcguild_result('function', top_threshold, summary_functions)
-        print(summary_functions)
-
-        # Get the profiles to represent an example
-        if top_threshold == comparison_instance.example_threshold:
-            comparison_instance.node_examples = [node_profile_instance1, node_profile_instance2]
-            comparison_instance.edge_examples = [edge_profile_instance1, edge_profile_instance2]
-            comparison_instance.function_examples = [functional_profile_instance1, functional_profile_instance2]
-
-
-    #----------------------------------------#
-    #   COMPARISON OF DCSTRUCTURE PROFILES   #
-    #----------------------------------------#
-
-    print('  DIANA INFO:\tSTARTING COMPARISON OF dcSTRUCTURE PROFILES\n')
-
-    # Directories for the dcStructure results
-    dcstructure_dir1 = os.path.join(drug1_dir, 'dcstructure_profiles')
-    dcstructure_dir2 = os.path.join(drug2_dir, 'dcstructure_profiles')
-
-    structure_file1 = os.path.join(dcstructure_dir1, 'structure_profile.txt')
-    structure_file2 = os.path.join(dcstructure_dir2, 'structure_profile.txt')
-
-    # Get SMILES from structure profiles
-    check_file(structure_file1)
-    drug1_instance.obtain_SMILES_from_file(structure_file1)
-
-    check_file(structure_file2)
-    drug2_instance.obtain_SMILES_from_file(structure_file2)
-
+    # Compare structures
     similarity_results = []
-    if len(drug1_instance.smiles) > 0 and len(drug2_instance.smiles) > 0:
-        for smiles1 in drug1_instance.smiles:
-            for smiles2 in drug2_instance.smiles:
+    if len(drug_instance1.smiles) > 0 and len(drug_instance2.smiles) > 0:
+        for smiles1 in drug_instance1.smiles:
+            for smiles2 in drug_instance2.smiles:
                 similarity_result = comparison.get_smiles_similarity(smiles1, smiles2, fp_type = "sub", metric = "tanimoto")
                 if similarity_result:
                     similarity_results.append(similarity_result)
@@ -387,63 +323,22 @@ def compare_profiles(options):
         similarity_results = None
         print('  DIANA INFO:\tThe SMILES of the drugs are missing! It is not possible to compute the structural similarity\n')
 
+    # Compare ATC profiles
+    drug_instance1.ATCs = set([x[0] for x in drug_instance1.ATCs])
+    drug_instance2.ATCs = set([x[0] for x in drug_instance2.ATCs])
+    ATCs1_dict = comparison.generate_targets_dict_for_comparison(drug_instance1.ATCs)
+    ATCs2_dict = comparison.generate_targets_dict_for_comparison(drug_instance2.ATCs)
+    print('  DIANA INFO:\tComparing ATCs {} of drug1 and ATcs {} of drug2\n'.format(', '.join(drug_instance1.ATCs), ', '.join(drug_instance2.ATCs)))
+    summary_ATCs = comparison.calculate_comparison(ATCs1_dict, ATCs2_dict)
+    comparison_instance.dcatc_result = summary_ATCs
+    print(summary_ATCs)
 
-    #----------------------------------#
-    #   COMPARISON OF DCATC PROFILES   #
-    #----------------------------------#
-
-    print('  DIANA INFO:\tSTARTING COMPARISON OF dcATC PROFILES\n')
-
-    # Directories for the dcatc results
-    dcatc_dir1 = os.path.join(drug1_dir, 'dcatc_profiles')
-    dcatc_dir2 = os.path.join(drug2_dir, 'dcatc_profiles')
-
-    ATC_file1 = os.path.join(dcatc_dir1, 'ATC_profile.txt')
-    ATC_file2 = os.path.join(dcatc_dir2, 'ATC_profile.txt')
-
-    # Get ATCs from ATC profiles
-    if fileExist(ATC_file1) and fileExist(ATC_file2):
-        drug1_instance.obtain_ATCs_from_file(ATC_file1)
-        drug2_instance.obtain_ATCs_from_file(ATC_file2)
-        drug1_instance.ATCs = set([x[0] for x in drug1_instance.ATCs])
-        drug2_instance.ATCs = set([x[0] for x in drug2_instance.ATCs])
-        ATCs1_dict = comparison.generate_targets_dict_for_comparison(drug1_instance.ATCs)
-        ATCs2_dict = comparison.generate_targets_dict_for_comparison(drug2_instance.ATCs)
-        print('  DIANA INFO:\tComparing ATCs {} of drug1 and ATcs {} of drug2\n'.format(', '.join(drug1_instance.ATCs), ', '.join(drug2_instance.ATCs)))
-        summary_ATCs = comparison.calculate_comparison(ATCs1_dict, ATCs2_dict)
-        comparison_instance.dcatc_result = summary_ATCs
-        print(summary_ATCs)
-    else:
-        comparison_instance.dcatc_result = ['-', '-', '-']
-        print('  DIANA INFO:\tThe ATCs of the drugs are missing! It is not possible to compute the ATC comparison\n')
-
-
-    #---------------------------------#
-    #   COMPARISON OF DCSE PROFILES   #
-    #---------------------------------#
-
-    print('  DIANA INFO:\tSTARTING COMPARISON OF dcSE PROFILES\n')
-
-    # Directories for the dcse results
-    dcse_dir1 = os.path.join(drug1_dir, 'dcse_profiles')
-    dcse_dir2 = os.path.join(drug2_dir, 'dcse_profiles')
-
-    SE_file1 = os.path.join(dcse_dir1, 'SE_profile.txt')
-    SE_file2 = os.path.join(dcse_dir2, 'SE_profile.txt')
-
-    # Get SEs from SE profiles
-    if fileExist(SE_file1) and fileExist(SE_file2):
-        drug1_instance.obtain_SE_from_file(SE_file1)
-        drug2_instance.obtain_SE_from_file(SE_file2)
-
-        SEs1_dict = comparison.generate_targets_dict_for_comparison(drug1_instance.SEs)
-        SEs2_dict = comparison.generate_targets_dict_for_comparison(drug2_instance.SEs)
-        summary_SEs = comparison.calculate_comparison(SEs1_dict, SEs2_dict)
-        comparison_instance.dcse_result = summary_SEs
-        print(summary_SEs)
-    else:
-        comparison_instance.dcse_result = ['-', '-', '-']
-        print('  DIANA INFO:\tThe SIDE EFFECTS of the drugs are missing! It is not possible to compute the SE comparison\n')
+    # Compare SE profiles
+    SEs1_dict = comparison.generate_targets_dict_for_comparison(drug_instance1.SEs)
+    SEs2_dict = comparison.generate_targets_dict_for_comparison(drug_instance2.SEs)
+    summary_SEs = comparison.calculate_comparison(SEs1_dict, SEs2_dict)
+    comparison_instance.dcse_result = summary_SEs
+    print(summary_SEs)
 
 
     #-------------------#
@@ -451,7 +346,7 @@ def compare_profiles(options):
     #-------------------#
 
     # Create a directory for the comparison of the two drugs
-    comparison_id =  '{}---{}'.format(diana_drug.generate_drug_id(drug1_instance.drug_name, drug1_instance.targets, network_filename), diana_drug.generate_drug_id(drug2_instance.drug_name, drug2_instance.targets, network_filename))
+    comparison_id =  '{}---{}'.format(diana_drug.generate_drug_id(drug_instance1.drug_name, drug_instance1.targets, network_filename), diana_drug.generate_drug_id(drug_instance2.drug_name, drug_instance2.targets, network_filename))
     comparison_dir = os.path.join(results_dir, comparison_id)
     create_directory(comparison_dir)
 
@@ -459,18 +354,26 @@ def compare_profiles(options):
     results_table = os.path.join(comparison_dir, 'results_table.tsv')
     comparison_instance.output_results_table(results_table, threshold_list)
 
-    if use_cluster == 'false':
+    if use_server == 'false':
 
         # Output the venn diagram of common targets
         venn_plot_targets = os.path.join(comparison_dir, 'venn_plot_targets.png')
-        shared_targets = set(drug1_instance.targets) & set(drug2_instance.targets)
-        comparison.plot_venn_2(drug1_instance.drug_name, drug2_instance.drug_name, set(drug1_instance.targets), set(drug2_instance.targets), shared_targets, venn_plot_targets)
+        shared_targets = set(drug_instance1.targets) & set(drug_instance2.targets)
+        comparison.plot_venn_2(drug_instance1.drug_name, drug_instance2.drug_name, set(drug_instance1.targets), set(drug_instance2.targets), shared_targets, venn_plot_targets)
+        # Output the venn diagram of common target-functions
+        venn_plot_func_tar = os.path.join(comparison_dir, 'venn_plot_functions-targets.png')
+        targets_functions_instance1 = network_analysis.FunctionalProfile(targets_functional_file1, 'targets', 'targets')
+        targets_functions_instance2 = network_analysis.FunctionalProfile(targets_functional_file2, 'targets', 'targets')
+        functions_targets_drug1 = targets_functions_instance1.go_id_to_values
+        functions_targets_drug2 = targets_functions_instance2.go_id_to_values
+        shared_func_tar = set(functions_targets_drug1) & set(functions_targets_drug2)
+        comparison.plot_venn_2(drug_instance1.drug_name, drug_instance2.drug_name, set(functions_targets_drug1), set(functions_targets_drug2), shared_func_tar, venn_plot_func_tar)
 
         # Output the venn diagram of common nodes/edges/functions using median_threshold
         venn_plot_nodes = os.path.join(comparison_dir, 'venn_plot_nodes.png')
         venn_plot_edges = os.path.join(comparison_dir, 'venn_plot_edges.png')
         venn_plot_functions = os.path.join(comparison_dir, 'venn_plot_functions.png')
-        comparison_instance.output_venn_diagram_dcguild(drug1_instance.drug_name, drug2_instance.drug_name, venn_plot_nodes, venn_plot_edges, venn_plot_functions)
+        comparison_instance.output_venn_diagram_dcguild(drug_instance1.drug_name, drug_instance2.drug_name, venn_plot_nodes, venn_plot_edges, venn_plot_functions)
 
 
 
@@ -539,6 +442,128 @@ def get_targets_in_sif_file(sif_file, targets):
             if node2 in str_tar:
                 targets_in_network.add(node2)
     return list(targets_in_network)
+
+
+def read_parameters_file(parameters_file):
+    """
+    Reads the parameters file of a drug profile
+    """
+    with open(parameters_file, 'r') as parameters_fd:
+        header = parameters_fd.readline()
+        content = parameters_fd.readline()
+        fields = content.strip().split('\t')
+    return fields
+
+
+def read_drug_profiles(drug_dir, threshold_list=[1, 2, 5, 'functions']):
+    """
+    Read the profiles of a drug.
+    """
+    # Check/Read parameters file
+    output_parameters_file = os.path.join(drug_dir, 'parameters.txt')
+    check_file(output_parameters_file)
+    parameters = read_parameters_file(output_parameters_file)
+    drugname = parameters[1]
+
+    # Create drug instance
+    drug_instance = diana_drug.Drug(drugname)
+
+    # Read target profile
+    target_dir = os.path.join(drug_dir, 'target_profiles')
+    target_file = os.path.join(target_dir, '{}_targets.txt'.format(drugname))
+    check_file(target_file)
+    drug_instance.obtain_targets_from_file(target_file, target_type_id='geneid')
+    print('  DIANA INFO:\tTARGETS OF {}: {}\n'.format(drugname, ', '.join(drug_instance.targets)))
+
+    # Read PFAM profile
+    pfam_file = os.path.join(target_dir, 'pfam_profile.txt')
+    check_file(pfam_file)
+    drug_instance.obtain_pfams_from_file(pfam_file)
+
+    # Read functional profiles
+    type_functions = ['gobp', 'gomf', 'reactome']
+    type_corrections = ['fdr_bh', 'bonferroni']
+    target_function_results = {}
+    for type_function in type_functions:
+        for type_correction in type_corrections:
+            targets_functional_file = os.path.join(target_dir, 'targets_functional_profile_{}_{}.txt'.format(type_function, type_correction))
+            check_file(targets_functional_file)
+            targets_functions_instance = network_analysis.FunctionalProfile(targets_functional_file, 'targets', 'targets')
+            target_function_results['{}-{}'.format(type_function, type_correction)] = targets_functions_instance
+
+    # Read GUILD node scores
+    guild_dir = os.path.join(drug_dir, 'guild_profiles')
+    scores_file = os.path.join(guild_dir, 'output_scores.sif.netcombo')
+    check_file(scores_file)
+    guild_profile_instance = network_analysis.GUILDProfile(scores_file, type_id='geneid', top=100, top_type='percentage')
+    drug_instance.targets_in_network = set([target for target in drug_instance.targets if target in guild_profile_instance.node_to_score.keys()])
+
+    # Read GUILD edge scores
+    scored_network_file = os.path.join(guild_dir, 'network_scored.txt')
+    check_file(scored_network_file)
+    scored_network_instance = network_analysis.EdgeProfile(network_file=scored_network_file, type_id='geneid', network_format='sif', top=100)
+
+    guild_results = {}
+    for top_threshold in threshold_list:
+        if top_threshold == 'functions':
+            # Read profiles associated to a functions threshold
+            for type_function in type_functions:
+                for type_correction in type_corrections:
+                    # Obtain cut-off
+                    output_sliding_window_file = os.path.join(guild_dir, 'sliding_window_{}_{}.txt'.format(type_function, type_correction))
+                    cutoff_central_position, cutoff_right_interval = functional_analysis.read_sliding_window_file(output_sliding_window_file=output_sliding_window_file, num_seeds=len(drug_instance.targets_in_network))
+                    print('{} - {} - {} - {}: Cut-off central position: {}. Cut-off right interval position: {}'.format(drug_instance.drug_name, top_threshold, type_function, type_correction, cutoff_central_position, cutoff_right_interval))
+                    # Obtain node profile
+                    node_file = os.path.join(guild_dir, 'node_profile_top_{}_{}_{}_{}.txt'.format('functions', type_function, type_correction, guild_profile_instance.type_id))
+                    check_file(node_file)
+                    node_profile_instance = network_analysis.GUILDProfile(scores_file=node_file, type_id=guild_profile_instance.type_id, top=cutoff_right_interval, top_type='number_of_nodes')
+                    guild_results['node-{}-{}-{}'.format(top_threshold, type_function, type_correction)] = node_profile_instance
+                    # Obtain edge profile
+                    edge_file = os.path.join(guild_dir, 'edge_profile_top_{}_{}_{}_{}.txt'.format('functions', type_function, type_correction, guild_profile_instance.type_id))
+                    check_file(edge_file)
+                    edge_profile_instance = network_analysis.EdgeProfile(network_file=edge_file, type_id=guild_profile_instance.type_id, network_format='sif', top=cutoff_right_interval, top_type='number_of_nodes')
+                    guild_results['edge-{}-{}-{}'.format(top_threshold, type_function, type_correction)] = edge_profile_instance
+                    # Obtain functional profile
+                    function_file = os.path.join(guild_dir, 'functional_profile_top_{}_{}_{}.txt'.format('functions', type_function, type_correction))
+                    functional_profile_instance = network_analysis.FunctionalProfile(functional_file=function_file, top=cutoff_right_interval, node_file=node_file)
+                    guild_results['functional-{}-{}-{}'.format(top_threshold, type_function, type_correction)] = functional_profile_instance
+        else:
+            # Obtain node profile
+            node_file = os.path.join(guild_dir, 'node_profile_top_{}_{}.txt'.format(str(top_threshold), guild_profile_instance.type_id))
+            check_file(node_file)
+            node_profile_instance = network_analysis.GUILDProfile(node_file, type_id=guild_profile_instance.type_id, top=top_threshold, top_type='percentage')
+            guild_results['node-{}'.format(top_threshold)] = node_profile_instance
+
+            # Obtain edge profiles
+            edge_file = os.path.join(guild_dir, 'edge_profile_top_{}_{}.txt'.format(str(top_threshold), guild_profile_instance.type_id))
+            check_file(edge_file)
+            edge_profile_instance = network_analysis.EdgeProfile(network_file=edge_file, type_id=guild_profile_instance.type_id, network_format='sif', top=top_threshold, top_type='percentage')
+            guild_results['edge-{}'.format(top_threshold)] = edge_profile_instance
+
+            # Obtain functional profiles
+            for type_function in type_functions:
+                for type_correction in type_corrections:
+                    functional_file = os.path.join(guild_dir, 'functional_profile_top_{}_{}_{}.txt'.format(str(top_threshold), type_function, type_correction))
+                    check_file(functional_file)
+                    functional_profile_instance = network_analysis.FunctionalProfile(functional_file=functional_file, top=top_threshold, node_file=node_file)
+                    guild_results['functional-{}-{}-{}'.format(top_threshold, type_function, type_correction)] = functional_profile_instance
+
+    # Read structures
+    structure_file = os.path.join(drug_dir, 'structure_profiles/structure_profile.txt')
+    check_file(structure_file)
+    drug_instance.obtain_SMILES_from_file(structure_file)
+
+    # Read ATCs
+    atc_file = os.path.join(drug_dir, 'atc_profiles/ATC_profile.txt')
+    check_file(atc_file)
+    drug_instance.obtain_ATCs_from_file(atc_file)
+
+    # Read side effects
+    se_file = os.path.join(drug_dir, 'se_profiles/SE_profile.txt')
+    check_file(se_file)
+    drug_instance.obtain_SE_from_file(se_file)
+
+    return drug_instance, guild_profile_instance, scored_network_instance, target_function_results, guild_results
 
 
 class FileNotFound(Exception):
