@@ -17,7 +17,6 @@ Drug Interactions ANAlyzer (DIANA) is a Python (v3) software which permits the p
 * **scripts**: Folder where the scripts to run the program are stored 
 * **scripts/generate_profiles.py**: Script to generate the profiles of a drug 
 * **scripts/compare_profiles.py**: Script to compare the profiles of two drugs 
-* **scripts/download_go_files.py**: Script to download Gene Ontology files necessary for the analysis 
 * **diana**: Folder where the source code is stored
 * **workspace**: Folder where the results of the analysis are stored
 * **workspace/profiles**: Folder containing the profiles generated
