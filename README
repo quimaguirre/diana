@@ -1,0 +1,207 @@
+################################################
+################################################
+##  DIANA - README OF THE PROCEDURES FOLLOWED ##
+################################################
+################################################
+
+#-------------------------------------------------#
+# 1. INTEGRATE BIOLOGICAL INFORMATION USING BIANA #
+#-------------------------------------------------#
+
+All the procedure is explained in detail in:
+
+/home/quim/PHD/Projects/BIANA/info/README_BIANA_2020
+/Users/quim/Dropbox/UPF/PHD/Projects/BIANA/info/README_BIANA_2020
+
+
+#----------------------------------------------#
+# 2. CREATE A MAPPING FILE OF DRUG INFORMATION #
+#----------------------------------------------#
+
+module load Python/3.6.2
+python /home/quim/PHD/Projects/DIANA/diana/scripts/create_drug_mappings.py -n /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.txt -d /home/quim/PHD/Projects/DIANA/diana/data -o /home/quim/PHD/Projects/DIANA/diana/mappings
+
+We read the input network from Cheng et al:
+    THE INPUT NETWORK HAS 215528 EDGES AND 15970 NODES (GENEIDS)
+
+We filtered the drug user entities by the ones that have DrugBankID. There aren't drugs with multiple DrugBankIDs:
+    DRUG USER ENTITIES WITH MULTIPLE DRUGBANK IDS: set()
+    NUMBER OF DRUG USER ENTITIES ORIGINALLY: 42306
+    NUMBER OF DRUG USER ENTITIES FILTERED: 13563
+
+We filtered the target user entities by the ones that have GeneID and TaxID = 9606. There are some of them with multiple GeneIDs. As all the cases with multiple GeneIDs come from Uniprot database, it is OK.
+    TARGET USER ENTITIES WITH MULTIPLE GENE IDS: {10112, 14722, 10512, 11793, 13843, 12309, 15257, 12577, 9123, 10284, 13871, 12850, 8636, 12103, 7368, 10707, 7767, 12376, 9048, 10341, 12010, 14320, 19187, 8436, 8827}
+    NUMBER OF TARGET USER ENTITIES ORIGINALLY: 5579
+    NUMBER OF TARGET USER ENTITIES FILTERED: 3020
+
+We filtered the drug-target interactions:
+    NUMBER OF DRUG-TARGET INTERACTIONS ORIGINALLY: 50001
+    NUMBER OF DRUG-TARGET INTERACTIONS FILTERED: 22046
+    NUMBER OF DRUG-TARGET INTERACTIONS IN NETWORK ORIGINALLY: 37647
+    NUMBER OF DRUG-TARGET INTERACTIONS IN NETWORK FILTERED: 19907
+    NUMBER OF DRUGS WITH AT LEAST ONE TARGET ORIGINALLY: 18655
+    NUMBER OF DRUGS WITH AT LEAST ONE TARGET FILTERED: 5563
+    NUMBER OF DRUGS WITH AT LEAST ONE TARGET IN THE NETWORK ORIGINALLY: 15586
+    NUMBER OF DRUGS WITH AT LEAST ONE TARGET IN THE NETWORK FILTERED: 5405
+
+We compared the drug-target interactions retrieved from the different sources of BIANA with the drug-target interactions from Cheng et al:
+    NUMBER OF DRUG-TARGET INTERACTIONS IN CHENG: 15051
+    NUMBER OF DRUG-TARGET INTERACTIONS IN NETWORK IN CHENG: 14530
+
+    I calculated some Venn diagrams of the intersection between sources using: http://bioinformatics.psb.ugent.be/webtools/Venn/
+    And also with IVENN (better than the previous): http://www.interactivenn.net/index2.html
+    They are in diana/mappings/venn_drugtargets and venn_drugtargets_network
+
+
+#---------------------------------------#
+# 3. CREATE DRUG COMBINATIONS BENCHMARK #
+#---------------------------------------#
+
+module load Python/3.6.2
+python /home/quim/PHD/Projects/DIANA/diana/scripts/integrate_drug_combinations.py -db /home/quim/Databases -m /home/quim/PHD/Projects/DIANA/diana/mappings -o /home/quim/PHD/Projects/DIANA/diana/mappings
+
+
+#-----------------#
+# 3. TEST PROGRAM #
+#-----------------#
+
+To create profiles:
+
+# With job ID
+module load Python/3.6.2
+python /home/quim/PHD/Projects/DIANA/diana/scripts/generate_profiles.py -j entresto -d entresto -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.sif
+Drug name: entresto
+ID: entresto
+Targets: 185, 4311
+Results: /home/quim/PHD/Projects/DIANA/diana/workspace/profiles/entresto/guild_profiles/
+scp rabin:/home/quim/PHD/Projects/DIANA/diana/workspace/profiles/entresto/guild_profiles/* /Users/quim/Dropbox/UPF/PHD/Projects/DIANA/diana/workspace/profiles/entresto/guild_profiles
+
+# Without job ID
+module load Python/3.6.2
+python /home/quim/PHD/Projects/DIANA/diana/scripts/generate_profiles.py -d DB11699 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.sif
+Drug name: tropisetron
+ID: 6c4e28ab0076
+Targets: 3359; 1140; 1136; 1137; 1141; 2743; 3360; 2741; 1146; 3350; 1133; 390402; 7840; 1144; 1134
+Results: /home/quim/PHD/Projects/DIANA/diana/workspace/profiles/6c4e28ab0076/guild_profiles/
+scp rabin:/home/quim/PHD/Projects/DIANA/diana/workspace/profiles/6c4e28ab0076/guild_profiles/* /Users/quim/Dropbox/UPF/PHD/Projects/DIANA/diana/workspace/profiles/6c4e28ab0076/guild_profiles2
+
+module load Python/3.6.2
+python /home/quim/PHD/Projects/DIANA/diana/scripts/generate_profiles.py -j DB11699 -d DB11699 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.sif -ws /sbi/users/quim/DIANA_data/diana
+
+
+To compare profiles:
+
+# No overlapping targets
+
+module load Python/3.6.2
+python /home/quim/PHD/Projects/DIANA/diana/scripts/compare_profiles.py -j1 DB11699 -j2 DB00177 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.sif -ws /sbi/users/quim/DIANA_data/diana
+
+Drug name 1: tropisetron (DB11699)
+Targets drug 1: 3359; 1140; 1136; 1137; 1141; 2743; 3360; 2741; 1146; 3350; 1133; 390402; 7840; 1144; 1134
+Drug name 2: valsartan (DB00177)
+Targets drug 2: 185
+
+# Overlapping targets
+
+module load Python/3.6.2
+python /home/quim/PHD/Projects/DIANA/diana/scripts/compare_profiles.py -j1 DB00602 -j2 DB11699 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.sif -ws /sbi/users/quim/DIANA_data/diana
+
+DB00602 = ivermectin
+DB11699 = tropisetron
+TARGETS OF DB00602: 1131; 8001; 150; 152; 1812; 2562; 2743; 1139; 89832; 2741; 2742; 1814; 1133; 7840; 5027; 1128; 9971
+TARGETS OF DB11699: 3359; 1140; 1136; 1137; 1141; 2743; 3360; 2741; 1146; 3350; 1133; 390402; 7840; 1144; 1134
+
+
+# TO DO:
+==> PUT THE ENRICHED GENE IDS IN THE FUNCTIONAL ENRICHMENT FILE (?)
+==> ADD THE THRESHOLD BY FUNCTIONS ENRICHED ==> IT'S DONE, BUT IT CAN BE IMPROVED: CHECK HOW MANY SLIDING WINDOWS I HAVE TO CALCULATE AND HOW MANY IF NOT FINDING ENRICHMENT IN THE BEGINNING 
+==> ASK EMRE ABOUT THRESHOLD BY FUNCTIONS FOR DRUGS, is it possible to do it, is it worth it?
+- Check program
+- Create profiles for all the drugs
+
+# Copy mappings to local
+scp rabin:/home/quim/PHD/Projects/DIANA/diana/mappings/* /Users/quim/Dropbox/UPF/PHD/Projects/DIANA/diana/mappings
+
+
+#----------------------------------#
+# 4. CREATE PROFILES USING CLUSTER #
+#----------------------------------#
+
+
+scp -r /home/quim/PHD/Projects/DIANA/diana quim@hydra:/users/sbi/quim/DIANA
+scp -r /home/quim/PHD/Projects/DIANA/diana/scripts/* quim@hydra:/users/sbi/quim/DIANA/diana/scripts
+
+module load Python/3.6.2
+python /users/sbi/quim/DIANA/diana/scripts/run_diana_profiles_cluster.py -i /users/sbi/quim/DIANA/diana/mappings/DIANA_drugbank_benchmark.txt -o /users/sbi/quim/DIANA/diana/workspace --dummy /users/sbi/quim/DIANA/dummy --logs /users/sbi/quim/DIANA/logs
+
+To check the status of the jobs:
+sacct
+squeue -u quim
+squeue -u quim -h -t pending,running -r | wc -l
+
+Copy the profiles to rabin:
+scp -r quim@hydra:/users/sbi/quim/DIANA/diana/workspace /sbi/users/quim/DIANA_data/diana
+
+
+# ERROR
+I discovered that among the drug-target interactions there are metabolic proteins that should be removed (specifically, the enzyme/carrier/transporter proteins from DrugBank).
+Therefore, I repeated the data files removing the drug-target interactions containing any metabolic protein from Drugbank.
+Then, I identified the profiles that do not have the same targets anymore and I have removed them using the script filter_drugs_without_metab.py.
+After this, I proceeded to create the profiles of the drugs with different targets:
+I copy the outputs:
+scp -r /home/quim/PHD/Projects/DIANA/diana/mappings quim@hydra:/users/sbi/quim/DIANA/diana
+I run the script in the cluster
+module load Python/3.6.2
+python /users/sbi/quim/DIANA/diana/scripts/run_diana_profiles_cluster.py -i /users/sbi/quim/DIANA/diana/mappings/DIANA_drugbank_benchmark_changes.txt -o /users/sbi/quim/DIANA/diana/workspace --dummy /users/sbi/quim/DIANA/dummy --logs /users/sbi/quim/DIANA/logs
+I copy the profiles to rabin:
+scp -r quim@hydra:/users/sbi/quim/DIANA/diana/workspace/profiles/* /sbi/users/quim/DIANA_data/diana/profiles
+
+
+#-----------------------------------#
+# 5. COMPARE PROFILES USING CLUSTER #
+#-----------------------------------#
+
+
+
+#-----------------------------#
+# ?. COPY FILES TO WEB SERVER #
+#-----------------------------#
+
+cp /home/quim/PHD/Projects/DIANA/diana/mappings/DIANA_drugbank_benchmark_names.json /var/www/html/DIANA/dianaserver/diana/diana/static/json
+cp -r /home/quim/PHD/Projects/DIANA/diana/mappings/* /sbi/users/quim/DIANA_data/diana/mappings
+
+
+#-------------------------------------------#
+# ?. UPDATE GITHUB AND KEEP A COPY OF FILES #
+#-------------------------------------------#
+
+1. UPDATE THE GITHUB
+
+git status
+git pull origin master # Get changes from github web
+cd /home/quim/PHD/Projects/DIANA/diana_git/scripts
+cp /home/quim/PHD/Projects/DIANA/diana/scripts/* .
+git add *
+git commit -m "Update of DIANA"
+git push -u origin master
+
+
+TO DO:
+
+- Save everything in GitHub and in my personal computer (or memory): the standalone program, the web server and the benchmark.
+- THINK ABOUT CHANGING THE WAY I'M DOING THE COMPARISONS. Maybe define all the nodes for both drugs at the same time and storing them in a dictionary. After this, compare all of them in an easy loop
+- Keep doing the comparison of profiles script: Now, continue with GUILD profiles.
+- Add an option to generate profiles and compare profiles to obtain the largest connected component of the GUILD profiles.
+- Add option in compare profiles to compare by network proximity (by Cheng and Barabasi).
+- The gene-function associations file used for the functional enrichment of the targets is specific for the network, and it should be general for all targets (because we are including targets that are not in the network!)
+  Therefore, we should create specific association files for them, and repeat the analysis for all drugs. I can wait to repeat the analysis for all drugs when I have checked that I have everything implemented!
+- Check how to display results of a profile
+- Repeat analysis for all drugs changing the following: 
+    - Functional enrichment analysis for target profiles (using a new associations file general for all targets)
+    - Longest connected component for GUILD profiles
+    - Maybe network visualization files?
+    - Something else?
+
+- Generate profile for diseases
+- Compare profiles for drug-disease
+- Compare profiles for drug-drug-disease

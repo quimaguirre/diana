@@ -8,7 +8,7 @@ Universitat Pompeu Fabra
 
 
 
-Drug Interactions ANAlyzer (DIANA) is a Python software which permits the prediction of drug combination using drug target and protein-protein interaction information
+Drug Interactions ANAlyzer (DIANA) is a Python (v3) software which permits the prediction of drug combination using drug target and protein-protein interaction information
 
 ## Getting Started
 
@@ -56,36 +56,26 @@ To create the profile of one drug, run the following script:
 
 ```
 python path/to/diana/scripts/generate_profiles.py 
+  -j <job id> # Give an specific job identifier. If not, it will be created automatically
   -d <drug name>
   -t <drug targets (in Entrez geneID)>
   -pt <type IDs of the proteins (default is geneid)>
   -sif <network (in SIF format and geneID)>
   -th <thresholds list> # Cut-offs that will define the profiles generated
-  -rad <radius> # The radius to generate the network of expansion if no network is introduced
-  -tax <taxid> # The Taxonomy ID restriction to generate the network of expansion if no network is introduced
   -ws <workspace> # Directory where the results will be saved
 ```
 
 Example of generate the profile having network and the targets:
 
 ```
-python path/to/diana/scripts/generate_profiles.py -d 'metformin' -t path/to/diana/workspace/targets/metformin.targets -sif path/to/diana/workspace/sif/human_eAFF_geneid_2017.sif
+python path/to/diana/scripts/generate_profiles.py -j metformin_with_targets -d metformin -t path/to/diana/workspace/targets/metformin.targets -sif path/to/diana/workspace/sif/human_eAFF_geneid_2017.sif
 ```
 
 Example of generate the profile having network but not having targets.
 The targets will be searched in BIANA.
 
 ```
-python path/to/diana/scripts/generate_profiles.py -d 'metformin' -sif path/to/diana/workspace/sif/human_eAFF_geneid_2017.sif
-```
-
-Example of generate the profile not having neither the network nor the targets.
-The targets will be searched in BIANA.
-The program will create a network of expansion using the targets as seeds and the options defined by the user as restrictions.
-In this case, we restrict the network to only human interactions found at least by Yeast to Hybrid methods, and not further than 3 levels from the targets.
-
-```
-python path/to/diana/scripts/generate_profiles.py -d 'metformin' -rad 3 -tax 9606 -res Y2H
+python path/to/diana/scripts/generate_profiles.py -j metformin -d metformin -sif path/to/diana/workspace/sif/human_eAFF_geneid_2017.sif
 ```
 
 
@@ -96,22 +86,18 @@ With this script we can compare the profiles of a pair of drugs:
 
 ```
 python path/to/diana/scripts/compare_profiles.py 
-  -d1 <drug name 1>
-  -d2 <drug name 2>
-  -t1 <targets from drug 1 (in Entrez geneID)>
-  -t2 <targets from drug 2 (in Entrez geneID)>
-  -pt <type IDs of the proteins (default is geneid)>
+  -j1 <job 1>
+  -j2 <job 2>
   -sif <network (in SIF format and geneID)>
   -th <thresholds list> # Cut-offs that will define the profiles generated
   -ws <workspace> # Directory where the results will be saved
 ```
 
-In the following example, we compare the profiles created for metformin using the targets in 'metformin.targets', with the profiles created for haloperidol using the targets from BIANA:
+In the following example, we compare the profiles created for metformin with the profiles created for haloperidol:
 
 ```
-python path/to/diana/scripts/compare_profiles.py -d1 'metformin' -t1 path/to/diana/workspace/targets/metformin.targets -d2 'haloperidol' -sif path/to/diana/workspace/sif/human_eAFF_geneid_2017.sif
+python path/to/diana/scripts/compare_profiles.py -j1 metformin -j2 haloperidol -sif path/to/diana/workspace/sif/human_eAFF_geneid_2017.sif
 ```
-
 
 
 #### Analyze the results:
