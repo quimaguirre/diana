@@ -1,0 +1,50 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0007186	G protein-coupled receptor signaling pathway	22	80	9.070582472947855e-15	1.0857487220118584e-11
+GO:0007213	G protein-coupled acetylcholine receptor signaling pathway	7	9	1.5707786025261517e-09	6.267406624079345e-07
+GO:0042310	vasoconstriction	6	6	1.3984428217574277e-09	6.267406624079345e-07
+GO:0007189	adenylate cyclase-activating G protein-coupled receptor signaling pathway	13	47	2.834806823738592e-09	8.483159420037738e-07
+GO:0019722	calcium-mediated signaling	10	28	1.2548447977143568e-08	3.0040984457281704e-06
+GO:0007204	positive regulation of cytosolic calcium ion concentration	12	46	2.4232363426780126e-08	4.8343565036426355e-06
+GO:0003100	regulation of systemic arterial blood pressure by endothelin	4	4	1.2659727422340666e-06	0.00013776085204128888
+GO:0014824	artery smooth muscle contraction	4	4	1.2659727422340666e-06	0.00013776085204128888
+GO:0014826	vein smooth muscle contraction	4	4	1.2659727422340666e-06	0.00013776085204128888
+GO:0007210	serotonin receptor signaling pathway	4	4	1.2659727422340666e-06	0.00013776085204128888
+GO:1902093	positive regulation of flagellated sperm motility	4	4	1.2659727422340666e-06	0.00013776085204128888
+GO:0070374	positive regulation of ERK1 and ERK2 cascade	16	124	3.805814267287193e-06	0.0003796299731618975
+GO:0038003	opioid receptor signaling pathway	4	5	6.161299970677382e-06	0.0005673135434539098
+GO:0007200	phospholipase C-activating G protein-coupled receptor signaling pathway	6	18	1.8401021403132402e-05	0.0015732873299678205
+GO:0043410	positive regulation of MAPK cascade	11	75	3.81437289723331e-05	0.002329371869461445
+GO:0007193	adenylate cyclase-inhibiting G protein-coupled receptor signaling pathway	6	20	3.628592319990195e-05	0.002329371869461445
+GO:0007217	tachykinin receptor signaling pathway	3	3	3.791487888918065e-05	0.002329371869461445
+GO:0051482	positive regulation of cytosolic calcium ion concentration involved in phospholipase C-activating G protein-coupled signaling pathway	4	7	4.08661731484464e-05	0.002329371869461445
+GO:0003081	regulation of systemic arterial blood pressure by renin-angiotensin	3	3	3.791487888918065e-05	0.002329371869461445
+GO:0048016	inositol phosphate-mediated signaling	4	7	4.08661731484464e-05	0.002329371869461445
+GO:0007603	phototransduction, visible light	3	3	3.791487888918065e-05	0.002329371869461445
+GO:0014065	phosphatidylinositol 3-kinase signaling	6	24	0.00011241925410411216	0.00611662941648283
+GO:0051464	positive regulation of cortisol secretion	3	4	0.00014786159733374274	0.00737459716702042
+GO:0010513	positive regulation of phosphatidylinositol biosynthetic process	3	4	0.00014786159733374274	0.00737459716702042
+GO:0008542	visual learning	4	10	0.00022620428513479886	0.01083066117225417
+GO:0018108	peptidyl-tyrosine phosphorylation	8	51	0.00027367704721057605	0.012599670211963829
+GO:0038083	peptidyl-tyrosine autophosphorylation	4	11	0.000346058679745111	0.014380440530398393
+GO:0001662	behavioral fear response	3	5	0.0003604120433683808	0.014380440530398393
+GO:0007191	adenylate cyclase-activating dopamine receptor signaling pathway	3	5	0.0003604120433683808	0.014380440530398393
+GO:1904778	positive regulation of protein localization to cell cortex	3	5	0.0003604120433683808	0.014380440530398393
+GO:0007166	cell surface receptor signaling pathway	6	30	0.00041815055586343135	0.01614600694737185
+GO:0031623	receptor internalization	6	32	0.000602965225632695	0.022554667971323
+GO:0071870	cellular response to catecholamine stimulus	3	6	0.0007028318936256291	0.024036850761996516
+GO:1903142	positive regulation of establishment of endothelial barrier	3	6	0.0007028318936256291	0.024036850761996516
+GO:0014068	positive regulation of phosphatidylinositol 3-kinase signaling	7	45	0.0006959587376153968	0.024036850761996516
+GO:0051387	negative regulation of neurotrophin TRK receptor signaling pathway	2	2	0.0011320470959455388	0.031513031949925815
+GO:0007617	mating behavior	2	2	0.0011320470959455388	0.031513031949925815
+GO:0023052	signaling	2	2	0.0011320470959455388	0.031513031949925815
+GO:0030072	peptide hormone secretion	2	2	0.0011320470959455388	0.031513031949925815
+GO:0009649	entrainment of circadian clock	2	2	0.0011320470959455388	0.031513031949925815
+GO:0035722	interleukin-12-mediated signaling pathway	2	2	0.0011320470959455388	0.031513031949925815
+GO:1902608	positive regulation of large conductance calcium-activated potassium channel activity	2	2	0.0011320470959455388	0.031513031949925815
+GO:1990172	G protein-coupled receptor catabolic process	2	2	0.0011320470959455388	0.031513031949925815
+GO:0043547	positive regulation of GTPase activity	10	94	0.0012056415897118882	0.032798931429207506
+GO:0051301	cell division	4	15	0.0012862237777457799	0.03421355248803774
+GO:0043406	positive regulation of MAP kinase activity	6	38	0.001550098801483988	0.040336266638615954
+GO:0051683	establishment of Golgi localization	3	8	0.001871152251765727	0.045709576435991335
+GO:0048246	macrophage chemotaxis	3	8	0.001871152251765727	0.045709576435991335
+GO:0060396	growth hormone receptor signaling pathway	3	8	0.001871152251765727	0.045709576435991335

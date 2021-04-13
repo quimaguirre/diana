@@ -1,0 +1,14 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0015464	acetylcholine receptor activity	8	10	1.0188948041261966e-19	1.4264527257766755e-18
+GO:0022848	acetylcholine-gated cation-selective channel activity	7	9	3.751910978148681e-17	2.626337684704077e-16
+GO:1904315	transmitter-gated ion channel activity involved in regulation of postsynaptic membrane potential	4	4	7.197411736494813e-11	2.519094107773185e-10
+GO:0022850	serotonin-gated cation-selective channel activity	4	4	7.197411736494813e-11	2.519094107773185e-10
+GO:0004993	G protein-coupled serotonin receptor activity	4	9	8.975588644665374e-09	2.5131648205063047e-08
+GO:0042166	acetylcholine binding	3	6	5.272170858942233e-07	1.2301732004198544e-06
+GO:0016933	extracellularly glycine-gated ion channel activity	1	1	0.0031194900312063348	0.0062389800624126695
+GO:0016934	extracellularly glycine-gated chloride channel activity	1	2	0.006229670678152384	0.010901923686766672
+GO:0015276	ligand-gated ion channel activity	1	3	0.00933056846329183	0.01306279584860856
+GO:0090722	receptor-receptor interaction	1	3	0.00933056846329183	0.01306279584860856
+GO:0015267	channel activity	1	4	0.012422209837120578	0.015810085247244372
+GO:0051378	serotonin binding	1	6	0.018577828794281385	0.021674133593328284
+GO:0016594	glycine binding	1	9	0.027742491289212308	0.029876529080690176

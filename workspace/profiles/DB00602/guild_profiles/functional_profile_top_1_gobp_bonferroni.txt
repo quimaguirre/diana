@@ -1,0 +1,7 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:1902093	positive regulation of flagellated sperm motility	4	4	7.762807171047396e-08	7.390192426837121e-05
+GO:0007191	adenylate cyclase-activating dopamine receptor signaling pathway	4	5	3.830381212528585e-07	0.00036465229143272125
+GO:0071870	cellular response to catecholamine stimulus	4	6	1.1340159174622669e-06	0.001079583153424078
+GO:0007099	centriole replication	5	14	2.2577921888689315e-06	0.002149418163803223
+GO:0008542	visual learning	4	10	1.5059064678242404e-05	0.014336229573686769
+GO:1904778	positive regulation of protein localization to cell cortex	3	5	4.578831103009722e-05	0.043590472100652554

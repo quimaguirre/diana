@@ -1,0 +1,11 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:1902476	chloride transmembrane transport	3	20	2.305275728366297e-05	0.004403076641179627
+GO:0035624	receptor transactivation	2	4	4.713363008402916e-05	0.00900252334604957
+GO:0060161	positive regulation of dopamine receptor signaling pathway	2	4	4.713363008402916e-05	0.00900252334604957
+GO:0095500	acetylcholine receptor signaling pathway	2	4	4.713363008402916e-05	0.00900252334604957
+GO:0007191	adenylate cyclase-activating dopamine receptor signaling pathway	2	5	7.841732241473923e-05	0.014977708581215192
+GO:0060134	prepulse inhibition	2	6	0.00011741828904010121	0.022426893206659332
+GO:0043268	positive regulation of potassium ion transport	2	7	0.0001640953869609909	0.03134221890954926
+GO:0071875	adrenergic receptor signaling pathway	2	7	0.0001640953869609909	0.03134221890954926
+GO:0032060	bleb assembly	2	7	0.0001640953869609909	0.03134221890954926
+GO:0034220	ion transmembrane transport	2	8	0.000218407630538259	0.04171585743280747

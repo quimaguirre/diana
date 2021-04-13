@@ -1,0 +1,5 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0005179	hormone activity	7	15	1.2411821305280868e-06	0.00037607818555001027
+GO:0004930	G protein-coupled receptor activity	10	35	1.3565238640910031e-06	0.00041102673081957396
+GO:0005184	neuropeptide hormone activity	5	9	1.579899572403706e-05	0.00478709570438323
+GO:0005086	ARF guanyl-nucleotide exchange factor activity	4	6	4.756057387295485e-05	0.01441085388350532

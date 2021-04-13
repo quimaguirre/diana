@@ -1,0 +1,5 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0004713	protein tyrosine kinase activity	27	49	2.542048661469029e-14	1.665041873262214e-11
+GO:0004672	protein kinase activity	28	98	8.418365190245823e-07	0.0005514029199611014
+GO:0004930	G protein-coupled receptor activity	13	35	3.759139561617946e-05	0.024622364128597543
+GO:0016301	kinase activity	13	37	7.386433979169818e-05	0.04838114256356231

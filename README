@@ -13,40 +13,102 @@ All the procedure is explained in detail in:
 /home/quim/PHD/Projects/BIANA/info/README_BIANA_2020
 /Users/quim/Dropbox/UPF/PHD/Projects/BIANA/info/README_BIANA_2020
 
+Keep in mind that Cheng's network has loops. See the following script to check it:
+
+module load Python/3.6.2
+python /home/quim/PHD/Projects/DIANA/diana/scripts/create_network_without_loops.py
+
+THE NETWORK HAS 217160 EDGES AND 15970 NODES (GENEIDS)
+THE NETWORK FILTERING LOOPS HAS 213896 EDGES AND 15934 NODES (GENEIDS)
+NUMBER OF LOOPS: 3264
+
+Keep in mind that if I want to count the edges using networkx, it is better to use network.number_of_edges() than len(network.edges()).
+This is because I think that isolated nodes with self-loops are not counted by len(network.edges()).
+
+I have also checked if the network is connected, and it has some nodes and edges that are unconnected:
+
+module load Python/3.6.2
+python /home/quim/PHD/Projects/DIANA/diana/scripts/create_connected_network.py
+
+THE NETWORK HAS 217160 EDGES AND 15970 NODES (GENEIDS)
+NUMBER OF LOOPS: 3264
+THE LONGEST CONNECTED COMPONENT HAS 217109 EDGES AND 15911 NODES (GENEIDS)
+THE LONGEST CONNECTED COMPONENT WITHOUT LOOPS HAS 213884 EDGES AND 15911 NODES (GENEIDS)
+
+I decided to use the connected network without loops: /home/quim/PHD/Projects/DIANA/diana/data/network_cheng_lcc_without_loops.sif
+
 
 #----------------------------------------------#
 # 2. CREATE A MAPPING FILE OF DRUG INFORMATION #
 #----------------------------------------------#
 
 module load Python/3.6.2
-python /home/quim/PHD/Projects/DIANA/diana/scripts/create_drug_mappings.py -n /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.txt -d /home/quim/PHD/Projects/DIANA/diana/data -o /home/quim/PHD/Projects/DIANA/diana/mappings
+python /home/quim/PHD/Projects/DIANA/diana/scripts/create_drug_mappings.py -n /home/quim/PHD/Projects/DIANA/diana/data/network_cheng_lcc_without_loops.sif -d /home/quim/PHD/Projects/DIANA/diana/data -o /home/quim/PHD/Projects/DIANA/diana/mappings
 
 We read the input network from Cheng et al:
-    THE INPUT NETWORK HAS 215528 EDGES AND 15970 NODES (GENEIDS)
+    THE INPUT NETWORK HAS 213884 EDGES AND 15911 NODES (GENEIDS)
+
+Retrieve the user entities associated with drugs:
+    NUMBER OF USER ENTITIES ASSOCIATED WITH DRUGS: 42308
+    NUMBER OF USER ENTITIES ASSOCIATED WITH DRUG NAMES: 41968
+    NUMBER OF USER ENTITIES ASSOCIATED WITH DRUGBANK IDS: 13565
+    NUMBER OF USER ENTITIES ASSOCIATED WITH PUBCHEMCOMPOUND IDS: 26611
+    NUMBER OF USER ENTITIES ASSOCIATED WITH CHEMBL IDS: 18508
+    NUMBER OF USER ENTITIES ASSOCIATED WITH ATCS: 4192
+    NUMBER OF USER ENTITIES ASSOCIATED WITH SMILES IDS: 16286
+    NUMBER OF PUBCHEM IDS ASSOCIATED WITH UMLS: 1556
+
+Retrieve drug-targets associations:
+    NUMBER OF DRUG TARGET INTERACTIONS RETRIEVED FROM DRUGBANK: 19074
+    NUMBER OF DRUG TARGETS RETRIEVED FROM DRUGBANK: 4832
+    NUMBER OF DRUG METABOLIC TARGET INTERACTIONS RETRIEVED FROM DRUGBANK: 8835
+    NUMBER OF DRUG METABOLIC TARGETS RETRIEVED FROM DRUGBANK: 735
+    NUMBER OF DRUG TARGET + METABOLIC INTERACTIONS RETRIEVED FROM DRUGBANK: 27907
+    NUMBER OF DRUG TARGETS + METABOLIC RETRIEVED FROM DRUGBANK: 5144
+    NUMBER OF DRUG TARGET INTERACTIONS RETRIEVED FROM DRUGCENTRAL: 8438
+    NUMBER OF DRUG TARGETS RETRIEVED FROM DRUGCENTRAL: 636
+    NUMBER OF DRUG TARGET INTERACTIONS RETRIEVED FROM DGIDB: 16904
+    NUMBER OF DRUG TARGETS RETRIEVED FROM DGIDB: 1924
+    NUMBER OF DRUG TARGET INTERACTIONS RETRIEVED FROM CHEMBL: 11860
+    NUMBER OF DRUG TARGETS RETRIEVED FROM CHEMBL: 1886
+    NUMBER OF DRUG TARGET INTERACTIONS RETRIEVED FROM TTD: 19287
+    NUMBER OF DRUG TARGETS RETRIEVED FROM TTD: 563
+    NUMBER OF TARGET USER ENTITIES without removing metab: 6145
+    NUMBER OF DRUG-TARGET INTERACTIONS without removing metab: 59264
+    NUMBER OF TARGET USER ENTITIES after removing metab: 5664
+    NUMBER OF DRUG-TARGET INTERACTIONS after removing metab: 49572
+
+Retrieve target information:
+    NUMBER OF USER ENTITIES ASSOCIATED WITH GENE SYMBOLS: 5061
+    NUMBER OF USER ENTITIES ASSOCIATED WITH GENE IDS: 4266
+    NUMBER OF USER ENTITIES ASSOCIATED WITH UNIPROT ACCESSIONS: 5564
+    NUMBER OF USER ENTITIES ASSOCIATED WITH UNIPROT ENTRIES: 5422
+    NUMBER OF USER ENTITIES ASSOCIATED WITH PFAMS: 4761
+    NUMBER OF USER ENTITIES ASSOCIATED WITH TAXONOMY IDS: 5030
 
 We filtered the drug user entities by the ones that have DrugBankID. There aren't drugs with multiple DrugBankIDs:
     DRUG USER ENTITIES WITH MULTIPLE DRUGBANK IDS: set()
-    NUMBER OF DRUG USER ENTITIES ORIGINALLY: 42306
-    NUMBER OF DRUG USER ENTITIES FILTERED: 13563
+    NUMBER OF DRUG USER ENTITIES ORIGINALLY: 42308
+    NUMBER OF DRUG USER ENTITIES FILTERED: 13565
 
 We filtered the target user entities by the ones that have GeneID and TaxID = 9606. There are some of them with multiple GeneIDs. As all the cases with multiple GeneIDs come from Uniprot database, it is OK.
-    TARGET USER ENTITIES WITH MULTIPLE GENE IDS: {10112, 14722, 10512, 11793, 13843, 12309, 15257, 12577, 9123, 10284, 13871, 12850, 8636, 12103, 7368, 10707, 7767, 12376, 9048, 10341, 12010, 14320, 19187, 8436, 8827}
+    TARGET USER ENTITIES WITH MULTIPLE GENE IDS: {6532, 8197, 13321, 11787, 16401, 12818, 10260, 14356, 11290, 11546, 19491, 6824, 10029, 13741, 12851, 11572, 11063, 6840, 10170, 11459, 12358, 11483, 11234, 9973, 13048}
     NUMBER OF TARGET USER ENTITIES ORIGINALLY: 5579
-    NUMBER OF TARGET USER ENTITIES FILTERED: 3020
+    NUMBER OF TARGET USER ENTITIES FILTERED: 3019
 
 We filtered the drug-target interactions:
-    NUMBER OF DRUG-TARGET INTERACTIONS ORIGINALLY: 50001
-    NUMBER OF DRUG-TARGET INTERACTIONS FILTERED: 22046
-    NUMBER OF DRUG-TARGET INTERACTIONS IN NETWORK ORIGINALLY: 37647
-    NUMBER OF DRUG-TARGET INTERACTIONS IN NETWORK FILTERED: 19907
-    NUMBER OF DRUGS WITH AT LEAST ONE TARGET ORIGINALLY: 18655
-    NUMBER OF DRUGS WITH AT LEAST ONE TARGET FILTERED: 5563
-    NUMBER OF DRUGS WITH AT LEAST ONE TARGET IN THE NETWORK ORIGINALLY: 15586
-    NUMBER OF DRUGS WITH AT LEAST ONE TARGET IN THE NETWORK FILTERED: 5405
+    NUMBER OF DRUG-TARGET INTERACTIONS ORIGINALLY: 49572
+    NUMBER OF DRUG-TARGET INTERACTIONS FILTERED: 21607
+    NUMBER OF DRUG-TARGET INTERACTIONS IN NETWORK ORIGINALLY: 37080
+    NUMBER OF DRUG-TARGET INTERACTIONS IN NETWORK FILTERED: 19389
+    NUMBER OF DRUGS WITH AT LEAST ONE TARGET ORIGINALLY: 18588
+    NUMBER OF DRUGS WITH AT LEAST ONE TARGET FILTERED: 5494
+    NUMBER OF DRUGS WITH AT LEAST ONE TARGET IN THE NETWORK ORIGINALLY: 15457
+    NUMBER OF DRUGS WITH AT LEAST ONE TARGET IN THE NETWORK FILTERED: 5312
 
 We compared the drug-target interactions retrieved from the different sources of BIANA with the drug-target interactions from Cheng et al:
     NUMBER OF DRUG-TARGET INTERACTIONS IN CHENG: 15051
-    NUMBER OF DRUG-TARGET INTERACTIONS IN NETWORK IN CHENG: 14530
+    NUMBER OF DRUG-TARGET INTERACTIONS IN NETWORK IN CHENG: 14490
 
     I calculated some Venn diagrams of the intersection between sources using: http://bioinformatics.psb.ugent.be/webtools/Venn/
     And also with IVENN (better than the previous): http://www.interactivenn.net/index2.html
@@ -60,6 +122,24 @@ We compared the drug-target interactions retrieved from the different sources of
 module load Python/3.6.2
 python /home/quim/PHD/Projects/DIANA/diana/scripts/integrate_drug_combinations.py -db /home/quim/Databases -m /home/quim/PHD/Projects/DIANA/diana/mappings -o /home/quim/PHD/Projects/DIANA/diana/mappings
 
+    Number of drugs in DCDB not found: 64
+    Number of drugs in DCDB found: 698
+    Number of drug combinations in DCDB that are not pairs: 402
+    Number of drug combinations in DCDB that are pairs: 884
+    Number of drugs in FDAOrangeBook not found: 111
+    Number of drugs in FDAOrangeBook found: 308
+    Number of drug combinations in FDAOrangeBook that are not pairs: 107
+    Number of drug combinations in FDAOrangeBook that are pairs: 279
+    Number of drugs in DrugCombDB not found: 354
+    Number of drugs in DrugCombDB found: 775
+    Number of drug combinations in DrugCombDB that are not pairs: 1
+    Number of drug combinations in DrugCombDB that are pairs: 1087
+    Number of drugs in Cheng not found: 0
+    Number of drugs in Cheng found: 362
+    Number of raw drug combinations in Cheng: 681
+    Number of drug combinations in Cheng that are pairs: 678
+    Number of drug combinations in Cheng that are not pairs: 3
+
 
 #-----------------#
 # 3. TEST PROGRAM #
@@ -69,7 +149,7 @@ To create profiles:
 
 # With job ID
 module load Python/3.6.2
-python /home/quim/PHD/Projects/DIANA/diana/scripts/generate_profiles.py -j entresto -d entresto -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.sif
+python /home/quim/PHD/Projects/DIANA/diana/scripts/generate_profiles.py -j entresto -d entresto -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng_lcc_without_loops.sif
 Drug name: entresto
 ID: entresto
 Targets: 185, 4311
@@ -78,15 +158,16 @@ scp rabin:/home/quim/PHD/Projects/DIANA/diana/workspace/profiles/entresto/guild_
 
 # Without job ID
 module load Python/3.6.2
-python /home/quim/PHD/Projects/DIANA/diana/scripts/generate_profiles.py -d DB11699 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.sif
+python /home/quim/PHD/Projects/DIANA/diana/scripts/generate_profiles.py -d DB11699 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng_lcc_without_loops.sif
 Drug name: tropisetron
 ID: 6c4e28ab0076
 Targets: 3359; 1140; 1136; 1137; 1141; 2743; 3360; 2741; 1146; 3350; 1133; 390402; 7840; 1144; 1134
 Results: /home/quim/PHD/Projects/DIANA/diana/workspace/profiles/6c4e28ab0076/guild_profiles/
 scp rabin:/home/quim/PHD/Projects/DIANA/diana/workspace/profiles/6c4e28ab0076/guild_profiles/* /Users/quim/Dropbox/UPF/PHD/Projects/DIANA/diana/workspace/profiles/6c4e28ab0076/guild_profiles2
 
+# Another example with job ID
 module load Python/3.6.2
-python /home/quim/PHD/Projects/DIANA/diana/scripts/generate_profiles.py -j DB11699 -d DB11699 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.sif -ws /sbi/users/quim/DIANA_data/diana
+python /home/quim/PHD/Projects/DIANA/diana/scripts/generate_profiles.py -j DB11699 -d DB11699 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng_lcc_without_loops.sif -ws /sbi/users/quim/DIANA_data/diana
 
 
 To compare profiles:
@@ -94,7 +175,7 @@ To compare profiles:
 # No overlapping targets
 
 module load Python/3.6.2
-python /home/quim/PHD/Projects/DIANA/diana/scripts/compare_profiles.py -j1 DB11699 -j2 DB00177 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.sif -ws /sbi/users/quim/DIANA_data/diana
+python /home/quim/PHD/Projects/DIANA/diana/scripts/compare_profiles.py -j1 DB11699 -j2 DB00177 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng_lcc_without_loops.sif -ws /sbi/users/quim/DIANA_data/diana
 
 Drug name 1: tropisetron (DB11699)
 Targets drug 1: 3359; 1140; 1136; 1137; 1141; 2743; 3360; 2741; 1146; 3350; 1133; 390402; 7840; 1144; 1134
@@ -104,7 +185,7 @@ Targets drug 2: 185
 # Overlapping targets
 
 module load Python/3.6.2
-python /home/quim/PHD/Projects/DIANA/diana/scripts/compare_profiles.py -j1 DB00602 -j2 DB11699 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng.sif -ws /sbi/users/quim/DIANA_data/diana
+python /home/quim/PHD/Projects/DIANA/diana/scripts/compare_profiles.py -j1 DB00602 -j2 DB11699 -sif /home/quim/PHD/Projects/DIANA/diana/data/network_cheng_lcc_without_loops.sif -ws /sbi/users/quim/DIANA_data/diana
 
 DB00602 = ivermectin
 DB11699 = tropisetron
@@ -130,9 +211,16 @@ scp rabin:/home/quim/PHD/Projects/DIANA/diana/mappings/* /Users/quim/Dropbox/UPF
 
 scp -r /home/quim/PHD/Projects/DIANA/diana quim@hydra:/users/sbi/quim/DIANA
 scp -r /home/quim/PHD/Projects/DIANA/diana/scripts/* quim@hydra:/users/sbi/quim/DIANA/diana/scripts
+scp -r /home/quim/PHD/Projects/DIANA/diana/diana quim@hydra:/users/sbi/quim/DIANA/diana
+scp -r /home/quim/PHD/Projects/DIANA/diana/mappings quim@hydra:/users/sbi/quim/DIANA/diana
+scp -r /home/quim/PHD/Projects/DIANA/diana/data quim@hydra:/users/sbi/quim/DIANA/diana
 
+# In hydra, copy the config file from hydra
+cp /users/sbi/quim/DIANA/config_diana_cluster.ini /users/sbi/quim/DIANA/diana/config.ini
+
+# Run DIANA
 module load Python/3.6.2
-python /users/sbi/quim/DIANA/diana/scripts/run_diana_profiles_cluster.py -i /users/sbi/quim/DIANA/diana/mappings/DIANA_drugbank_benchmark.txt -o /users/sbi/quim/DIANA/diana/workspace --dummy /users/sbi/quim/DIANA/dummy --logs /users/sbi/quim/DIANA/logs
+python /users/sbi/quim/DIANA/diana/scripts/run_diana_profiles_cluster.py -i /users/sbi/quim/DIANA/diana/mappings/DIANA_drugbank_benchmark.txt -o /users/sbi/quim/DIANA/diana/workspace -n /users/sbi/quim/DIANA/diana/data/network_cheng_lcc_without_loops.sif --dummy /users/sbi/quim/DIANA/dummy --logs /users/sbi/quim/DIANA/logs
 
 To check the status of the jobs:
 sacct
@@ -181,6 +269,7 @@ git status
 git pull origin master # Get changes from github web
 cd /home/quim/PHD/Projects/DIANA/diana_git/scripts
 cp /home/quim/PHD/Projects/DIANA/diana/scripts/* .
+cp /home/quim/PHD/Projects/DIANA/README /home/quim/PHD/Projects/DIANA/diana_git
 git add *
 git commit -m "Update of DIANA"
 git push -u origin master
@@ -188,19 +277,17 @@ git push -u origin master
 
 TO DO:
 
-- Save everything in GitHub and in my personal computer (or memory): the standalone program, the web server and the benchmark.
-- THINK ABOUT CHANGING THE WAY I'M DOING THE COMPARISONS. Maybe define all the nodes for both drugs at the same time and storing them in a dictionary. After this, compare all of them in an easy loop
-- Keep doing the comparison of profiles script: Now, continue with GUILD profiles.
+- Fork the toolbox from Emre to create my a new version of toolbox for Python 3 updating it using DIANA files
+- Add option in compare profiles to compare by network proximity (by Cheng and Barabasi! Check if it is the one of Menche or the one of Emre in Cheng's paper).
+- Which is the best option to save comparison results, MySQL table, or a file?
 - Add an option to generate profiles and compare profiles to obtain the largest connected component of the GUILD profiles.
-- Add option in compare profiles to compare by network proximity (by Cheng and Barabasi).
-- The gene-function associations file used for the functional enrichment of the targets is specific for the network, and it should be general for all targets (because we are including targets that are not in the network!)
-  Therefore, we should create specific association files for them, and repeat the analysis for all drugs. I can wait to repeat the analysis for all drugs when I have checked that I have everything implemented!
 - Check how to display results of a profile
 - Repeat analysis for all drugs changing the following: 
     - Functional enrichment analysis for target profiles (using a new associations file general for all targets)
     - Longest connected component for GUILD profiles
     - Maybe network visualization files?
     - Something else?
+    - Maybe it's not necessary to create all node/edge/function profiles. I can create them during the comparison, as it is a quick process, without saving the files.
 
 - Generate profile for diseases
 - Compare profiles for drug-disease

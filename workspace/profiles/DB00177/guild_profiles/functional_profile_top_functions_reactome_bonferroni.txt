@@ -1,0 +1,2 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+R-HSA-375276	Peptide ligand-binding receptors	2	94	9.936911637093874e-05	0.0004968455818546936

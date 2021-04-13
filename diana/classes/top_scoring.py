@@ -6,7 +6,7 @@ import diana.classes.network_translation as NT
 import diana.classes.functional_analysis as FA
 
 
-def node_top_scoring(node_to_score, threshold, threshold_type, output_file):
+def node_top_scoring(node_to_score, threshold, threshold_type, output_file, verbose=False):
     """
     Creates a profile with the most relevant nodes using a percentage threshold of the score provided by the user.
 
@@ -14,7 +14,7 @@ def node_top_scoring(node_to_score, threshold, threshold_type, output_file):
         @node_to_score:         Dictionary of all the nodes to their GUILD score
         @threshold:             Top percentage / number of nodes of the scores file in which we will cut to obtain the most relevant nodes
         @threshold_type:        Type of threshold used to define the top scoring nodes (it can either be 'percentage' or 'number_of_nodes')
-        @output_file:           Resulting file which will contain the most relevant nodes
+        @output_file:           Resulting file which will contain the most relevant nodes.
     """
 
     # Get number of top scoring nodes
@@ -46,12 +46,12 @@ def node_top_scoring(node_to_score, threshold, threshold_type, output_file):
                 else:
                     break
 
-    print('  DIANA INFO:\t{} file created.\n'.format(output_file))
-
+    if verbose:
+        print('  DIANA INFO:\t{} file created.\n'.format(output_file))
     return
 
 
-def edge_top_scoring(network_file, node_to_score, threshold, threshold_type, output_file):
+def edge_top_scoring(network_file, node_to_score, threshold, threshold_type, output_file, verbose=False):
     """
     Creates profiles with the most relevant edges using the thresholds provided by the user.
     The profile is created selecting the top most relevant nodes, and creating the subsequent scored subnetwork.
@@ -105,12 +105,12 @@ def edge_top_scoring(network_file, node_to_score, threshold, threshold_type, out
             score = (score_u + score_v) / 2
             f.write('{}\t{:f}\t{}\n'.format(u, score, v))
 
-    print('  DIANA INFO:\t{} file created.\n'.format(output_file))
-
+    if verbose:
+        print('  DIANA INFO:\t{} file created.\n'.format(output_file))
     return
 
 
-def functional_top_scoring(top_geneids, type_correction, output_file, associations_file):
+def functional_top_scoring(top_geneids, type_correction, associations_file, output_file, verbose=False):
     """
     Creates profiles with the most relevant functions using the thresholds provided by the user.
     The profile is created selecting the top most relevant nodes, and computing a functional enrichment analysis of them.
@@ -118,11 +118,12 @@ def functional_top_scoring(top_geneids, type_correction, output_file, associatio
     Parameters:
         @top_geneids:           A list containing the selected Entrez gene IDs to do the enrichment analysis
         @type_correction:       Type of p-value multiple test correction (fda_bh or bonferroni)
-        @output_file:           Resulting file which will contain the functions enriched
+        @output_file:           Resulting file which will contain the functions enriched.
         @associations_file:     File containing the function-gene associations
     """
-    FA.calculate_functional_enrichment_profile(top_geneids=top_geneids, type_correction=type_correction, output_file=output_file, associations_file=associations_file)
-    print('  DIANA INFO:\t{} file created.\n'.format(output_file))
+    FA.calculate_functional_enrichment_profile(top_geneids=top_geneids, type_correction=type_correction, associations_file=associations_file, output_file=output_file)
+    if verbose:
+        print('  DIANA INFO:\t{} file created.\n'.format(output_file))
     return
 
 

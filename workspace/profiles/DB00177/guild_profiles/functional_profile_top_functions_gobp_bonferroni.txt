@@ -1,0 +1,9 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0086097	phospholipase C-activating angiotensin-activated signaling pathway	1	2	0.0004238410560353644	0.005933774784495102
+GO:0019229	regulation of vasoconstriction	1	2	0.0004238410560353644	0.005933774784495102
+GO:0032430	positive regulation of phospholipase A2 activity	1	3	0.0006357278941746315	0.008900190518444841
+GO:0038166	angiotensin-activated signaling pathway	1	4	0.000847592272421176	0.011866291813896463
+GO:0010873	positive regulation of cholesterol esterification	1	7	0.0014830506476263823	0.02076270906676935
+GO:0051482	positive regulation of cytosolic calcium ion concentration involved in phospholipase C-activating G protein-coupled signaling pathway	1	7	0.0014830506476263823	0.02076270906676935
+GO:1903589	positive regulation of blood vessel endothelial cell proliferation involved in sprouting angiogenesis	1	9	0.0019065772648616244	0.02669208170806274
+GO:0032270	positive regulation of cellular protein metabolic process	1	16	0.0033882129378103158	0.04743498112934442

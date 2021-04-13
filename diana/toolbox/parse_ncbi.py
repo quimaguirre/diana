@@ -17,24 +17,24 @@ def get_geneid_symbol_mapping(file_name):
     geneid_to_name = {} # now contains only the official symbol
     name_to_geneid = {}
     for line in f:
-	words = line.strip("\n").split("\t")
-	if len(words) == 2:
-	    geneid, symbol = words
-	else:
-	    geneid, symbol, alternatives = words[:3]
-	    alternatives = alternatives.split("|")
-	geneid = geneid.strip() # strip in case mal formatted input file
-	symbol = symbol.strip()
-	if geneid == "" or symbol == "":
-	    continue
-	#geneid_to_names.setdefault(geneid, set()).add(symbol) 
-	geneid_to_name[geneid] = symbol
-	for symbol in [symbol] + alternatives: # added for synonym parsing
-	    if symbol in name_to_geneid: 
-		if int(geneid) >= int(name_to_geneid[symbol]):
-		    continue
-		print "Multiple geneids", name_to_geneid[symbol], geneid, symbol
-	    name_to_geneid[symbol] = geneid
+        words = line.strip("\n").split("\t")
+        if len(words) == 2:
+            geneid, symbol = words
+        else:
+            geneid, symbol, alternatives = words[:3]
+            alternatives = alternatives.split("|")
+        geneid = geneid.strip() # strip in case mal formatted input file
+        symbol = symbol.strip()
+        if geneid == "" or symbol == "":
+            continue
+        #geneid_to_names.setdefault(geneid, set()).add(symbol) 
+        geneid_to_name[geneid] = symbol
+        for symbol in [symbol] + alternatives: # added for synonym parsing
+            if symbol in name_to_geneid: 
+                if int(geneid) >= int(name_to_geneid[symbol]):
+                    continue
+                print "Multiple geneids", name_to_geneid[symbol], geneid, symbol
+            name_to_geneid[symbol] = geneid
     f.close()
     return geneid_to_name, name_to_geneid
 
@@ -47,13 +47,13 @@ def get_unigene_to_geneids(file_name, prefix = "Hs."):
     unigene_to_geneids = {}
     f.readline()
     for line in f:
-	geneid, unigene = line.strip().split("\t")
-	if not unigene.startswith(prefix):
-	    continue
-	unigene_to_geneids.setdefault(unigene, set()).add(geneid)
+        geneid, unigene = line.strip().split("\t")
+        if not unigene.startswith(prefix):
+            continue
+        unigene_to_geneids.setdefault(unigene, set()).add(geneid)
     #for unigene, geneids in unigene_to_geneids.iteritems():
-    #	if len(geneids) > 1:
-    #	    print unigene, geneids
+    #        if len(geneids) > 1:
+    #            print unigene, geneids
     return unigene_to_geneids
 
 
@@ -65,10 +65,10 @@ def get_geneid_to_pubmeds(file_name, tax_id = "9606"):
     geneid_to_pubmeds = {}
     f.readline()
     for line in f:
-	tax, geneid, pubmed_id = line.strip().split("\t")
-	if tax != tax_id:
-	    continue
-	geneid_to_pubmeds.setdefault(geneid, set()).add(pubmed_id)
+        tax, geneid, pubmed_id = line.strip().split("\t")
+        if tax != tax_id:
+            continue
+        geneid_to_pubmeds.setdefault(geneid, set()).add(pubmed_id)
     return geneid_to_pubmeds
 
 
@@ -81,17 +81,17 @@ def get_ensembl_protein_to_id(file_name, id_type="geneid"):
     parser = TsvReader.TsvReader(file_name, delim="\t")
     fields_to_include = ["Protein stable ID"]
     if id_type == "geneid":
-	column_name = "EntrezGene ID" #"NCBI gene ID" (in GRch38)
+        column_name = "EntrezGene ID" #"NCBI gene ID" (in GRch38)
     elif id_type == "genesymbol":
-	column_name = "HGNC symbol"
+        column_name = "HGNC symbol"
     else:
-	raise ValueError("Unknown id type")
+        raise ValueError("Unknown id type")
     fields_to_include += [column_name]
     column_to_index, id_to_values = parser.read(fields_to_include=fields_to_include)
     for ensembl, values in id_to_values.iteritems():
-    	for val in values:
-    	    gene = val[column_to_index[column_name.lower()]]
-	    ensembl_to_id[ensembl] = gene
+            for val in values:
+                gene = val[column_to_index[column_name.lower()]]
+            ensembl_to_id[ensembl] = gene
     return ensembl_to_id
 
 
@@ -114,27 +114,27 @@ def get_homology_mapping(file_name, tax_id, from_tax_id="9606", symbol_type="gen
     """
     # 3  9606  34  ACADM  4557231  NP_000007.1
     if symbol_type == "symbol":
-	idx = 3
+        idx = 3
     elif symbol_type == "geneid":
-	idx = 2
+        idx = 2
     else:
-	raise ValueError("Unknown symbol type: %s" % symbol_type)
+        raise ValueError("Unknown symbol type: %s" % symbol_type)
     # Parse group info
     group_to_taxid_to_geneid = {}
     f = open(file_name)
     for line in f:
-	words = line.strip("\n").split("\t")
-	group, taxid = words[:2]
-	geneid = words[idx]
-	d = group_to_taxid_to_geneid.setdefault(group, {})
-	d[taxid] = geneid
+        words = line.strip("\n").split("\t")
+        group, taxid = words[:2]
+        geneid = words[idx]
+        d = group_to_taxid_to_geneid.setdefault(group, {})
+        d[taxid] = geneid
     f.close()
     # Get geneid mapping
     geneid_to_geneid = {}
     for group, taxid_to_geneid in group_to_taxid_to_geneid.iteritems():
-	if tax_id not in taxid_to_geneid or from_tax_id not in taxid_to_geneid:
-	    continue
-	geneid_to_geneid[taxid_to_geneid[from_tax_id]] = taxid_to_geneid[tax_id]
+        if tax_id not in taxid_to_geneid or from_tax_id not in taxid_to_geneid:
+            continue
+        geneid_to_geneid[taxid_to_geneid[from_tax_id]] = taxid_to_geneid[tax_id]
     return geneid_to_geneid, group_to_taxid_to_geneid 
 
  

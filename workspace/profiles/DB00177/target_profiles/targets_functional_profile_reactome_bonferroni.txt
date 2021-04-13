@@ -1,0 +1,2 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+R-HSA-8856825	Cargo recognition for clathrin-mediated endocytosis	1	25	0.010322047894246716	0.04128819157698686

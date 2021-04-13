@@ -1,0 +1,63 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0007189	adenylate cyclase-activating G protein-coupled receptor signaling pathway	14	47	2.2916219342359467e-10	3.51076480324947e-07
+GO:0007186	G protein-coupled receptor signaling pathway	16	80	7.24509043435994e-09	5.5497392727197135e-06
+GO:0007204	positive regulation of cytosolic calcium ion concentration	12	46	2.4232363426780126e-08	1.2374660256609052e-05
+GO:0007200	phospholipase C-activating G protein-coupled receptor signaling pathway	8	18	4.964841968418655e-08	1.5212275791234759e-05
+GO:0007191	adenylate cyclase-activating dopamine receptor signaling pathway	5	5	4.2140935127305236e-08	1.5212275791234759e-05
+GO:0071870	cellular response to catecholamine stimulus	5	6	2.458533966601616e-07	6.277456728056126e-05
+GO:0007195	adenylate cyclase-inhibiting dopamine receptor signaling pathway	4	4	1.2659727422340666e-06	0.00024243378013782374
+GO:1902093	positive regulation of flagellated sperm motility	4	4	1.2659727422340666e-06	0.00024243378013782374
+GO:0007099	centriole replication	6	14	3.3376575447860554e-06	0.0005681434842902485
+GO:1904322	cellular response to forskolin	5	9	4.7469172005347395e-06	0.0006611161046562928
+GO:0007213	G protein-coupled acetylcholine receptor signaling pathway	5	9	4.7469172005347395e-06	0.0006611161046562928
+GO:0018105	peptidyl-serine phosphorylation	13	88	6.962453882775992e-06	0.0008888732790344018
+GO:0008542	visual learning	5	10	9.232057392226207e-06	0.0010879624557608115
+GO:0048660	regulation of smooth muscle cell proliferation	4	6	1.799219311854033e-05	0.0019688599898288416
+GO:0007193	adenylate cyclase-inhibiting G protein-coupled receptor signaling pathway	6	20	3.628592319990195e-05	0.003235753869223748
+GO:0032467	positive regulation of cytokinesis	7	29	3.801799585249834e-05	0.003235753869223748
+GO:0034776	response to histamine	3	3	3.791487888918065e-05	0.003235753869223748
+GO:0007603	phototransduction, visible light	3	3	3.791487888918065e-05	0.003235753869223748
+GO:0018107	peptidyl-threonine phosphorylation	8	44	9.350268391594218e-05	0.0075392690399591275
+GO:0048148	behavioral response to cocaine	3	4	0.00014786159733374274	0.010296543959786086
+GO:0006171	cAMP biosynthetic process	4	9	0.00013941539404154524	0.010296543959786086
+GO:1901020	negative regulation of calcium ion transmembrane transporter activity	3	4	0.00014786159733374274	0.010296543959786086
+GO:0042771	intrinsic apoptotic signaling pathway in response to DNA damage by p53 class mediator	5	17	0.00018651181393863214	0.011905670789749353
+GO:0031333	negative regulation of protein complex assembly	6	26	0.00018165248220086252	0.011905670789749353
+GO:0007212	dopamine receptor signaling pathway	3	5	0.0003604120433683808	0.0204500463126059
+GO:0038003	opioid receptor signaling pathway	3	5	0.0003604120433683808	0.0204500463126059
+GO:1904778	positive regulation of protein localization to cell cortex	3	5	0.0003604120433683808	0.0204500463126059
+GO:1902476	chloride transmembrane transport	5	20	0.00042995668746343373	0.02352477304264216
+GO:0032436	positive regulation of proteasomal ubiquitin-dependent protein catabolic process	7	42	0.000451122055366786	0.023831689269721245
+GO:1900273	positive regulation of long-term synaptic potentiation	4	12	0.0005053686426254898	0.02497499227426614
+GO:0030010	establishment of cell polarity	4	12	0.0005053686426254898	0.02497499227426614
+GO:0070555	response to interleukin-1	5	21	0.0005488898216190112	0.02627810021001016
+GO:0071380	cellular response to prostaglandin E stimulus	3	6	0.0007028318936256291	0.02910103948741794
+GO:0071276	cellular response to cadmium ion	5	22	0.0006909234985025659	0.02910103948741794
+GO:0048169	regulation of long-term neuronal synaptic plasticity	3	6	0.0007028318936256291	0.02910103948741794
+GO:0060134	prepulse inhibition	3	6	0.0007028318936256291	0.02910103948741794
+GO:1904951	positive regulation of establishment of protein localization	3	6	0.0007028318936256291	0.02910103948741794
+GO:0042493	response to drug	7	49	0.001174170995386872	0.033406128615573114
+GO:0007190	activation of adenylate cyclase activity	3	7	0.0011993061839794526	0.033406128615573114
+GO:0051482	positive regulation of cytosolic calcium ion concentration involved in phospholipase C-activating G protein-coupled signaling pathway	3	7	0.0011993061839794526	0.033406128615573114
+GO:0007617	mating behavior	2	2	0.0011320470959455388	0.033406128615573114
+GO:0050482	arachidonic acid secretion	3	7	0.0011993061839794526	0.033406128615573114
+GO:0038188	cholecystokinin signaling pathway	2	2	0.0011320470959455388	0.033406128615573114
+GO:0060158	phospholipase C-activating dopamine receptor signaling pathway	2	2	0.0011320470959455388	0.033406128615573114
+GO:0001975	response to amphetamine	2	2	0.0011320470959455388	0.033406128615573114
+GO:1903799	negative regulation of production of miRNAs involved in gene silencing by miRNA	3	7	0.0011993061839794526	0.033406128615573114
+GO:0009649	entrainment of circadian clock	2	2	0.0011320470959455388	0.033406128615573114
+GO:0006476	protein deacetylation	4	14	0.0009687486737752465	0.033406128615573114
+GO:1990441	negative regulation of transcription from RNA polymerase II promoter in response to endoplasmic reticulum stress	2	2	0.0011320470959455388	0.033406128615573114
+GO:0032071	regulation of endodeoxyribonuclease activity	2	2	0.0011320470959455388	0.033406128615573114
+GO:0034462	small-subunit processome assembly	2	2	0.0011320470959455388	0.033406128615573114
+GO:0034502	protein localization to chromosome	2	2	0.0011320470959455388	0.033406128615573114
+GO:0061857	endoplasmic reticulum stress-induced pre-emptive quality control	2	2	0.0011320470959455388	0.033406128615573114
+GO:1990172	G protein-coupled receptor catabolic process	2	2	0.0011320470959455388	0.033406128615573114
+GO:0034971	histone H3-R17 methylation	2	2	0.0011320470959455388	0.033406128615573114
+GO:0060766	negative regulation of androgen receptor signaling pathway	4	15	0.0012862237777457799	0.03518740763404526
+GO:0045184	establishment of protein localization	5	26	0.0015452228400580376	0.04153125247313884
+GO:0043066	negative regulation of apoptotic process	19	268	0.0017747746610789475	0.04687853070298185
+GO:0007188	adenylate cyclase-modulating G protein-coupled receptor signaling pathway	3	8	0.001871152251765727	0.04699352868369006
+GO:0002052	positive regulation of neuroblast proliferation	3	8	0.001871152251765727	0.04699352868369006
+GO:0010332	response to gamma radiation	3	8	0.001871152251765727	0.04699352868369006
+GO:0006468	protein phosphorylation	17	230	0.0019698218861534896	0.04867366338043784

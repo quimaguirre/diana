@@ -1,0 +1,8 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+R-HSA-629597	Highly calcium permeable nicotinic acetylcholine receptors	7	7	7.021191706763266e-19	2.036145594961347e-17
+R-HSA-629587	Highly sodium permeable postsynaptic acetylcholine nicotinic receptors	7	7	7.021191706763266e-19	2.036145594961347e-17
+R-HSA-629594	Highly calcium permeable postsynaptic nicotinic acetylcholine receptors	7	9	2.5181990235804847e-17	7.302777168383406e-16
+R-HSA-112314	Neurotransmitter receptors and postsynaptic signal transmission	5	7	2.7937279248436706e-12	8.101810982046645e-11
+R-HSA-390666	Serotonin receptors	4	11	1.7721350241092986e-08	5.139191569916965e-07
+R-HSA-418594	G alpha (i) signalling events	6	211	2.4060397990715657e-05	0.000697751541730754
+R-HSA-419408	Lysosphingolipid and LPA receptors	2	12	0.0005173702625896508	0.015003737615099873

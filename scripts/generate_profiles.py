@@ -7,9 +7,9 @@ import sys, os, re
 
 from context import diana
 import diana.classes.drug as diana_drug
+import diana.classes.functional_analysis as functional_analysis
 import diana.classes.network_analysis as network_analysis
 import diana.classes.top_scoring as top_scoring
-import diana.classes.functional_analysis as functional_analysis
 
 
 def main():
@@ -318,10 +318,9 @@ def generate_profiles(options):
             associations_file = os.path.join(network_associations_dir, '{}_to_gene.txt'.format(type_function))
             for type_correction in type_corrections:
                 print(type_function, type_correction)
-                output_seeds_enrichment_file = os.path.join(guild_dir, 'functional_profile_targets_network_{}_{}.txt'.format(type_function, type_correction))
                 output_sliding_window_file = os.path.join(guild_dir, 'sliding_window_{}_{}.txt'.format(type_function, type_correction))
                 if not fileExist(output_sliding_window_file):
-                    cutoff_central_position, cutoff_right_interval = functional_analysis.calculate_functions_threshold(seed_geneids=drug_instance.targets_in_network, geneid_to_score=guild_profile_instance.node_to_score, type_correction=type_correction, associations_file=associations_file, output_seeds_enrichment_file=output_seeds_enrichment_file, output_sliding_window_file=output_sliding_window_file, seed_functional_enrichment=False)
+                    cutoff_central_position, cutoff_right_interval = functional_analysis.calculate_functions_threshold(seed_geneids=drug_instance.targets_in_network, geneid_to_score=guild_profile_instance.node_to_score, type_correction=type_correction, associations_file=associations_file, output_sliding_window_file=output_sliding_window_file, output_seeds_enrichment_file=None, seed_functional_enrichment=False)
                 else:
                     cutoff_central_position, cutoff_right_interval = functional_analysis.read_sliding_window_file(output_sliding_window_file=output_sliding_window_file, num_seeds=len(drug_instance.targets_in_network))
                 print('Cut-off central position: {}. Cut-off right interval position: {}'.format(cutoff_central_position, cutoff_right_interval))
@@ -406,7 +405,7 @@ def generate_profiles(options):
         for type_correction in type_corrections:
             output_file = os.path.join(targets_dir, 'targets_functional_profile_{}_{}.txt'.format(type_function, type_correction))
             if not fileExist(output_file):
-                top_scoring.functional_top_scoring(top_geneids=drug_instance.targets, type_correction=type_correction, output_file=output_file, associations_file=associations_file)
+                top_scoring.functional_top_scoring(top_geneids=drug_instance.targets, type_correction=type_correction, associations_file=associations_file, output_file=output_file)
 
 
     #---------------------------#

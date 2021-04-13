@@ -1,0 +1,17 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0042310	vasoconstriction	6	6	2.082656235010945e-11	1.3453959278170705e-08
+GO:0007186	G protein-coupled receptor signaling pathway	13	80	6.406547395493944e-10	4.1386296174890876e-07
+GO:0007213	G protein-coupled acetylcholine receptor signaling pathway	6	9	1.6774754640287481e-09	1.0836491497625712e-06
+GO:0003100	regulation of systemic arterial blood pressure by endothelin	4	4	7.762807171047396e-08	5.0147734324966176e-05
+GO:0014824	artery smooth muscle contraction	4	4	7.762807171047396e-08	5.0147734324966176e-05
+GO:0014826	vein smooth muscle contraction	4	4	7.762807171047396e-08	5.0147734324966176e-05
+GO:1902093	positive regulation of flagellated sperm motility	4	4	7.762807171047396e-08	5.0147734324966176e-05
+GO:0019722	calcium-mediated signaling	7	28	2.969959664303996e-07	0.00019185939431403816
+GO:0007204	positive regulation of cytosolic calcium ion concentration	8	46	8.249022535176647e-07	0.0005328868557724114
+GO:0007217	tachykinin receptor signaling pathway	3	3	4.694507875009205e-06	0.0030326520872559467
+GO:0007166	cell surface receptor signaling pathway	6	30	8.84373324861598e-06	0.0057130516786059226
+GO:0051464	positive regulation of cortisol secretion	3	4	1.8545147285384148e-05	0.01198016514635816
+GO:0007210	serotonin receptor signaling pathway	3	4	1.8545147285384148e-05	0.01198016514635816
+GO:0010513	positive regulation of phosphatidylinositol biosynthetic process	3	4	1.8545147285384148e-05	0.01198016514635816
+GO:0043406	positive regulation of MAP kinase activity	6	38	3.6784579422006345e-05	0.0237628383066161
+GO:0038003	opioid receptor signaling pathway	3	5	4.578831103009722e-05	0.029579248925442805

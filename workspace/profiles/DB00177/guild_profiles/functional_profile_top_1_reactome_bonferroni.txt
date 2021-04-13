@@ -1,0 +1,16 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+R-HSA-416476	G alpha (q) signalling events	48	153	1.7657064997739718e-49	7.963336313980612e-47
+R-HSA-418594	G alpha (i) signalling events	45	211	6.363077089921194e-38	2.8697477675544585e-35
+R-HSA-375276	Peptide ligand-binding receptors	29	94	1.8795707213295521e-29	8.47686395319628e-27
+R-HSA-434316	Fatty Acids bound to GPR40 (FFAR1) regulate insulin secretion	7	8	2.7800865084922535e-12	1.2538190153300064e-09
+R-HSA-418555	G alpha (s) signalling events	16	128	3.960453045254379e-10	1.786164323409725e-07
+R-HSA-380095	Tachykinin receptors bind tachykinins	5	5	1.314798024554942e-09	5.929739090742788e-07
+R-HSA-456926	Thrombin signalling through proteinase activated receptors (PARs)	9	32	1.85071040663105e-09	8.346703933906035e-07
+R-HSA-399997	Acetylcholine regulates insulin secretion	6	10	4.287068824255268e-09	1.933468039739126e-06
+R-HSA-428930	Thromboxane signalling through TP receptor	7	24	9.571615103035602e-08	4.3167984114690565e-05
+R-HSA-418597	G alpha (z) signalling events	8	48	1.2126801869725859e-06	0.0005469187643246362
+R-HSA-418592	ADP signalling through P2Y purinoceptor 1	6	25	2.9281302248714876e-06	0.001320586731417041
+R-HSA-8856825	Cargo recognition for clathrin-mediated endocytosis	10	103	8.997738484622072e-06	0.004057980056564554
+R-HSA-380108	Chemokine receptors bind chemokines	7	55	3.6108970259905765e-05	0.0162851455872175
+R-HSA-9009391	Extra-nuclear estrogen signaling	7	57	4.572879505214855e-05	0.020623686568518994
+R-HSA-9656223	Signaling by RAF1 mutants	6	43	7.83373507521121e-05	0.03533014518920256

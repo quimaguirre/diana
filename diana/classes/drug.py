@@ -26,6 +26,7 @@ class Drug(object):
         self.pfams = []
         self.smiles = []
         self.ATCs = []
+        self.level_to_ATCs = {'level1':[], 'level2':[], 'level3':[], 'level4':[], 'level5':[]}
         self.SEs = []
         self.target_type_id = None
         self.target_type_id_to_table = {
@@ -401,6 +402,7 @@ class Drug(object):
         with open(ATCs_file, 'r') as ATC_file_fd:
             for line in ATC_file_fd:
                 self.ATCs.append(line.strip())
+        self.level_to_ATCs = obtain_ATC_levels(self.ATCs)
         return
 
     def obtain_ATCs_from_table(self, drugbankids, drugbank_atc_file):
@@ -410,6 +412,7 @@ class Drug(object):
         drugbank_atc_df = pd.read_csv(drugbank_atc_file, sep='\t', index_col=None)
         atcs = drugbank_atc_df.loc[drugbank_atc_df['#drugbankid'].isin(drugbankids), 'atc'].tolist()
         self.ATCs = set([atc.upper() for atc in atcs])
+        self.level_to_ATCs = obtain_ATC_levels(self.ATCs)
         return
 
     def obtain_ATCs_from_BIANA(self, biana_cnx, output_file, unification_protocol):
@@ -672,7 +675,8 @@ def get_all_atcs_from_mappings(drugbank_atc_file):
     """
     drugbank_atc_df = pd.read_csv(drugbank_atc_file, sep='\t', index_col=None)
     atcs = set(drugbank_atc_df['atc'].tolist())
-    return atcs
+    level_to_ATCs = obtain_ATC_levels(atcs)
+    return level_to_ATCs
 
 def get_all_ses_from_mappings(drugbank_side_effects_file):
     """
@@ -710,6 +714,19 @@ def return_unification_protocol_table(biana_cnx, unification_protocol):
     cursor.close()
 
     return up_table
+
+def obtain_ATC_levels(ATCs):
+    """
+    Obtain the 5 levels of ATCs from an ATC list
+    """
+    level_to_ATCs = {'level1':[], 'level2':[], 'level3':[], 'level4':[], 'level5':[]}
+    for ATC in ATCs:
+        level_to_ATCs['level1'].append(ATC[0]) # e.g. A
+        level_to_ATCs['level2'].append(ATC[0:3]) # e.g. A10
+        level_to_ATCs['level3'].append(ATC[0:4]) # e.g. A10B
+        level_to_ATCs['level4'].append(ATC[0:5]) # e.g. A10BA
+        level_to_ATCs['level5'].append(ATC) # e.g. A10BA02
+    return level_to_ATCs
 
 def obtain_drugbank_to_targets(biana_cnx, unification_protocol, sif_file, output_pickle_file):
     """

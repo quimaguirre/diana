@@ -1,0 +1,22 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0018105	peptidyl-serine phosphorylation	32	88	2.4155556775681746e-13	7.096902580695297e-10
+GO:0006468	protein phosphorylation	52	230	2.330915782105703e-11	6.848230567826555e-08
+GO:0007200	phospholipase C-activating G protein-coupled receptor signaling pathway	12	18	1.3820174248600143e-09	4.060367194238722e-06
+GO:0051225	spindle assembly	11	17	1.1096284624900986e-08	3.2600884227959095e-05
+GO:0042752	regulation of circadian rhythm	20	57	1.5779907816419042e-08	4.6361369164639144e-05
+GO:0007098	centrosome cycle	14	29	1.9271773014722444e-08	5.662046911725454e-05
+GO:0071276	cellular response to cadmium ion	12	22	3.5008304350712466e-08	0.00010285439818239323
+GO:0018107	peptidyl-threonine phosphorylation	17	44	3.632634606160728e-08	0.00010672680472900219
+GO:0007099	centriole replication	9	14	2.810546424153825e-07	0.0008257385394163938
+GO:0032212	positive regulation of telomere maintenance via telomerase	13	30	3.069821698471766e-07	0.0009019136150110049
+GO:0007189	adenylate cyclase-activating G protein-coupled receptor signaling pathway	16	47	7.005838963667704e-07	0.0020583154875255714
+GO:0007213	G protein-coupled acetylcholine receptor signaling pathway	7	9	9.169299020355928e-07	0.0026939400521805716
+GO:0043066	negative regulation of apoptotic process	47	268	9.266523072070629e-07	0.002722504478574351
+GO:0007186	G protein-coupled receptor signaling pathway	21	80	1.8033162539751672e-06	0.005298143154179041
+GO:0007190	activation of adenylate cyclase activity	6	7	2.2998632368522768e-06	0.006756998189871989
+GO:0035556	intracellular signal transduction	21	83	3.4338253914148004e-06	0.010088578999976684
+GO:0007191	adenylate cyclase-activating dopamine receptor signaling pathway	5	5	4.220749421512381e-06	0.012400561800403375
+GO:0034614	cellular response to reactive oxygen species	11	27	5.30722355650794e-06	0.015592622809020329
+GO:0032467	positive regulation of cytokinesis	11	29	1.2032576582384696e-05	0.03535170999904624
+GO:0008284	positive regulation of cell proliferation	44	270	1.469722921052042e-05	0.04318045942050899
+GO:0007204	positive regulation of cytosolic calcium ion concentration	14	46	1.5298457599045883e-05	0.0449468684259968

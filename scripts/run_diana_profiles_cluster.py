@@ -22,13 +22,14 @@ def parse_options():
     # Directory arguments
     parser.add_option("-i", action="store", type="string", dest="input_file", help="File with the names of the drugs to analyze", metavar="INPUT_FILE")
     parser.add_option("-o", action="store", type="string", dest="output_dir", help="Output folder where to store the results", metavar="OUTPUT_DIR")
+    parser.add_option("-n", action="store", type="string", dest="network_file", help="File of the network in SIF format", metavar="NETWORK_FILE")
     parser.add_option("--dummy_dir", default="dummy/", action="store", type="string", dest="dummy_dir", help="Dummy directory (default = ./)", metavar="DUMMY_DIR")
     parser.add_option("--logs_dir", default="logs/", action="store", type="string", dest="logs_dir", help="Logs directory (default = ./)", metavar="LOGS_DIR")
 
 
     (options, args) = parser.parse_args()
 
-    if options.input_file is None or options.output_dir is None:
+    if options.input_file is None or options.output_dir is None or options.network_file is None:
         parser.error("missing arguments: type option \"-h\" for help")
 
     return options
@@ -64,6 +65,14 @@ def run_diana_profiles_cluster(options):
     input_file = options.input_file
     output_dir = options.output_dir
     create_directory(output_dir)
+    network_file = options.network_file
+
+    if not fileExist(input_file):
+        print('Input file missing: {}'.format(input_file))
+        sys.exit(10)
+    if not fileExist(network_file):
+        print('Network file missing: {}'.format(network_file))
+        sys.exit(10)
 
     # Create the dummy directory (to store the commands)
     dummy_dir = os.path.abspath(options.dummy_dir)
@@ -91,8 +100,7 @@ def run_diana_profiles_cluster(options):
     #print(len(drugs))
 
     # Run the script for each target
-    network_file = os.path.join(src_path, '../data/network_cheng.sif')
-    for drug in drugs:
+    for drug in sorted(drugs):
 
         if limit: # Break the loop if a limit of jobs is introduced
             if l > limit:
@@ -105,7 +113,7 @@ def run_diana_profiles_cluster(options):
         script = os.path.join(dummy_dir, script_name)
         #if not fileExist(results_file):
         if not fileExist(script):
-            command = 'python {} -j {} -d {} -sif {}'.format( os.path.join(src_path, 'generate_profiles.py'), drug, drug, network_file )
+            command = 'python {} -j {} -d {} -sif {} -ws {}'.format( os.path.join(src_path, 'generate_profiles.py'), drug, drug, network_file, output_dir )
             print(command)
 
             #To run in the cluster submitting files to queues

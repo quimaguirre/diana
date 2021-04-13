@@ -663,7 +663,7 @@ class GUILDProfile(object):
         return node_to_score
 
 
-    def create_node_profile(self, threshold, threshold_type, output_file):
+    def create_node_profile(self, threshold, threshold_type, output_file=None):
         """
         Select the most relevant nodes of the pvalue_profile using a threshold
         to select the top scoring nodes. Returns a new GUILDProfile containing the
@@ -798,7 +798,7 @@ class FunctionalProfile(object):
         self.top = top
         self.node_file = node_file
 
-        self.term_id_to_pvalue = self.parse_functional_profile()
+        self.term_id_to_values = self.parse_functional_profile()
 
 
     ###########
@@ -812,14 +812,14 @@ class FunctionalProfile(object):
         - Key = GO/Reactome term id
         - Value = Set --> (Log of odds ratio, Adjusted p-value)
         """
-        term_id_to_pvalue = {}
+        term_id_to_values = {}
         with open(self.functional_file, 'r') as f:
             for line in f:
                 if line[0] == '#':
                     continue
                 term_id, term_name, num_genes, total_genes, pval, adj_pval = line.strip().split('\t')
-                term_id_to_pvalue[term_id] = (float(num_genes)/float(total_genes), float(adj_pval))
-        return term_id_to_pvalue
+                term_id_to_values[term_id] = (float(num_genes)/float(total_genes), float(adj_pval))
+        return term_id_to_values
 
 
 

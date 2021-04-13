@@ -110,7 +110,7 @@ def create_drug_mappings(options):
                     print(len(fields))
                     print('Network in incorrect format!')
                     sys.exit(10)
-        print('\nTHE INPUT NETWORK HAS {} EDGES AND {} NODES (GENEIDS)\n'.format(len(network_geneid.edges()), len(network_geneid.nodes())))
+        print('\nTHE INPUT NETWORK HAS {} EDGES AND {} NODES (GENEIDS)\n'.format(network_geneid.number_of_edges(), network_geneid.number_of_nodes()))
 
 
     #--------------------------------------#

@@ -1,0 +1,6 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:1902476	chloride transmembrane transport	5	15	6.947436074483151e-08	1.1741166965876526e-05
+GO:0007218	neuropeptide signaling pathway	3	7	1.7954771654121102e-05	0.0030343564095464664
+GO:0043268	positive regulation of potassium ion transport	2	2	6.920580738496685e-05	0.011695781448059397
+GO:0071361	cellular response to ethanol	2	2	6.920580738496685e-05	0.011695781448059397
+GO:0001964	startle response	2	2	6.920580738496685e-05	0.011695781448059397

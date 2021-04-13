@@ -1,0 +1,7 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0016934	extracellularly glycine-gated chloride channel activity	4	4	5.532888003392154e-09	2.2684840813907833e-07
+GO:0016594	glycine binding	3	10	8.15122091647014e-05	0.0033420005757527575
+GO:0022852	glycine-gated chloride ion channel activity	2	2	8.456023393333382e-05	0.0034669695912666865
+GO:0004938	alpha2-adrenergic receptor activity	2	3	0.00025226507288322837	0.010342867988212363
+GO:0051379	epinephrine binding	2	4	0.0005017154865985074	0.020570334950538803
+GO:0042166	acetylcholine binding	2	5	0.0008315288827589987	0.03409268419311895

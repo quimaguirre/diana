@@ -1,0 +1,2 @@
+#diana_id	drug	targets	network
+DB11699	DB11699	2743;1146;1133;2741;1134;390402;7840;3360;1136;3350;3359;1140;1144;1141;1137	network_cheng_lcc_without_loops.sif

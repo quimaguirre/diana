@@ -1,0 +1,2 @@
+#diana_id	drug	targets	network
+DB00177	DB00177	185	network_cheng_lcc_without_loops.sif

@@ -1,1 +1,0 @@
-[H][C@]1(CC#N)CC[C@@]2([H])[C@]3([H])CCC4=CC(OS(N)(=O)=O)=C(OC)C=C4[C@@]3([H])CC[C@]12C

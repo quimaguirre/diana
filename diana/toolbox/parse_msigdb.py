@@ -10,17 +10,17 @@ def get_msigdb_info(pathway_file, prefix=None, inner_delim=None):
     pathway_to_geneids = {}
     geneid_to_pathways = {}
     for line in open(pathway_file):
-	words = line.strip().split("\t")
-	pathway = words[0].lower().strip()
-	if prefix is not None:
-	    if not pathway.startswith(prefix):
-		continue
-	geneids = words[2:]
-	if inner_delim is not None:
-	    geneids = geneids[0].split(inner_delim)
-	pathway_to_geneids[pathway] = set(geneids)
-	for geneid in geneids:
-	    geneid_to_pathways.setdefault(geneid, set()).add(pathway)
+        words = line.strip().split("\t")
+        pathway = words[0].lower().strip()
+        if prefix is not None:
+            if not pathway.startswith(prefix):
+                continue
+        geneids = words[2:]
+        if inner_delim is not None:
+            geneids = geneids[0].split(inner_delim)
+        pathway_to_geneids[pathway] = set(geneids)
+        for geneid in geneids:
+            geneid_to_pathways.setdefault(geneid, set()).add(pathway)
     return pathway_to_geneids, geneid_to_pathways
 
 

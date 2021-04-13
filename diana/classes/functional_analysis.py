@@ -4,14 +4,14 @@ from statsmodels.sandbox.stats.multicomp import multipletests
 import sys, os, re
 
 
-def calculate_functional_enrichment_profile(top_geneids, type_correction, output_file, associations_file):
+def calculate_functional_enrichment_profile(top_geneids, type_correction, associations_file, output_file=None):
     """
     Calculate the functional enrichment of the seeds, obtaining GO terms significantly enriched.
     Calculate how many of the nodes in the ranking are part of the enriched GO terms.
     Parameters:
         @top_geneids:           Set of Entrez gene IDs to check the enrichment
         @type_correction:       The multiple test p-value correction (fdr_bh / bonferroni)
-        @output_file:           Resulting file which will contain the functions enriched
+        @output_file:           Resulting file which will contain the functions enriched. If None, the file is not created.
         @associations_file:     File containing the function-gene associations
     """
     # Read associations file
@@ -23,11 +23,12 @@ def calculate_functional_enrichment_profile(top_geneids, type_correction, output
     test_passed_f1, terms_l1, term_to_values = functional_enrichment(dicbp2, N, list(set(top_geneids)), type_correction)
 
     # Write the output file
-    if len(top_geneids) > 0:
-        write_enrichment_file_Carlota(term_to_values, term2name, output_file)
-    else:
-        with open(output_file, 'w') as out_fd:
-            out_fd.write('# Term ID\tTerm name\tnum of genes\tnum of total genes\tP-value\tP-value corrected')
+    if output_file:
+        if len(top_geneids) > 0:
+            write_enrichment_file_Carlota(term_to_values, term2name, output_file)
+        else:
+            with open(output_file, 'w') as out_fd:
+                out_fd.write('# Term ID\tTerm name\tnum of genes\tnum of total genes\tP-value\tP-value corrected')
     return term_to_values
 
 
@@ -301,14 +302,15 @@ def read_number_of_functions_file(number_of_functions_file):
     return number_of_functions
 
 
-def calculate_functions_threshold(seed_geneids, geneid_to_score, type_correction, associations_file, output_seeds_enrichment_file, output_sliding_window_file, seed_functional_enrichment=False):
+def calculate_functions_threshold(seed_geneids, geneid_to_score, type_correction, associations_file, output_sliding_window_file, output_seeds_enrichment_file=None, seed_functional_enrichment=False):
     """
     Calculate the threshold of a GUILD scored list of genes by their functional similarity with their seeds.
     Parameters:
         @seed_geneids:                  Set of seed Entrez gene IDs to check the enrichment
         @type_correction:               The multiple test p-value correction (fdr_bh / bonferroni)
-        @output_seeds_enrichment_file:  Resulting file which will contain the functions enriched for the seeds
         @associations_file:             File containing the function-gene associations
+        @output_sliding_window_file     File containing the sliding window information.
+        @output_seeds_enrichment_file:  Resulting file which will contain the functions enriched for the seeds. If None, the file is not created
         @seed_functional_enrichment:    If true, a functional enrichment of the seeds is calculated.
                                         If false, all the functions associated to the seeds are considered.
     """
@@ -324,11 +326,12 @@ def calculate_functions_threshold(seed_geneids, geneid_to_score, type_correction
         # Calculate functional enrichment
         test_passed_f1, terms_l1, term_to_values = functional_enrichment(dicbp2, N, list(set(seed_geneids)), type_correction)
         # Write the output seeds file
-        if len(seed_geneids) > 0:
-            write_enrichment_file_Carlota(term_to_values, term2name, output_seeds_enrichment_file)
-        else:
-            with open(output_seeds_enrichment_file, 'w') as out_fd:
-                out_fd.write('# Term ID\tTerm name\tnum of genes\tnum of total genes\tP-value\tP-value corrected')
+        if output_seeds_enrichment_file:
+            if len(seed_geneids) > 0:
+                write_enrichment_file_Carlota(term_to_values, term2name, output_seeds_enrichment_file)
+            else:
+                with open(output_seeds_enrichment_file, 'w') as out_fd:
+                    out_fd.write('# Term ID\tTerm name\tnum of genes\tnum of total genes\tP-value\tP-value corrected')
         # Get the genes of the functions enriched
         for term in term_to_values:
             pval, pval_corrected, x, m = term_to_values[term]

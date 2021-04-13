@@ -1,0 +1,3 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0001596	angiotensin type I receptor activity	1	1	0.0005574136008908622	0.0005574136008908622
+GO:0004945	angiotensin type II receptor activity	1	1	0.0005574136008908622	0.0005574136008908622

@@ -1,0 +1,5 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+R-HSA-112314	Neurotransmitter receptors and postsynaptic signal transmission	4	9	2.0519921353408775e-07	7.181972473693071e-06
+R-HSA-390648	Muscarinic acetylcholine receptors	3	5	2.850344533298472e-06	9.976205866544652e-05
+R-HSA-392023	Adrenaline signalling through Alpha-2 adrenergic receptor	2	3	0.00013858713192761292	0.004850549617466452
+R-HSA-390651	Dopamine receptors	2	5	0.000458148362553501	0.016035192689372535

@@ -1,5 +1,0 @@
-# num of genes	num of total genes	Log of odds ratio	P-value	Adjusted p-value	GO term ID	GO term name	GO type
-1	1	13.749240939	-	7.26e-05	GO:0004603	phenylethanolamine N-methyltransferase activity	MF
-1	2	12.749240939	-	1.45e-04	GO:0042418	epinephrine biosynthetic process	BP
-1	6	11.1642784383	-	4.36e-04	GO:0042423	catecholamine biosynthetic process	BP
-1	68	7.66177809777	-	2.90e-03	GO:0032259	methylation	BP

@@ -1,0 +1,11 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+R-HSA-112314	Neurotransmitter receptors and postsynaptic signal transmission	4	9	2.0519921353408775e-07	7.181972473693072e-06
+R-HSA-390648	Muscarinic acetylcholine receptors	3	5	2.850344533298472e-06	4.988102933272326e-05
+R-HSA-392023	Adrenaline signalling through Alpha-2 adrenergic receptor	2	3	0.00013858713192761292	0.0016168498724888174
+R-HSA-390651	Dopamine receptors	2	5	0.000458148362553501	0.004008798172343134
+R-HSA-390696	Adrenoceptors	2	9	0.0016222664815202894	0.011355865370642025
+R-HSA-5683826	Surfactant metabolism	2	12	0.002937499920434794	0.012851562151902224
+R-HSA-400042	Adrenaline,noradrenaline inhibits insulin secretion	2	11	0.0024580543536313936	0.012851562151902224
+R-HSA-629594	Highly calcium permeable postsynaptic nicotinic acetylcholine receptors	2	12	0.002937499920434794	0.012851562151902224
+R-HSA-418597	G alpha (z) signalling events	2	16	0.005253390298916762	0.020429851162454077
+R-HSA-399997	Acetylcholine regulates insulin secretion	1	2	0.013991597742112685	0.0489705920973944

@@ -1,0 +1,15 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0007189	adenylate cyclase-activating G protein-coupled receptor signaling pathway	14	47	2.2916219342359467e-10	3.51076480324947e-07
+GO:0007186	G protein-coupled receptor signaling pathway	16	80	7.24509043435994e-09	1.1099478545439429e-05
+GO:0007204	positive regulation of cytosolic calcium ion concentration	12	46	2.4232363426780126e-08	3.712398076982715e-05
+GO:0007191	adenylate cyclase-activating dopamine receptor signaling pathway	5	5	4.2140935127305236e-08	6.455991261503162e-05
+GO:0007200	phospholipase C-activating G protein-coupled receptor signaling pathway	8	18	4.964841968418655e-08	7.606137895617379e-05
+GO:0071870	cellular response to catecholamine stimulus	5	6	2.458533966601616e-07	0.0003766474036833675
+GO:0007195	adenylate cyclase-inhibiting dopamine receptor signaling pathway	4	4	1.2659727422340666e-06	0.00193947024110259
+GO:1902093	positive regulation of flagellated sperm motility	4	4	1.2659727422340666e-06	0.00193947024110259
+GO:0007099	centriole replication	6	14	3.3376575447860554e-06	0.005113291358612237
+GO:1904322	cellular response to forskolin	5	9	4.7469172005347395e-06	0.007272277151219221
+GO:0007213	G protein-coupled acetylcholine receptor signaling pathway	5	9	4.7469172005347395e-06	0.007272277151219221
+GO:0018105	peptidyl-serine phosphorylation	13	88	6.962453882775992e-06	0.01066647934841282
+GO:0008542	visual learning	5	10	9.232057392226207e-06	0.01414351192489055
+GO:0048660	regulation of smooth muscle cell proliferation	4	6	1.799219311854033e-05	0.02756403985760379

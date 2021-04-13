@@ -17,8 +17,11 @@ class ComparisonResult(object):
         self.target_results = {'target':[], 'pfam':[], 'gobp-fdr_bh':[], 'gobp-bonferroni':[], 'gomf-fdr_bh':[], 'gomf-bonferroni':[], 'reactome-fdr_bh':[], 'reactome-bonferroni':[]}
         self.guild_results = {'node':{}, 'edge':{}, 'gobp-fdr_bh':{}, 'gobp-bonferroni':{}, 'gomf-fdr_bh':{}, 'gomf-bonferroni':{}, 'reactome-fdr_bh':{}, 'reactome-bonferroni':{}}
         self.structure_result = None
-        self.atc_result = []
+        self.atc_results = {'level1':[], 'level2':[], 'level3':[], 'level4':[], 'level5':[]}
         self.se_result = []
+        self.type_functions = ['gobp', 'gomf', 'reactome']
+        self.type_corrections = ['fdr_bh', 'bonferroni']
+        self.atc_levels = ['level1', 'level2', 'level3', 'level4', 'level5']
         self.example_threshold = None
         self.node_examples = []
         self.edge_examples = []
@@ -36,7 +39,7 @@ class ComparisonResult(object):
         if data_type in self.target_results:
             self.target_results[data_type] = result
         else:
-            print('Incorrect type of data for Target! It must be target, pfam or function.\n')
+            print('Incorrect type of data for Target: {}. It must be target, pfam or a specific type of function.\n'.format(data_type))
             sys.exit(10)
         return
 
@@ -48,7 +51,7 @@ class ComparisonResult(object):
         if data_type in self.guild_results:
             self.guild_results[data_type][threshold] = result
         else:
-            print('Incorrect type of data for guild! It must be node, edge or function.\n')
+            print('Incorrect type of data for guild: {}. It must be node, edge or a specific type of function.\n'.format(data_type))
             sys.exit(10)
         return
 
@@ -69,20 +72,29 @@ class ComparisonResult(object):
         Outputs a results table containing the results of all the comparisons
         """
         with open(results_table, 'w') as results_table_fd:
-            results_table_fd.write('method\tdata_type\tthreshold\tdot_product\tspearman\tjaccard\n')
+            results_table_fd.write('method\tdata_type\tthreshold\tdot_product\tspearman\tjaccard\tn_common\tfisher_oddsratio\tfisher_pvalue\n')
 
-            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'target', 'target', '-', self.target_results['target'][0], self.target_results['target'][1], self.target_results['target'][2] ))
-            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'target', 'pfam', '-', self.target_results['pfam'][0],  self.target_results['pfam'][1],  self.target_results['pfam'][2] ))
-            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'target', 'function', '-',  self.target_results['function'][0], self.target_results['function'][1], self.target_results['function'][2] ))
+            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'target', 'target', '-', self.target_results['target'][0], self.target_results['target'][1], self.target_results['target'][2], self.target_results['target'][3], self.target_results['target'][4], self.target_results['target'][5] ))
+            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'target', 'pfam', '-', self.target_results['pfam'][0],  self.target_results['pfam'][1],  self.target_results['pfam'][2], self.target_results['pfam'][3], self.target_results['pfam'][4], self.target_results['pfam'][5] ))
+            for type_function in self.type_functions:
+                for type_correction in self.type_corrections:
+                    functional_feature = '{}-{}'.format(type_function, type_correction)
+                    results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'target', functional_feature, '-',  self.target_results[functional_feature][0], self.target_results[functional_feature][1], self.target_results[functional_feature][2], self.target_results[functional_feature][3], self.target_results[functional_feature][4], self.target_results[functional_feature][5] ))
 
             for top_threshold in threshold_list:
-                results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'guild', 'node', top_threshold, self.guild_results['node'][top_threshold][0], self.guild_results['node'][top_threshold][1], self.guild_results['node'][top_threshold][2] ))
-                results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'guild', 'edge', top_threshold, self.guild_results['edge'][top_threshold][0], self.guild_results['edge'][top_threshold][1], self.guild_results['edge'][top_threshold][2] ))
-                results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'guild', 'function', top_threshold, self.guild_results['function'][top_threshold][0], self.guild_results['function'][top_threshold][1], self.guild_results['function'][top_threshold][2] ))
+                results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'guild', 'node', top_threshold, self.guild_results['node'][top_threshold][0], self.guild_results['node'][top_threshold][1], self.guild_results['node'][top_threshold][2], self.guild_results['node'][top_threshold][3], self.guild_results['node'][top_threshold][4], self.guild_results['node'][top_threshold][5] ))
+                results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'guild', 'edge', top_threshold, self.guild_results['edge'][top_threshold][0], self.guild_results['edge'][top_threshold][1], self.guild_results['edge'][top_threshold][2], self.guild_results['edge'][top_threshold][3], self.guild_results['edge'][top_threshold][4], self.guild_results['edge'][top_threshold][5] ))
+                for type_function in self.type_functions:
+                    for type_correction in self.type_corrections:
+                        functional_feature = '{}-{}'.format(type_function, type_correction)
+                        results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'guild', functional_feature, top_threshold, self.guild_results[functional_feature][top_threshold][0], self.guild_results[functional_feature][top_threshold][1], self.guild_results[functional_feature][top_threshold][2], self.guild_results[functional_feature][top_threshold][3], self.guild_results[functional_feature][top_threshold][4], self.guild_results[functional_feature][top_threshold][5] ))
 
-            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'structure', 'structure', '-', self.structure_result, self.structure_result, self.structure_result ))
-            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'atc', 'atc', '-', self.atc_result[0], self.atc_result[1], self.atc_result[2] ))
-            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'se', 'se', '-', self.se_result[0], self.se_result[1], self.se_result[2] ))
+            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'structure', 'structure', '-', self.structure_result, self.structure_result, self.structure_result, self.structure_result, self.structure_result, self.structure_result ))
+
+            for level in self.atc_levels:
+                results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'atc', level, '-', self.atc_results[level][0], self.atc_results[level][1], self.atc_results[level][2], self.atc_results[level][3], self.atc_results[level][4], self.atc_results[level][5] ))
+
+            results_table_fd.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format( 'se', 'se', '-', self.se_result[0], self.se_result[1], self.se_result[2], self.se_result[3], self.se_result[4], self.se_result[5] ))
 
     def output_venn_diagram_guild(self, drug1_name, drug2_name, output_venn_nodes, output_venn_edges, output_venn_functions):
         """
@@ -115,7 +127,7 @@ class ComparisonResult(object):
 #############
 
 
-def calculate_comparison(node_to_vals_drug1, node_to_vals_drug2, n_total):
+def calculate_comparison(node_to_vals_drug1, node_to_vals_drug2, n_total, verbose=False):
     """
     Calculates the comparison between two drugs from a dict containing as keys the nodes/edges/GOs and as values
     a set (score, pval). Returns a list with the results.
@@ -125,13 +137,15 @@ def calculate_comparison(node_to_vals_drug1, node_to_vals_drug2, n_total):
     ### Compute the Jaccard Index ###
     jaccard = calculate_jaccard_index(set(node_to_vals_drug1.keys()), set(node_to_vals_drug2.keys()))
 
-    print('  DIANA INFO:\tThe Jaccard Index is {:.3f}\n'.format(jaccard))
+    if verbose:
+        print('  DIANA INFO:\tThe Jaccard Index is {:.3f}\n'.format(jaccard))
 
 
     ### Compute the Fisher's test ###
     n_common, fisher_oddsratio, fisher_pvalue = calculate_fisher_test(set(node_to_vals_drug1.keys()), set(node_to_vals_drug2.keys()), n_total)
 
-    print('  DIANA INFO:\tFisher\'s test results. Number of common: {}. Odds ratio: {:.3f}. P-value: {:.3f}.\n'.format(n_common, fisher_oddsratio, fisher_pvalue))
+    if verbose:
+        print('  DIANA INFO:\tFisher\'s test results. Number of common: {}. Odds ratio: {:.3f}. P-value: {:.3f}.\n'.format(n_common, fisher_oddsratio, fisher_pvalue))
 
 
     ### Compute the Dot Product ###
@@ -164,21 +178,24 @@ def calculate_comparison(node_to_vals_drug1, node_to_vals_drug2, n_total):
     # Compute the dot product for the two vectors, multiplying the scores at each position
     dot_product = calculate_norm_dot_product(scores_drug1, scores_drug2)
 
-    print('  DIANA INFO:\tThe dot product between the scores of the profiles is: {:.3f}\n'.format(dot_product))
+    if verbose:
+        print('  DIANA INFO:\tThe dot product between the scores of the profiles is: {:.3f}\n'.format(dot_product))
 
 
     ### Compute the Spearman correlation coefficient ###
 
     #(spearman_result, spearman_pval) = calculate_spearman_without_tie(scores_drug1, scores_drug2)
-    #print('  DIANA INFO:\tThe Spearman rank correlation coefficient is {:.3f} with P-value {:.3f}'.format(spearman_result, spearman_pval))
+    #if verbose:
+        #print('  DIANA INFO:\tThe Spearman rank correlation coefficient is {:.3f} with P-value {:.3f}'.format(spearman_result, spearman_pval))
 
     spearman_tie = calculate_spearman_with_tie(scores_drug1, scores_drug2)
-    print('  DIANA INFO:\tThe Spearman rank correlation coefficient with tie correction is {:.3f}\n'.format(spearman_tie))
+    if verbose:
+        print('  DIANA INFO:\tThe Spearman rank correlation coefficient with tie correction is {:.3f}\n'.format(spearman_tie))
 
     return dot_product, spearman_tie, jaccard, n_common, fisher_oddsratio, fisher_pvalue
 
 
-def calculate_comparison_top_scoring(top_node_to_vals_drug1, node_to_vals_drug1, top_node_to_vals_drug2, node_to_vals_drug2):
+def calculate_comparison_top_scoring(top_node_to_vals_drug1, node_to_vals_drug1, top_node_to_vals_drug2, node_to_vals_drug2, n_total, verbose=False):
     """
     Calculates the comparison between two drugs from a dict containing as keys the nodes/edges and as values
     a set (score, pval). 
@@ -186,11 +203,21 @@ def calculate_comparison_top_scoring(top_node_to_vals_drug1, node_to_vals_drug1,
     Returns a list with the results.
     """
 
-    # Compute the Jaccard Index
+    ### Compute the Jaccard Index ###
     jaccard = calculate_jaccard_index(set(top_node_to_vals_drug1.keys()), set(top_node_to_vals_drug2.keys()))
 
-    print('  DIANA INFO:\tThe Jaccard Index is {:.3f}\n'.format(jaccard))
+    if verbose:
+        print('  DIANA INFO:\tThe Jaccard Index is {:.3f}\n'.format(jaccard))
 
+
+    ### Compute the Fisher's test ###
+    n_common, fisher_oddsratio, fisher_pvalue = calculate_fisher_test(set(top_node_to_vals_drug1.keys()), set(top_node_to_vals_drug2.keys()), n_total)
+
+    if verbose:
+        print('  DIANA INFO:\tFisher\'s test results. Number of common: {}. Odds ratio: {:.3f}. P-value: {:.3f}.\n'.format(n_common, fisher_oddsratio, fisher_pvalue))
+
+
+    ### Compute the Dot Product ###
 
     # Calculating the differences in keys between network 1 and network 2
     diff1 = set(top_node_to_vals_drug1.keys()) - set(top_node_to_vals_drug2.keys())
@@ -228,16 +255,22 @@ def calculate_comparison_top_scoring(top_node_to_vals_drug1, node_to_vals_drug1,
     # Compute the dot product for the two vectors, multiplying the scores at each position
     dot_product = calculate_norm_dot_product(scores_drug1, scores_drug2)
 
-    print('  DIANA INFO:\tThe dot product between the scores of the profiles is: {:.3f}\n'.format(dot_product))
+    if verbose:
+        print('  DIANA INFO:\tThe dot product between the scores of the profiles is: {:.3f}\n'.format(dot_product))
 
+
+    ### Compute the Spearman correlation coefficient ###
 
     # Compute the Spearman correlation coefficient
     #(spearman_result, spearman_pval) = calculate_spearman_without_tie(scores_drug1, scores_drug2)
-    #print('  DIANA INFO:\tThe Spearman rank correlation coefficient is {:.3f} with P-value {:.3f}'.format(spearman_result, spearman_pval))
-    spearman_tie = calculate_spearman_with_tie(scores_drug1, scores_drug2)
-    print('  DIANA INFO:\tThe Spearman rank correlation coefficient with tie correction is {:.3f}\n'.format(spearman_tie))
+    #if verbose:
+        #print('  DIANA INFO:\tThe Spearman rank correlation coefficient is {:.3f} with P-value {:.3f}'.format(spearman_result, spearman_pval))
 
-    return dot_product, spearman_tie, jaccard
+    spearman_tie = calculate_spearman_with_tie(scores_drug1, scores_drug2)
+    if verbose:
+        print('  DIANA INFO:\tThe Spearman rank correlation coefficient with tie correction is {:.3f}\n'.format(spearman_tie))
+
+    return dot_product, spearman_tie, jaccard, n_common, fisher_oddsratio, fisher_pvalue
 
 
 def create_vectors_from_dicts(dict1, dict2):
@@ -268,10 +301,14 @@ def calculate_norm_dot_product(list1, list2):
     length_list1 = np.sqrt(np.dot(list1, list1))
     length_list2 = np.sqrt(np.dot(list2, list2))
     # Divides all the components of the list by its length to obtain the unitary vector
-    list1 = [x / length_list1 for x in list1]
-    list2 = [x / length_list2 for x in list2]
-    # Performs the dot product of the unitary vectors
-    return np.dot(list1, list2)
+    if length_list1 == 0 or length_list2 == 0:
+        dot_product = 0
+    else:
+        list1 = [x / length_list1 for x in list1]
+        list2 = [x / length_list2 for x in list2]
+        # Performs the dot product of the unitary vectors
+        dot_product = np.dot(list1, list2)
+    return dot_product
 
 
 def calculate_spearman_without_tie(list1, list2):
@@ -336,8 +373,11 @@ def calculate_fisher_test(set1, set2, n_total):
     # | Non-Top 1 | n2 - n_common | n_total - n1 - n2 + n_common |
     # |-----------|---------------|------------------------------|
 
+    #print(n_common, n1, n2, n_total)
     contigency = [[n_common, n1 - n_common], [n2 - n_common, n_total - n1 - n2 + n_common]]
     oddsratio, pvalue = scipy.stats.fisher_exact(contigency, alternative="greater")
+    if str(oddsratio) == 'nan':
+        oddsratio = 0
     return n_common, oddsratio, pvalue
 
 
@@ -355,6 +395,20 @@ def generate_targets_dict_for_comparison(targets_list):
     return targets_dict
 
 
+def generate_guild_dict_for_comparison(guild_dict):
+    """
+       Generates a dict which contains the target name as key, and the score '1.00' and a p-value 'foo'
+       as a set in the value of the dict. This dict will be used for the targets comparison
+    """
+
+    new_guild_dict = {}
+
+    for node in guild_dict:
+        new_guild_dict[node] = (guild_dict[node], "foo")
+
+    return new_guild_dict
+
+
 def filter_top_scoring_values(top_node_to_vals, node_to_vals):
     """
     From the dict that contains all the nodes in common in both drugs scored, we get the top ones and their values.
@@ -370,7 +424,7 @@ def filter_top_scoring_values(top_node_to_vals, node_to_vals):
     return filtered_node_to_vals
 
 
-def get_smiles_similarity(smiles1, smiles2, fp_type = "sub", metric = "tanimoto"):
+def get_smiles_similarity_indigo(smiles1, smiles2, fp_type = "sub", metric = "tanimoto"):
     """
     Calculates the structural similarity between the SMILES of two compounds by means of the Indigo package.
     fp_type: sim | sub
@@ -383,11 +437,11 @@ def get_smiles_similarity(smiles1, smiles2, fp_type = "sub", metric = "tanimoto"
     ind = indigo.Indigo()
 
     # Sometimes the SMILES are not correct, and they fail when loading. This is why I have introduced this exception
-    try:
-        m = ind.loadMolecule(smiles1)
-        m2 = ind.loadMolecule(smiles2)
-    except indigo.IndigoException: 
-        return None
+    #try:
+    m = ind.loadMolecule(smiles1)
+    m2 = ind.loadMolecule(smiles2)
+    #except indigo.IndigoException: 
+    #    return None
     m.aromatize()
     fp = m.fingerprint(fp_type)
     m2.aromatize() # Aromatize molecules in case they are not in aromatic form

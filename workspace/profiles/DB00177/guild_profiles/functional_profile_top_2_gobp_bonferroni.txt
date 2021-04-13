@@ -1,0 +1,22 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+GO:0007186	G protein-coupled receptor signaling pathway	22	80	9.070582472947855e-15	1.0857487220118582e-11
+GO:0042310	vasoconstriction	6	6	1.3984428217574277e-09	1.6739360576436409e-06
+GO:0007213	G protein-coupled acetylcholine receptor signaling pathway	7	9	1.5707786025261517e-09	1.8802219872238035e-06
+GO:0007189	adenylate cyclase-activating G protein-coupled receptor signaling pathway	13	47	2.834806823738592e-09	3.3932637680150946e-06
+GO:0019722	calcium-mediated signaling	10	28	1.2548447977143568e-08	1.5020492228640851e-05
+GO:0007204	positive regulation of cytosolic calcium ion concentration	12	46	2.4232363426780126e-08	2.900613902185581e-05
+GO:0003100	regulation of systemic arterial blood pressure by endothelin	4	4	1.2659727422340666e-06	0.0015153693724541777
+GO:0014824	artery smooth muscle contraction	4	4	1.2659727422340666e-06	0.0015153693724541777
+GO:0014826	vein smooth muscle contraction	4	4	1.2659727422340666e-06	0.0015153693724541777
+GO:0007210	serotonin receptor signaling pathway	4	4	1.2659727422340666e-06	0.0015153693724541777
+GO:1902093	positive regulation of flagellated sperm motility	4	4	1.2659727422340666e-06	0.0015153693724541777
+GO:0070374	positive regulation of ERK1 and ERK2 cascade	16	124	3.805814267287193e-06	0.00455555967794277
+GO:0038003	opioid receptor signaling pathway	4	5	6.161299970677382e-06	0.007375076064900826
+GO:0007200	phospholipase C-activating G protein-coupled receptor signaling pathway	6	18	1.8401021403132402e-05	0.022026022619549484
+GO:0007193	adenylate cyclase-inhibiting G protein-coupled receptor signaling pathway	6	20	3.628592319990195e-05	0.043434250070282635
+GO:0007217	tachykinin receptor signaling pathway	3	3	3.791487888918065e-05	0.045384110030349235
+GO:0003081	regulation of systemic arterial blood pressure by renin-angiotensin	3	3	3.791487888918065e-05	0.045384110030349235
+GO:0007603	phototransduction, visible light	3	3	3.791487888918065e-05	0.045384110030349235
+GO:0043410	positive regulation of MAPK cascade	11	75	3.81437289723331e-05	0.04565804357988273
+GO:0051482	positive regulation of cytosolic calcium ion concentration involved in phospholipase C-activating G protein-coupled signaling pathway	4	7	4.08661731484464e-05	0.04891680925869034
+GO:0048016	inositol phosphate-mediated signaling	4	7	4.08661731484464e-05	0.04891680925869034

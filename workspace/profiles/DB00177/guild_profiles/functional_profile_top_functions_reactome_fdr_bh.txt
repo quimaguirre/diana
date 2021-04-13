@@ -1,0 +1,6 @@
+# Term ID	Term name	num of genes	num of total genes	P-value	P-value corrected
+R-HSA-375276	Peptide ligand-binding receptors	2	94	9.936911637093874e-05	0.0004968455818546936
+R-HSA-8856828	Clathrin-mediated endocytosis	1	127	0.026896998716661097	0.040447816892058674
+R-HSA-416476	G alpha (q) signalling events	1	153	0.03235825351364694	0.040447816892058674
+R-HSA-8856825	Cargo recognition for clathrin-mediated endocytosis	1	103	0.021842200206186494	0.040447816892058674
+R-HSA-418594	G alpha (i) signalling events	1	211	0.044485673319240075	0.044485673319240075
