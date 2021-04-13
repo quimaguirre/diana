@@ -265,10 +265,13 @@ cp -r /home/quim/PHD/Projects/DIANA/diana/mappings/* /sbi/users/quim/DIANA_data/
 
 1. UPDATE THE GITHUB
 
+cd /home/quim/PHD/Projects/DIANA/diana_git/
 git status
 git pull origin master # Get changes from github web
 cd /home/quim/PHD/Projects/DIANA/diana_git/scripts
-cp /home/quim/PHD/Projects/DIANA/diana/scripts/* .
+cp /home/quim/PHD/Projects/DIANA/diana/scripts/* /home/quim/PHD/Projects/DIANA/diana_git/scripts
+cp /home/quim/PHD/Projects/DIANA/diana/diana/classes/* /home/quim/PHD/Projects/DIANA/diana_git/diana/classes
+cp /home/quim/PHD/Projects/DIANA/diana/diana/toolbox/* /home/quim/PHD/Projects/DIANA/diana_git/diana/toolbox
 cp /home/quim/PHD/Projects/DIANA/README /home/quim/PHD/Projects/DIANA/diana_git
 git add *
 git commit -m "Update of DIANA"
